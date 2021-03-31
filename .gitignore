@@ -1,0 +1,11 @@
+.env
+poetry.lock
+pyproject.toml
+
+server.py
+execute.py
+
+log.txt
+user_config.yaml
+server_config.yaml
+server_activity.yaml
