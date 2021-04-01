@@ -227,7 +227,7 @@ async def log(msg):
 
 ################################################################
 
-# Gets the amount of songs in queue
+# Gets the amount of songs in the queue
 
 def queue_length(guild):
 
