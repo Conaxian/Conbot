@@ -1,6 +1,8 @@
 .env
 poetry.lock
 pyproject.toml
+__pycache__/
+songs/
 
 server.py
 execute.py

@@ -17,11 +17,16 @@ By using this software, you agree to the license terms in the LICENSE.txt file.
 from server import init
 from pyexecute import PyExecute
 import discord
+import asyncio
 import os
+import sys
 import yaml
 import datetime
 import random
+import re
+import urllib
 import difflib
+import youtube_dl
 
 ################################################################
 
@@ -31,9 +36,15 @@ import difflib
 
 token = os.environ.get("DISCORD_BOT_TOKEN")
 
+loop_interval = 1
+
 default_prefix = "?"
 default_embed_color = 0x20a0e0
 default_reply_chance = 0.3333
+
+# This is an important workaround for the play function to send messages properly
+
+play_text_output = {}
 
 # Never use filenames directly, instead add any files used in the code to this dict and get the value
 
@@ -50,6 +61,8 @@ localization = {
     "en_GB": "localization/en_GB.yaml",
     "cs_CZ": "localization/cs_CZ.yaml"
 }
+
+song_dir = "songs"
 
 # Devs have access to all commands, this is a VERY DANGEROUS permission
 
@@ -214,6 +227,102 @@ async def log(msg):
 
 ################################################################
 
+# Gets the amount of songs in queue
+
+def queue_length(guild):
+
+    try:
+        path = f"{song_dir}/{guild.id}"
+        return len(os.listdir(path))
+    except FileNotFoundError:
+        return 0
+
+################################################################
+
+# Gets the path of the song in the specified position
+
+def get_song_path(guild, position):
+
+    path = f"{song_dir}/{guild.id}"
+    songs = os.listdir(path)
+    for song in songs:
+        song_position = song.split("$<|sep;|>")[0]
+        if int(song_position) == position:
+            return f"{path}/{song}"
+
+################################################################
+
+# Downloads a song from YouTube and saves it the specified path
+
+async def download_song(guild, name, position):
+
+    name = urllib.parse.quote(name, safe="")
+    search_url = f"https://www.youtube.com/results?search_query={name}"
+    html = urllib.request.urlopen(search_url)
+    html = html.read().decode()
+    videos = re.findall(r"watch\?v=(\S{11})", html)
+    url = f"https://www.youtube.com/watch?v={videos[0]}"
+    
+    path = f"{song_dir}/{guild.id}/{position}$<|sep;|>%(title)s.%(ext)s"
+
+    ydl_options = {
+        "format": "bestaudio/best",
+        "outtmpl": path,
+        "postprocessors": [{
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192",
+        }]
+    }
+
+    with youtube_dl.YoutubeDL(ydl_options) as ydl:
+        ydl.download([url])
+
+################################################################
+
+# Deletes the first song in the queue and shifts the queue
+
+async def shift_queue(guild):
+
+    path = f"{song_dir}/{guild.id}"
+    song_amount = queue_length(guild)
+    if song_amount <= 1:
+        os.system(f"rm -rf {path}")
+        os.mkdir(f"{path}")
+
+    else:
+        os.remove(get_song_path(guild, 1))
+        for i in range(2, song_amount + 1):
+            path = get_song_path(guild, i)
+            song_name = path.split("$<|sep;|>")[1]
+            song_name = f"$<|sep;|>{song_name}"
+            path = f"{song_dir}/{guild.id}/"
+            os.rename(f"{path}{i}{song_name}", f"{path}{i - 1}{song_name}")
+
+################################################################
+
+# Continues playing the song queue
+
+async def play_continue(ctx, voice):
+
+    shift_queue(ctx.guild)
+
+    if queue_length(ctx.guild) > 0:
+        path = get_song_path(ctx.guild, 1)
+
+        song_name = path.split("$<|sep;|>")[1]
+        song_name = song_name.replace(" _ ", " ").replace(".mp3", "")
+        text = Loc("text_play_playing").server_loc(ctx.guild)
+        text = format_loc(text, [song_name])
+        embed = get_embed(text)
+        await ctx.channel.send(embed=embed)
+
+        voice.play(discord.FFmpegPCMAudio(path))
+        voice.source = discord.PCMVolumeTransformer(voice.source)
+        voice.source.volume = 0.25
+
+################################################################
+
 # Creates an embed
 
 def get_embed(text, title=None, author_name=None, author_img=None, timestamp=None, fields={}, footer=None, color=None):
@@ -307,7 +416,7 @@ class Config:
 
 class Command:
 
-    def __init__(self, name, calls, category, args, delimiters, perms, desc, code):
+    def __init__(self, name, calls, category, args, delimiters, perms, desc, code, dev):
 
         self.name = name
         self.calls = calls
@@ -317,6 +426,7 @@ class Command:
         self.perms = perms
         self.desc = desc
         self.code = code
+        self.dev = dev
 
 # Class for command context
 
@@ -335,11 +445,11 @@ class Context:
 
 # Creates a Command
 
-def cmd(name, calls, category, args, delimiters, perms, code):
+def cmd(name, calls, category, args, delimiters, perms, code, dev=False):
 
     desc_name = name.replace("-", "_")
     desc = f"cmd_desc_{desc_name}"
-    return Command(name, calls, category, args, delimiters, perms, Loc(desc), code)
+    return Command(name, calls, category, args, delimiters, perms, Loc(desc), code, dev)
 
 ################################################################
 
@@ -358,6 +468,7 @@ async def help(ctx):
             if cmd.category not in cmd_list.keys():
                 cmd_list[cmd.category] = []
             cmd_list[cmd.category].append(cmd.name)
+        cmd_list.pop("dev", None)
 
         prefix_text = Loc("text_help_prefix").user_loc(ctx.author)
         prefix_text = format_loc(prefix_text, [ctx.prefix])
@@ -381,7 +492,7 @@ async def help(ctx):
             if arg_cmd.lstrip(ctx.prefix) in command.calls:
                 cmd = command
         
-        if cmd == None:
+        if cmd == None or cmd.category == "dev":
             text = Loc("err_help_unknown_cmd").user_loc(ctx.author)
             embed = get_cembed(ctx.msg, text)
             await ctx.channel.send(embed=embed)
@@ -566,17 +677,128 @@ async def python(ctx):
 
 async def join(ctx):
 
-    voice_state = ctx.author.voice
+    voice = ctx.author.voice
 
-    if voice_state == None:
-        text = Loc("err_join_no_voice")
+    if voice == None:
+        text = Loc("err_join_no_voice").user_loc(ctx.author)
     
     else:
-        channel = voice_state.channel
-        channel.connect()
-        print(channel)
-    
+        bot_channel = None
+        for bot_voice in client.voice_clients:
+            if bot_voice.guild == ctx.guild:
+                bot_channel = bot_voice
+
+        if bot_channel == None:
+            await voice.channel.connect()
+            text = Loc("text_join").user_loc(ctx.author)
+            text = format_loc(text, [voice.channel])
+        else:
+            text = Loc("err_join_voice_connected").user_loc(ctx.author)
+
     embed = get_cembed(ctx.msg, text)
+    await ctx.channel.send(embed=embed)
+
+################################################################
+
+async def leave(ctx):
+
+    voices = client.voice_clients
+    text = Loc("err_leave_no_voice").user_loc(ctx.author)
+
+    for voice in voices:
+        if voice.guild == ctx.guild:
+            path = f"{song_dir}/{voice.guild.id}"
+            await voice.disconnect()
+            os.system(f"rm -rf {path}")
+            
+            text = Loc("text_leave").user_loc(ctx.author)
+            text = format_loc(text, [voice.channel])
+
+    embed = get_cembed(ctx.msg, text)
+    await ctx.channel.send(embed=embed)
+
+################################################################
+
+async def play(ctx):
+
+    voice = ctx.author.voice
+
+    if voice == None:
+        text = Loc("err_join_no_voice").user_loc(ctx.author)
+        embed = get_cembed(ctx.msg, text)
+        await ctx.channel.send(embed=embed)
+        return
+    
+    else:
+        bot_channel = None
+        for bot_voice in client.voice_clients:
+            if bot_voice.guild == ctx.guild:
+                bot_channel = bot_voice
+
+        if bot_channel == None:
+            await voice.channel.connect()
+            text = Loc("text_join").user_loc(ctx.author)
+            text = format_loc(text, [voice.channel])
+            embed = get_cembed(ctx.msg, text)
+            await ctx.channel.send(embed=embed)
+
+    voices = client.voice_clients
+
+    for voice in voices:
+        if voice.guild == ctx.guild:
+            text = Loc("text_play_downloading").user_loc(ctx.author)
+            embed = get_cembed(ctx.msg, text)
+            await ctx.channel.send(embed=embed)
+            position = queue_length(ctx.guild) + 1
+            await download_song(ctx.guild, ctx.args["song"], position)
+
+    global play_text_output
+    play_text_output[ctx.guild.id] = ctx.channel
+    path = get_song_path(ctx.guild, position)
+    song_name = path.split("$<|sep;|>")[1].replace(".mp3", "")
+
+    if queue_length(ctx.guild) == 1:
+        voice.play(discord.FFmpegPCMAudio(path))
+        voice.source = discord.PCMVolumeTransformer(voice.source)
+        voice.source.volume = 0.25
+
+        text = Loc("text_play_playing").server_loc(ctx.guild)
+        text = format_loc(text, [song_name])
+
+    else:
+        text = Loc("text_play_add_queue").server_loc(ctx.guild)
+        text = format_loc(text, [song_name])
+
+    embed = get_embed(text)
+    await ctx.channel.send(embed=embed)
+
+################################################################
+
+async def skip(ctx):
+
+    voices = client.voice_clients
+    text = Loc("err_skip_not_playing").user_loc(ctx.author)
+    embed = get_cembed(ctx.msg, text)
+
+    for voice in voices:
+        if voice.guild == ctx.guild:
+            song_amount = queue_length(ctx.guild)
+            if song_amount >= 1:
+                voice.stop()
+                await shift_queue(ctx.guild)
+                if song_amount - 1 >= 1:
+
+                    path = get_song_path(voice.guild, 1)
+                    song_name = path.split("$<|sep;|>")[1].replace(".mp3", "")
+
+                    voice.play(discord.FFmpegPCMAudio(path))
+                    voice.source = discord.PCMVolumeTransformer(voice.source)
+                    voice.source.volume = 0.25
+
+                    text = Loc("text_play_playing").server_loc(voice.guild)
+                    text = format_loc(text, [song_name])
+                    embed = get_embed(text)
+
     await ctx.channel.send(embed=embed)
 
 ################################################################
@@ -719,6 +941,24 @@ async def language(ctx):
         embed = get_cembed(ctx.msg, text)
 
     await ctx.channel.send(embed=embed)
+
+################################################################
+
+# Dev
+
+################################################################
+
+async def shutdown(ctx):
+
+    text = Loc("text_exit").user_loc(ctx.author)
+    embed = get_cembed(ctx.msg, text)
+    await ctx.channel.send(embed=embed)
+    def crash():
+        try:
+            crash()
+        except:
+            crash()
+    crash()
 
 ################################################################
 
@@ -869,6 +1109,39 @@ commands = [
         join
     ),
 
+    # Leave
+    cmd(
+        "leave",
+        ["leave", "quit", "disconnect", "dc"],
+        "music",
+        [],
+        [" "],
+        [],
+        leave
+    ),
+
+    # Play
+    cmd(
+        "play",
+        ["play", "song", "music"],
+        "music",
+        ["<song>"],
+        ["$<|no_delimiter;|>"],
+        [],
+        play
+    ),
+
+    # Skip
+    cmd(
+        "skip",
+        ["skip"],
+        "music",
+        [],
+        [" "],
+        [],
+        skip
+    ),
+
     # Moderation
 
     # Kick
@@ -926,8 +1199,66 @@ commands = [
         [" "],
         [],
         language
+    ),
+
+    # Developer
+    
+    # Exit
+    cmd(
+        "exit",
+        ["exit", "shutdown", "off"],
+        "dev",
+        [],
+        [" "],
+        [],
+        shutdown,
+        True
     )
 ]
+
+################################################################
+
+# Loop that keeps checking various things
+
+async def loop():
+
+    while True:
+
+        # Disconnect from empty voice channels
+
+        voices = client.voice_clients
+        for voice in voices:
+            if len(voice.channel.members) <= 1:
+                path = f"{song_dir}/{voice.guild.id}"
+                await voice.disconnect()
+                os.system(f"rm -rf {path}")
+                os.mkdir(path)
+
+            # Check if the song finished playing and starts a new song
+
+            if not voice.is_playing() and not voice.is_paused():
+
+                song_amount = queue_length(voice.guild)
+                if song_amount >= 1:
+                    await shift_queue(voice.guild)
+                    if song_amount - 1 >= 1:
+
+                        path = get_song_path(voice.guild, 1)
+                        song_name = path.split("$<|sep;|>")[1].replace(".mp3", "")
+
+                        voice.play(discord.FFmpegPCMAudio(path))
+                        voice.source = discord.PCMVolumeTransformer(voice.source)
+                        voice.source.volume = 0.25
+
+                        text = Loc("text_play_playing").server_loc(voice.guild)
+                        text = format_loc(text, [song_name])
+                        embed = get_embed(text)
+                        text_channel = play_text_output[voice.guild.id]
+                        await text_channel.send(embed=embed)
+
+        # Wait between check turns
+
+        await asyncio.sleep(loop_interval)
 
 ################################################################
 
@@ -938,11 +1269,14 @@ commands = [
 async def on_ready():
 
     print(f"Bot initialized as {client.user}")
+    os.system(f"rm -rf {song_dir}")
+    os.mkdir(song_dir)
     status = discord.Status.online
     activity_name = f"{len(client.guilds)} servers"
     activity_type = discord.ActivityType.watching
     activity = discord.Activity(name=activity_name, type=activity_type)
     await client.change_presence(status=status, activity=activity)
+    await client.loop.create_task(loop())
 
 ################################################################
 
@@ -1008,9 +1342,13 @@ async def on_message(msg):
         command = command[len(prefix):]
         command = command.lower().replace("_", "-")
 
-        # Looks for the command
+        # Looks for the command, ignores dev commands unless the message author is a dev
 
         for cmd in commands:
+
+            if cmd.category == "dev" and msg.author.id not in devs:
+                continue
+
             if command in cmd.calls:
 
                 # Checks if the user has sufficient permissions to use the command
@@ -1030,8 +1368,8 @@ async def on_message(msg):
                     parts = msg.content.split(" ")
                     parts = " ".join(parts[1:])
                     for delimiter in cmd.delimiters:
-                        parts = parts.replace(delimiter, "$<|split;|>")
-                    parts = parts.split("$<|split;|>")
+                        parts = parts.replace(delimiter, "$<|sep;|>")
+                    parts = parts.split("$<|sep;|>")
                 except Exception:
                     parts = []
                 parts = cond(parts != [""], parts, [])
@@ -1088,11 +1426,12 @@ async def on_message(msg):
 
                 return
 
-        # Get the list of command calls
+        # Get the list of command calls (except dev commands)
 
         calls = []
         for cmd in commands:
-            calls += cmd.calls
+            if cmd.category != "dev":
+                calls += cmd.calls
 
         # Find a close match between the entered command and the list of command calls, if there isn't any, display the default unknown command message
 
