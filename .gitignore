@@ -6,6 +6,7 @@ songs/
 
 server.py
 execute.py
+conscript.py
 
 log.txt
 user_config.yaml

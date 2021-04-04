@@ -1,5 +1,9 @@
 loc_cs_CZ:
+  # General
+
   language_name: "Čeština"
+
+  # Short text
 
   label_none: "Nic"
   label_help: "Help"
@@ -14,6 +18,8 @@ loc_cs_CZ:
   label_user_config: "Uživatelské Nastavení"
   label_server_config: "Serverové Nastavení"
   label_languages: "Jazyky"
+
+  # Long text
 
   text_join_msg: "$1 se připojil/a na server."
   text_leave_msg: "$1 se odpojil/a ze serveru."
@@ -36,6 +42,8 @@ loc_cs_CZ:
   text_play_playing: "Nyní se přehrává: `$1`"
   text_play_add_queue: "Přidáno do fronty: `$1`"
   text_exit: "Bot byl úspěšně vypnut."
+
+  # Error messages
 
   err_unknown_cmd: "Neznámý příkaz! Použij `$1help` pro zobrazení dostupných příkazů!"
   err_unknown_cmd_alt: "Neznámý příkaz! Neměl jsi na mysli `$1$2`?"
@@ -60,14 +68,20 @@ loc_cs_CZ:
   err_missing_perms: "Bot nemá dostatečné permise k provedení tohoto příkazu! Pro správné fungování potřebuje administrátorskou roli."
   err_skip_not_playing: "Fronta songů je prázdná!"
 
+  # Config names
+
   config_language: "Jazyk"
   config_embed_color: "Barva Embedů"
   config_log_channel: "Kanál se Záznamy"
+
+  # Permission names
 
   perm_kick_members: "Vyhodit Členy"
   perm_ban_members: "Zabanovat Členy"
   perm_manage_guild: "Spravovat Server"
   perm_administrator: "Administrátor"
+
+  # Command category names
 
   cmd_category_info: "Info"
   cmd_category_chat: "Chat"
@@ -75,6 +89,8 @@ loc_cs_CZ:
   cmd_category_music: "Hudba"
   cmd_category_mod: "Moderace"
   cmd_category_config: "Nastavení"
+
+  # Command descriptions
 
   cmd_desc_help: "Vypíše všechny příkazy seřazené podle kategorií. Pokud je upřesněn `[command]`, zobrazí detailní informace o tomto příkazu."
   cmd_desc_status: "Zobrazí zprávu potvrzující, že je bot online."

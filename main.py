@@ -16,6 +16,7 @@ By using this software, you agree to the license terms in the LICENSE.txt file.
 
 from server import init
 from pyexecute import PyExecute
+from conexecute import ConExecute
 import discord
 import asyncio
 import os
@@ -301,28 +302,6 @@ async def shift_queue(guild):
 
 ################################################################
 
-# Continues playing the song queue
-
-async def play_continue(ctx, voice):
-
-    shift_queue(ctx.guild)
-
-    if queue_length(ctx.guild) > 0:
-        path = get_song_path(ctx.guild, 1)
-
-        song_name = path.split("$<|sep;|>")[1]
-        song_name = song_name.replace(" _ ", " ").replace(".mp3", "")
-        text = Loc("text_play_playing").server_loc(ctx.guild)
-        text = format_loc(text, [song_name])
-        embed = get_embed(text)
-        await ctx.channel.send(embed=embed)
-
-        voice.play(discord.FFmpegPCMAudio(path))
-        voice.source = discord.PCMVolumeTransformer(voice.source)
-        voice.source.volume = 0.25
-
-################################################################
-
 # Creates an embed
 
 def get_embed(text, title=None, author_name=None, author_img=None, timestamp=None, fields={}, footer=None, color=None):
@@ -479,8 +458,7 @@ async def help(ctx):
             category_name = Loc(f"cmd_category_{category[0]}")
             category_name = category_name.user_loc(ctx.author)
             cmd_str = "`, `".join(category[1])
-            cmd_str = f"`{cmd_str}`"
-            category_list[category_name] = cmd_str
+            category_list[category_name] = f"`{cmd_str}`"
 
         embed = get_cembed(ctx.msg, f"{prefix_text}\n", title, fields=category_list)
 
@@ -661,8 +639,8 @@ async def python(ctx):
     for loc_name in ["err_exec_timeout", "err_exec_banned_module", "err_exec_banned_keyword"]:
         exec_loc[loc_name] = Loc(loc_name).user_loc(ctx.author)
 
-    execute = PyExecute(files["pyexecute"], exec_loc)
-    output = execute.execute(code)
+    pyexecute = PyExecute(files["pyexecute"], exec_loc)
+    output = pyexecute.execute(code)
     output = cond(len(output) <= 2000, output, output[:2000])
 
     title = Loc("label_output").user_loc(ctx.author)
@@ -962,6 +940,21 @@ async def shutdown(ctx):
 
 ################################################################
 
+async def conscript(ctx):
+
+    code = ctx.args["code"]
+    code = code.strip(" `\n")
+
+    conexecute = ConExecute(client, ctx)
+    output = await conexecute.execute(code)
+    output = cond(len(output) <= 2000, output, output[:2000])
+
+    title = Loc("label_output").user_loc(ctx.author)
+    embed = get_cembed(ctx.msg, f"```{output}```", title)
+    await ctx.channel.send(embed=embed)
+
+################################################################
+
 # Misc
 
 ################################################################
@@ -1213,7 +1206,20 @@ commands = [
         [],
         shutdown,
         True
+    ),
+
+    # ConScript
+    cmd(
+        "conscript",
+        ["conscript", "cscript", "conbot-script"],
+        "dev",
+        ["<code>"],
+        ["$<|no_delimiter;|>"],
+        [],
+        conscript,
+        True
     )
+
 ]
 
 ################################################################
@@ -1255,6 +1261,14 @@ async def loop():
                         embed = get_embed(text)
                         text_channel = play_text_output[voice.guild.id]
                         await text_channel.send(embed=embed)
+
+        # Updates the bot activity
+
+        status = discord.Status.online
+        activity_name = f"{len(client.guilds)} servers"
+        activity_type = discord.ActivityType.watching
+        activity = discord.Activity(name=activity_name, type=activity_type)
+        await client.change_presence(status=status, activity=activity)
 
         # Wait between check turns
 

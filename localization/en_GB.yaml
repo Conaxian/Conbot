@@ -1,5 +1,9 @@
 loc_en_GB:
+  # General
+
   language_name: "English (United Kingdom)"
+
+  # Short text
 
   label_none: "None"
   label_help: "Help"
@@ -14,6 +18,8 @@ loc_en_GB:
   label_user_config: "User Config"
   label_server_config: "Server Config"
   label_languages: "Languages"
+
+  # Long text
 
   text_join_msg: "$1 has joined the server."
   text_leave_msg: "$1 has left the server."
@@ -36,6 +42,8 @@ loc_en_GB:
   text_play_playing: "Now playing: `$1`"
   text_play_add_queue: "Added to queue: `$1`"
   text_exit: "Successfully shut the bot."
+
+  # Error messages
 
   err_unknown_cmd: "Unknown command! Use `$1help` to get a list of available commands!"
   err_unknown_cmd_alt: "Unknown command! Did you mean `$1$2`?"
@@ -60,14 +68,20 @@ loc_en_GB:
   err_missing_perms: "The bot has insufficient permissions to execute this command! It needs an administrator role to work correctly."
   err_skip_not_playing: "The song queue is empty!"
 
+  # Config names
+
   config_language: "Language"
   config_embed_color: "Embed Colour"
   config_log_channel: "Log Channel"
+
+  # Permission names
 
   perm_kick_members: "Kick Members"
   perm_ban_members: "Ban Members"
   perm_manage_guild: "Manage Server"
   perm_administrator: "Administrator"
+
+  # Command category names
 
   cmd_category_info: "Info"
   cmd_category_chat: "Chat"
@@ -75,6 +89,8 @@ loc_en_GB:
   cmd_category_music: "Music"
   cmd_category_mod: "Moderation"
   cmd_category_config: "Config"
+
+  # Command descriptions
 
   cmd_desc_help: "Lists all commands, organized by categories. If `[command]` is specified, shows detailed information about the command instead."
   cmd_desc_status: "Displays a message confirming that the bot is online."
