@@ -27,6 +27,8 @@ import random
 import re
 import urllib
 import difflib
+import traceback
+import googletrans
 import youtube_dl
 
 ################################################################
@@ -54,10 +56,11 @@ files = {
     "server_config": "server_config.yaml",
     "user_config": "user_config.yaml",
     "server_activity": "server_activity.yaml",
-    "pyexecute": "execute.py"
+    "pyexecute": "execute.py",
+    "pycalc": "calc.py"
 }
 
-localization = {
+loc_files = {
     "en_US": "localization/en_US.yaml",
     "en_GB": "localization/en_GB.yaml",
     "cs_CZ": "localization/cs_CZ.yaml"
@@ -75,12 +78,6 @@ devs = [
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-
-################################################################
-
-# Function that works as a ternary operator
-
-cond = lambda condition, true, false: true if condition else false
 
 ################################################################
 
@@ -152,7 +149,7 @@ def read_config(file, id, option):
 def set_config(file, id, option, value):
 
     data = load_yaml(file)
-    data = cond(data == None, {}, data)
+    data = {} if not data else data
     if id not in data.keys():
         data[id] = {}
     data[id][option] = value
@@ -190,25 +187,9 @@ def set_server_config(server_id, option, value):
 
 def load_localization(lang):
 
-    loc = load_yaml(localization[lang])
+    loc = load_yaml(loc_files[lang])
     loc = loc[f"loc_{lang}"]
     return loc
-
-# Gets the localization string for a key
-
-def localize(lang, key):
-
-    return load_localization(lang)[key]
-
-################################################################
-
-# Formats a localization string
-
-def format_loc(string, values):
-
-    for i in range(len(values)):
-        string = string.replace(f"${i+1}", str(values[i]))
-    return string
 
 ################################################################
 
@@ -217,12 +198,14 @@ def format_loc(string, values):
 async def log(msg):
 
     with open(files["log"], "a") as f:
-        msg_datetime = f"{date()} | {time()} UTC"
+        space_length = max(len(date()), len(msg.guild.name), len(msg.channel.name), len(str(msg.author)))
+        spacing = lambda string: " " * (space_length - len(string))
+        msg_datetime = f"{date()}{spacing(date())} | {time()} UTC"
         f.write("\n--------------------------------")
         f.write(f"\n[{msg_datetime}]")
-        f.write(f"\n[{msg.guild.name} | {msg.guild.id}]")
-        f.write(f"\n[#{msg.channel.name} | {msg.channel.id}]")
-        f.write(f"\n[{msg.author} | {msg.author.id}]")
+        f.write(f"\n[{msg.guild.name}{spacing(msg.guild.name)} | {msg.guild.id}]")
+        f.write(f"\n[#{msg.channel.name}{spacing(msg.channel.name)}| {msg.channel.id}]")
+        f.write(f"\n[{msg.author}{spacing(str(msg.author))} | {msg.author.id}]")
         f.write(f"\n{msg.content}")
         f.write("\n--------------------------------\n")
 
@@ -263,7 +246,7 @@ async def download_song(guild, name, position):
     html = html.read().decode()
     videos = re.findall(r"watch\?v=(\S{11})", html)
     url = f"https://www.youtube.com/watch?v={videos[0]}"
-    
+
     path = f"{song_dir}/{guild.id}/{position}$<|sep;|>%(title)s.%(ext)s"
 
     ydl_options = {
@@ -304,60 +287,91 @@ async def shift_queue(guild):
 
 # Creates an embed
 
-def get_embed(text, title=None, author_name=None, author_img=None, timestamp=None, fields={}, footer=None, color=None):
+def get_embed(text, title=None, url=None, author_name=None, author_img=None, timestamp=None, fields={}, fields_inline=False, color=None):
 
-    color = cond(color != None, color, default_embed_color)
-    embed = discord.Embed(description=text, colour=color)
-    if title != None:
-        embed.title = title
-    if author_name != None and author_img != None:
+    color = color if color else default_embed_color
+    embed = discord.Embed(description=str(text), colour=color)
+
+    if title:
+        embed.title = str(title)
+
+    if url:
+        embed.url = url
+
+    if author_name and author_img:
         embed.set_author(name=author_name, icon_url=str(author_img))
-    if timestamp != None:
+
+    if timestamp:
         embed.timestamp = timestamp
+
     for field in fields.items():
-        embed.add_field(name=field[0], value=field[1], inline=False)
-    if footer != None:
-        embed.set_footer(text=footer)
+        field = list(field)
+        field[0] = "\u200b" if str(field[0]).isspace() else str(field[0])
+        field[1] = "\u200b" if str(field[1]).isspace() else str(field[1])
+        embed.add_field(name=field[0], value=field[1], inline=fields_inline)
+
+    embed.set_footer(text=f"{time()} UTC", icon_url="http://conax.cz/conbot/embed_clock.png")
     return embed
 
 # Creates an embed using information obtained from the message
 
-def get_cembed(msg, text, title=None, author_name=None, author_img=None, timestamp=None, fields={}, footer=None):
+def get_cembed(msg, text, title=None, url=None, author_name=None, author_img=None, timestamp=None, fields={}, fields_inline=False):
 
-    color = read_user_config(msg.author.id, "embed_color")
-    return get_embed(text, title, author_name, author_img, timestamp, fields, footer, color)
+    return get_embed(text, title, url, author_name, author_img, timestamp, fields, fields_inline, msg.author.color)
 
 ################################################################
 
-# Class for localization placeholders
+# Class for localization strings
 
 class Loc:
 
-    def __init__(self, name):
+    def __init__(self, name, lang, values=[]):
 
         self.name = name
-    
+        self.lang = lang
+        self.values = values
+
+    def format(self, *args):
+
+        self.values = list(args)
+
     def __repr__(self):
 
-        return self.name
+        string = loc_dict[self.lang][self.name]
+        for i in range(len(self.values)):
+            string = string.replace(f"${i+1}", str(self.values[i]))
+        return string
 
-    def loc(self, lang):
+    def __str__(self):
 
-        return localize(lang, self.name)
+        return repr(self)
 
-    def server_loc(self, server):
+    def __add__(self, obj):
+
+        return str(self) + str(obj)
+    
+    def __len__(self):
+
+        return len(str(self))
+
+    def replace(self, old, new, count=9999):
+
+        return str(self).replace(old, new, count)
+
+    @classmethod
+    def server(cls, name, server):
 
         lang = read_server_config(server.id, "language")
-        lang = cond(lang != None, lang, "en_US")
-        return self.loc(lang)
+        lang = lang if lang else "en_US"
+        return cls(name, lang)
 
-    def user_loc(self, user):
+    @classmethod
+    def member(cls, name, member):
 
-        lang = read_user_config(user.id, "language")
-        if lang == None:
-            lang = read_server_config(user.guild.id, "language")
-        lang = cond(lang != None, lang, "en_US")
-        return self.loc(lang)
+        lang = read_user_config(member.id, "language")
+        lang = lang if lang else read_server_config(member.guild.id, "language")
+        lang = lang if lang else "en_US"
+        return cls(name, lang)
 
 # Config class for user and server config
 
@@ -371,7 +385,8 @@ class Config:
     
     def format(self, value):
 
-        value = cond(value != None, value, self.default)
+        value = value if value else self.default
+        fvalue = None
 
         if self.ftype == "hex_str":
             value = hex(value)
@@ -389,7 +404,7 @@ class Config:
         elif self.ftype == "default":
             fvalue = value
 
-        return cond(value, fvalue, None)
+        return fvalue if fvalue else None
 
 # Class for commands
 
@@ -407,6 +422,13 @@ class Command:
         self.code = code
         self.dev = dev
 
+    @classmethod
+    def new(cls, name, aliases, category, args, delimiters, perms, code, dev=False):
+
+        aliases.append(name)
+        desc = name.replace("-", "_")
+        return cls(name, aliases, category, args, delimiters, perms, desc, code, dev)
+
 # Class for command context
 
 class Context:
@@ -422,16 +444,6 @@ class Context:
 
 ################################################################
 
-# Creates a Command
-
-def cmd(name, calls, category, args, delimiters, perms, code, dev=False):
-
-    desc_name = name.replace("-", "_")
-    desc = f"cmd_desc_{desc_name}"
-    return Command(name, calls, category, args, delimiters, perms, Loc(desc), code, dev)
-
-################################################################
-
 # Info
 
 ################################################################
@@ -440,7 +452,7 @@ async def help(ctx):
 
     command = ctx.args["command"]
 
-    if command == None:
+    if not command:
 
         cmd_list = {}
         for cmd in commands:
@@ -449,14 +461,13 @@ async def help(ctx):
             cmd_list[cmd.category].append(cmd.name)
         cmd_list.pop("dev", None)
 
-        prefix_text = Loc("text_help_prefix").user_loc(ctx.author)
-        prefix_text = format_loc(prefix_text, [ctx.prefix])
-        title = Loc("label_help").user_loc(ctx.author)
+        prefix_text = Loc.member("text_help_prefix", ctx.author)
+        prefix_text.format(ctx.prefix)
+        title = Loc.member("label_help", ctx.author)
 
         category_list = {}
         for category in cmd_list.items():
-            category_name = Loc(f"cmd_category_{category[0]}")
-            category_name = category_name.user_loc(ctx.author)
+            category_name = Loc.member(f"cmd_category_{category[0]}", ctx.author)
             cmd_str = "`, `".join(category[1])
             category_list[category_name] = f"`{cmd_str}`"
 
@@ -470,36 +481,37 @@ async def help(ctx):
             if arg_cmd.lstrip(ctx.prefix) in command.calls:
                 cmd = command
         
-        if cmd == None or cmd.category == "dev":
-            text = Loc("err_help_unknown_cmd").user_loc(ctx.author)
+        if not cmd or cmd.category == "dev":
+            text = Loc.member("err_help_unknown_cmd", ctx.author)
             embed = get_cembed(ctx.msg, text)
             await ctx.channel.send(embed=embed)
             return
 
         fields = {}
-        none = Loc("label_none").user_loc(ctx.author)
+        none = Loc.member("label_none", ctx.author)
 
-        syntax = Loc("label_syntax").user_loc(ctx.author)
+        syntax = Loc.member("label_syntax", ctx.author)
         cmd_call = f"{ctx.prefix}{cmd.name}"
         args = " ".join(cmd.args)
         cmd_syntax = f"{cmd_call} {args}"
         fields[syntax] = f"`{cmd_syntax.strip()}`"
         
-        aliases = Loc("label_aliases").user_loc(ctx.author)
+        aliases = Loc.member("label_aliases", ctx.author)
         alias_list = [f"`{call}`" for call in cmd.calls if call != cmd.name]
         cmd_aliases = ", ".join(alias_list)
-        fields[aliases] = cond(cmd_aliases != "", cmd_aliases, none)
+        fields[aliases] = cmd_aliases if cmd_aliases != "" else none
 
-        req_perms = Loc("label_req_perms").user_loc(ctx.author)
+        req_perms = Loc.member("label_req_perms", ctx.author)
         perms = []
         for perm in cmd.perms:
-            perm_name = Loc(f"perm_{perm}").user_loc(ctx.author)
-            perms.append(perm_name)
+            perm_name = Loc.member(f"perm_{perm}", ctx.author)
+            perms.append(str(perm_name))
         perms_text = ", ".join(perms)
-        fields[req_perms] = cond(perms != [], perms_text, none)
+        fields[req_perms] = perms_text if perms != [] else none
 
-        desc = Loc("label_desc").user_loc(ctx.author)
-        fields[desc] = cmd.desc.user_loc(ctx.author)
+        desc_title = Loc.member("label_desc", ctx.author)
+        desc = Loc.member(f"cmd_desc_{cmd.desc}", ctx.author)
+        fields[desc_title] = desc
 
         embed = get_cembed(ctx.msg, "", cmd_call, fields=fields)
 
@@ -509,7 +521,7 @@ async def help(ctx):
 
 async def status(ctx):
 
-    online_msg = Loc("text_status_online").user_loc(ctx.author)
+    online_msg = Loc.member("text_status_online", ctx.author)
     embed = get_cembed(ctx.msg, online_msg)
     await ctx.channel.send(embed=embed)
 
@@ -518,37 +530,45 @@ async def status(ctx):
 async def invite(ctx):
 
     invite = await ctx.channel.create_invite(max_age=0, max_uses=0, unique=False)
-    invite_link = Loc("label_invite_link").user_loc(ctx.author)
-    embed = get_cembed(ctx.msg, invite.url, invite_link, ctx.guild.name, ctx.guild.icon_url)
+    invite_link = Loc.member("label_invite_link", ctx.author)
+    embed = get_cembed(ctx.msg, invite.url, invite_link, author_name=ctx.guild.name, author_img=ctx.guild.icon_url)
     await ctx.channel.send(embed=embed)
 
 ################################################################
 
 async def perms(ctx):
 
-    if ctx.args["member"] == None:
+    if not ctx.args["member"]:
         member = ctx.guild.get_member(ctx.author.id)
     else:
         member_id = mention_id(ctx.args["member"])
         member = ctx.guild.get_member(member_id)
-        if member == None:
-            text = Loc("err_unknown_member").user_loc(ctx.author)
-            text = format_loc(text, [client.user.mention])
+        if not member:
+            text = Loc.member("err_unknown_member", ctx.author)
+            text.format(client.user.mention)
             embed = get_cembed(ctx.msg, text)
             await ctx.channel.send(embed=embed)
             return
-
     perms = member.guild_permissions
-    perm_dict = {}
-    for perm in perms:
-        perm_dict["WIP"] = "WIP" # TODO
 
-    perms_text = Loc("text_perms_list").user_loc(ctx.author)
-    perms_text = format_loc(perms_text, [member.mention])
-    perms_title = Loc("text_perms_title").user_loc(ctx.author)
-    perms_title = format_loc(perms_title, [ctx.guild.name])
+    perm_list = ["administrator", "view_channel", "manage_channels", "manage_roles", "manage_emojis", "view_audit_log", "manage_webhooks", "manage_guild"]
+    perm_list += ["send_messages", "embed_links", "attach_files", "add_reactions", "external_emojis", "mention_everyone", "manage_messages", "read_message_history", "send_tts_messages", "use_slash_commands"]
+    perm_list += ["create_instant_invite", "change_nickname", "manage_nicknames", "kick_members", "ban_members"]
+    perm_list += ["connect", "speak", "stream", "use_voice_activation", "priority_speaker", "mute_members", "deafen_members", "move_members"]
 
-    embed = get_cembed(ctx.msg, perms_text, perms_title, member.name, member.avatar_url, fields=perm_dict)
+    fields = {}
+    for perm in perm_list:
+        enabled = "**[Yes]" if getattr(perms, perm) else "**[No]"
+        enabled += "(https://discord.com/developers/docs/topics/permissions)**"
+        name = Loc.member(f"perm_{perm}", ctx.author)
+        fields[name] = enabled
+
+    perms_text = Loc.member("text_perms_list", ctx.author)
+    perms_text.format(member.mention)
+    perms_title = Loc.member("text_perms_title", ctx.author)
+    perms_title.format(ctx.guild.name)
+
+    embed = get_cembed(ctx.msg, perms_text, perms_title, author_name=member.name, author_img=member.avatar_url, fields=fields, fields_inline=True)
     await ctx.channel.send(embed=embed)
 
 ################################################################
@@ -564,12 +584,12 @@ async def rng(ctx):
         min_num, max_num = int(min_num.strip(", ")), int(max_num.strip(", "))
         text = ""
         if min_num > max_num:
-            text = Loc("err_rng_range_larger").user_loc(ctx.author)
+            text = Loc.member("err_rng_range_larger", ctx.author)
         if min_num == max_num:
-            text = Loc("err_rng_range_equal").user_loc(ctx.author)
+            text = Loc.member("err_rng_range_equal", ctx.author)
 
     except ValueError:
-        text = Loc("err_rng_no_floats").user_loc(ctx.author)
+        text = Loc.member("err_rng_no_floats", ctx.author)
 
     if text != "":
         embed = get_cembed(ctx.msg, text)
@@ -587,8 +607,8 @@ async def choice(ctx):
     delimiter = ","
     choices = ctx.args["choices"].split(delimiter)
     if len(choices) < 2:
-        text = Loc("err_choice_not_enough").user_loc(ctx.author)
-        text = format_loc(text, [delimiter])
+        text = Loc.member("err_choice_not_enough", ctx.author)
+        text.format(delimiter)
     else:
         text = random.choice(choices)
     embed = get_cembed(ctx.msg, text)
@@ -599,11 +619,11 @@ async def choice(ctx):
 async def gay(ctx):
 
     target = ctx.args["target"]
-    target = cond(target != None, target, ctx.author.mention)
+    target = target if target else ctx.author.mention
     gay_percent = random.randint(0, 100)
-    gay_text = Loc("text_gay").user_loc(ctx.author)
-    gay_text = format_loc(gay_text, [target, gay_percent])
-    gay_meter = Loc("label_gay_meter").user_loc(ctx.author)
+    gay_text = Loc.member("text_gay", ctx.author)
+    gay_text.format(target, gay_percent)
+    gay_meter = Loc.member("label_gay_meter", ctx.author)
     embed = get_cembed(ctx.msg, gay_text, gay_meter)
     await ctx.channel.send(embed=embed)
 
@@ -612,17 +632,60 @@ async def gay(ctx):
 async def penis(ctx):
 
     target = ctx.args["target"]
-    target = cond(target != None, target, ctx.author.mention)
+    target = target if target else ctx.author.mention
     penis = f"8{'=' * random.randint(0, 10)}>"
-    penis_text = Loc("text_penis").user_loc(ctx.author)
-    penis_text = format_loc(penis_text, [target, penis])
-    penis_length = Loc("label_penis_length").user_loc(ctx.author)
+    penis_text = Loc.member("text_penis", ctx.author)
+    penis_text.format(target, penis)
+    penis_length = Loc.member("label_penis_length", ctx.author)
     embed = get_cembed(ctx.msg, penis_text, penis_length)
     await ctx.channel.send(embed=embed)
 
 ################################################################
 
 # Tools
+
+################################################################
+
+async def translate(ctx):
+
+    translator = googletrans.Translator()
+    translation = translator.translate(ctx.args["text"])
+    source, dest = translation.src, translation.dest
+
+    text = Loc.member("text_translate", ctx.author)
+    text.format(source, dest)
+    text += f"\n\n```{translation.text}```"
+    title = Loc.member("label_translate", ctx.author)
+
+    embed = get_cembed(ctx.msg, text, title)
+    await ctx.channel.send(embed=embed)
+
+################################################################
+
+async def calc(ctx):
+
+    expr = ctx.args["expression"]
+    expr = expr.strip(" `\n").replace("^", "**").replace("\n", " ")
+    allowed_chars = " \t0123456789.+-*/%"
+    text = None
+
+    for char in expr:
+        if char not in allowed_chars:
+            text = Loc.member("err_calc_bannned_char", ctx.author)
+
+    if not text:
+        err_timeout = Loc.member("err_calc_timeout", ctx.author)
+        exec_loc = {"err_exec_timeout": err_timeout, "err_exec_banned_module": "", "err_exec_banned_keyword": ""}
+        pyexecute = PyExecute(files["pycalc"], exec_loc)
+        text = pyexecute.execute(f"print({expr})")
+        
+        err_syntax = Loc.member("err_calc_syntax_error", ctx.author)
+        text = text if "Error" not in text else err_syntax
+        text = text if len(text) <= 2000 else text[:2000]
+
+    title = Loc.member("label_result", ctx.author)
+    embed = get_cembed(ctx.msg, f"```{text}```", title)
+    await ctx.channel.send(embed=embed)
 
 ################################################################
 
@@ -637,13 +700,13 @@ async def python(ctx):
 
     exec_loc = {}
     for loc_name in ["err_exec_timeout", "err_exec_banned_module", "err_exec_banned_keyword"]:
-        exec_loc[loc_name] = Loc(loc_name).user_loc(ctx.author)
+        exec_loc[loc_name] = Loc.member(loc_name, ctx.author)
 
     pyexecute = PyExecute(files["pyexecute"], exec_loc)
     output = pyexecute.execute(code)
-    output = cond(len(output) <= 2000, output, output[:2000])
+    output = output if len(output) <= 2000 else output[:2000]
 
-    title = Loc("label_output").user_loc(ctx.author)
+    title = Loc.member("label_output", ctx.author)
     embed = get_cembed(ctx.msg, f"```{output}```", title)
     await ctx.channel.send(embed=embed)
 
@@ -657,8 +720,8 @@ async def join(ctx):
 
     voice = ctx.author.voice
 
-    if voice == None:
-        text = Loc("err_join_no_voice").user_loc(ctx.author)
+    if not voice:
+        text = Loc.member("err_join_no_voice", ctx.author)
     
     else:
         bot_channel = None
@@ -666,12 +729,12 @@ async def join(ctx):
             if bot_voice.guild == ctx.guild:
                 bot_channel = bot_voice
 
-        if bot_channel == None:
+        if not bot_channel:
             await voice.channel.connect()
-            text = Loc("text_join").user_loc(ctx.author)
-            text = format_loc(text, [voice.channel])
+            text = Loc.member("text_join", ctx.author)
+            text.format(voice.channel)
         else:
-            text = Loc("err_join_voice_connected").user_loc(ctx.author)
+            text = Loc.member("err_join_voice_connected", ctx.author)
 
     embed = get_cembed(ctx.msg, text)
     await ctx.channel.send(embed=embed)
@@ -681,7 +744,7 @@ async def join(ctx):
 async def leave(ctx):
 
     voices = client.voice_clients
-    text = Loc("err_leave_no_voice").user_loc(ctx.author)
+    text = Loc.member("err_leave_no_voice", ctx.author)
 
     for voice in voices:
         if voice.guild == ctx.guild:
@@ -689,8 +752,8 @@ async def leave(ctx):
             await voice.disconnect()
             os.system(f"rm -rf {path}")
             
-            text = Loc("text_leave").user_loc(ctx.author)
-            text = format_loc(text, [voice.channel])
+            text = Loc.member("text_leave", ctx.author)
+            text.format(voice.channel)
 
     embed = get_cembed(ctx.msg, text)
     await ctx.channel.send(embed=embed)
@@ -701,8 +764,8 @@ async def play(ctx):
 
     voice = ctx.author.voice
 
-    if voice == None:
-        text = Loc("err_join_no_voice").user_loc(ctx.author)
+    if not voice:
+        text = Loc.member("err_join_no_voice", ctx.author)
         embed = get_cembed(ctx.msg, text)
         await ctx.channel.send(embed=embed)
         return
@@ -713,10 +776,10 @@ async def play(ctx):
             if bot_voice.guild == ctx.guild:
                 bot_channel = bot_voice
 
-        if bot_channel == None:
+        if not bot_channel:
             await voice.channel.connect()
-            text = Loc("text_join").user_loc(ctx.author)
-            text = format_loc(text, [voice.channel])
+            text = Loc.member("text_join", ctx.author)
+            text.format(voice.channel)
             embed = get_cembed(ctx.msg, text)
             await ctx.channel.send(embed=embed)
 
@@ -724,7 +787,7 @@ async def play(ctx):
 
     for voice in voices:
         if voice.guild == ctx.guild:
-            text = Loc("text_play_downloading").user_loc(ctx.author)
+            text = Loc.member("text_play_downloading", ctx.author)
             embed = get_cembed(ctx.msg, text)
             await ctx.channel.send(embed=embed)
             position = queue_length(ctx.guild) + 1
@@ -740,12 +803,12 @@ async def play(ctx):
         voice.source = discord.PCMVolumeTransformer(voice.source)
         voice.source.volume = 0.25
 
-        text = Loc("text_play_playing").server_loc(ctx.guild)
-        text = format_loc(text, [song_name])
+        text = Loc.server("text_play_playing", ctx.guild)
+        text.format(song_name)
 
     else:
-        text = Loc("text_play_add_queue").server_loc(ctx.guild)
-        text = format_loc(text, [song_name])
+        text = Loc.server("text_play_add_queue", ctx.guild)
+        text.format(song_name)
 
     embed = get_embed(text)
     await ctx.channel.send(embed=embed)
@@ -755,7 +818,7 @@ async def play(ctx):
 async def skip(ctx):
 
     voices = client.voice_clients
-    text = Loc("err_skip_not_playing").user_loc(ctx.author)
+    text = Loc.member("err_skip_not_playing", ctx.author)
     embed = get_cembed(ctx.msg, text)
 
     for voice in voices:
@@ -773,8 +836,8 @@ async def skip(ctx):
                     voice.source = discord.PCMVolumeTransformer(voice.source)
                     voice.source.volume = 0.25
 
-                    text = Loc("text_play_playing").server_loc(voice.guild)
-                    text = format_loc(text, [song_name])
+                    text = Loc.server("text_play_playing", voice.guild)
+                    text.format(song_name)
                     embed = get_embed(text)
 
     await ctx.channel.send(embed=embed)
@@ -791,22 +854,22 @@ async def kick(ctx):
     target = ctx.guild.get_member(target_id)
     text = ""
 
-    if target == None:
-        text = Loc("err_unknown_member").user_loc(ctx.author)
-        text = format_loc(text, [client.user.mention])
+    if not target:
+        text = Loc.member("err_unknown_member", ctx.author)
+        text.format(client.user.mention)
     elif target.top_role >= ctx.author.top_role:
-        text = Loc("err_kick_perms_author").user_loc(ctx.author)
+        text = Loc.member("err_kick_perms_author", ctx.author)
     if text != "":
         embed = get_cembed(ctx.msg, text)
         await ctx.channel.send(embed=embed)
         return
 
-    reason = Loc("text_kick_reason").user_loc(ctx.author)
-    reason = format_loc(reason, [ctx.author])
+    reason = Loc.member("text_kick_reason", ctx.author)
+    reason.format(ctx.author)
     await target.kick(reason=reason)
-    text = Loc("text_kick_success").user_loc(ctx.author)
+    text = Loc.member("text_kick_success", ctx.author)
     target_mention = f"<@!{target_id}>"
-    text = format_loc(text, [target_mention])
+    text.format(target_mention)
 
     embed = get_cembed(ctx.msg, text)
     await ctx.channel.send(embed=embed)
@@ -819,22 +882,22 @@ async def ban(ctx):
     target = ctx.guild.get_member(target_id)
     text = ""
 
-    if target == None:
-        text = Loc("err_unknown_member").user_loc(ctx.author)
-        text = format_loc(text, [client.user.mention])
+    if not target:
+        text = Loc.member("err_unknown_member", ctx.author)
+        text.format(client.user.mention)
     elif target.top_role >= ctx.author.top_role:
-        text = Loc("err_ban_perms_author").user_loc(ctx.author)
+        text = Loc.member("err_ban_perms_author", ctx.author)
     if text != "":
         embed = get_cembed(ctx.msg, text)
         await ctx.channel.send(embed=embed)
         return
 
-    reason = Loc("text_ban_reason").user_loc(ctx.author)
-    reason = format_loc(reason, [ctx.author])
+    reason = Loc.member("text_ban_reason", ctx.author)
+    reason.format(ctx.author)
     await target.ban(reason=reason)
-    text = Loc("text_ban_success").user_loc(ctx.author)
+    text = Loc.member("text_ban_success", ctx.author)
     target_mention = f"<@!{target_id}>"
-    text = format_loc(text, [target_mention])
+    text.format(text, [target_mention])
 
     embed = get_cembed(ctx.msg, text)
     await ctx.channel.send(embed=embed)
@@ -849,28 +912,27 @@ async def user_settings(ctx):
 
     target_mention = ctx.args["member"]
     target = ctx.author
-    if target_mention != None:
+    if target_mention:
         target_id = mention_id(target_mention)
         if target_id != 0:
             target = ctx.guild.get_member(target_id)
 
-    if target == None:
-        text = Loc("err_unknown_member").user_loc(ctx.author)
-        text = format_loc(text, [client.user.mention])
+    if not target:
+        text = Loc.member("err_unknown_member", ctx.author)
+        text.format(client.user.mention)
         embed = get_cembed(ctx.msg, text)
         ctx.channel.send(embed=embed)
         return
 
     fields = {}
     for config in user_config:
-        name = f"config_{config.name}"
-        name = Loc(name).user_loc(ctx.author)
+        name = Loc.member(f"config_{config.name}", ctx.author)
         value = read_user_config(target.id, config.name)
         value = config.format(value)
         fields[name] = value
 
-    title = Loc("label_user_config").user_loc(ctx.author)
-    embed = get_cembed(ctx.msg, "", title, target.name, target.avatar_url, fields=fields)
+    title = Loc.member("label_user_config", ctx.author)
+    embed = get_cembed(ctx.msg, "", title, author_name=target.name, author_img=target.avatar_url, fields=fields, fields_inline=True)
     await ctx.channel.send(embed=embed)
 
 ################################################################
@@ -880,13 +942,13 @@ async def server_settings(ctx):
     fields = {}
     for config in server_config:
         name = f"config_{config.name}"
-        name = Loc(name).user_loc(ctx.author)
+        name = Loc.member(name, ctx.author)
         value = read_server_config(ctx.guild.id, config.name)
         value = config.format(value)
         fields[name] = value
 
-    title = Loc("label_server_config").user_loc(ctx.author)
-    embed = get_cembed(ctx.msg, "", title, ctx.guild.name, ctx.guild.icon_url, fields=fields)
+    title = Loc.member("label_server_config", ctx.author)
+    embed = get_cembed(ctx.msg, "", title, author_name=ctx.guild.name, author_img=ctx.guild.icon_url, fields=fields, fields_inline=True)
     await ctx.channel.send(embed=embed)
 
 ################################################################
@@ -895,26 +957,27 @@ async def language(ctx):
 
     lang = ctx.args["language"]
 
-    if lang == None:
+    if not lang:
 
         fields = {}
-        for language in localization.keys():
-            lang_name = Loc("language_name").loc(language)
+        for language in loc_files.keys():
+            lang_name = loc_dict[language]["language_name"]
             lang_code = f"`{language}`"
             fields[lang_name] = lang_code
         
-        text = Loc("text_lang_list").user_loc(ctx.author)
-        title = Loc("label_languages").user_loc(ctx.author)
+        text = Loc.member("text_lang_list", ctx.author)
+        title = Loc.member("label_languages", ctx.author)
         embed = get_cembed(ctx.msg, text, title, fields=fields)
     
     else:
 
-        if lang in localization.keys():
+        lang = lang.replace("-", "_")
+        if lang in loc_files.keys():
             set_user_config(ctx.author.id, "language", lang)
-            text = Loc("text_lang_changed").user_loc(ctx.author)
+            text = Loc.member("text_lang_changed", ctx.author)
 
         else:
-            text = Loc("err_unknown_lang").user_loc(ctx.author)
+            text = Loc.member("err_unknown_lang", ctx.author)
         
         embed = get_cembed(ctx.msg, text)
 
@@ -928,7 +991,7 @@ async def language(ctx):
 
 async def shutdown(ctx):
 
-    text = Loc("text_exit").user_loc(ctx.author)
+    text = Loc.member("text_exit", ctx.author)
     embed = get_cembed(ctx.msg, text)
     await ctx.channel.send(embed=embed)
     def crash():
@@ -947,10 +1010,19 @@ async def conscript(ctx):
 
     conexecute = ConExecute(client, ctx)
     output = await conexecute.execute(code)
-    output = cond(len(output) <= 2000, output, output[:2000])
+    output = output if len(output) <= 2000 else output[:2000]
 
-    title = Loc("label_output").user_loc(ctx.author)
+    title = Loc.member("label_output", ctx.author)
     embed = get_cembed(ctx.msg, f"```{output}```", title)
+    await ctx.channel.send(embed=embed)
+
+################################################################
+
+async def guilds(ctx):
+
+    guild_names = [str(guild) for guild in client.guilds]
+    text = "\n".join(guild_names)
+    embed = get_cembed(ctx.msg, text)
     await ctx.channel.send(embed=embed)
 
 ################################################################
@@ -961,17 +1033,22 @@ async def conscript(ctx):
 
 async def wip(ctx):
 
-    text = Loc("text_wip").user_loc(ctx.author)
+    text = Loc.member("text_wip", ctx.author)
     embed = get_cembed(ctx.msg, text)
     await ctx.channel.send(embed=embed)
+
+################################################################
+
+# Preloads the localization files
+
+loc_dict = {lang:load_localization(lang) for lang in loc_files.keys()}
 
 ################################################################
 
 # Config options
 
 user_config = [
-    Config("language", "en_US", "backticks"),
-    Config("embed_color", int(default_embed_color), "hex_str")
+    Config("language", "en_US", "backticks")
 ]
 
 server_config = [
@@ -987,9 +1064,9 @@ commands = [
     # Info
 
     # Help
-    cmd(
+    Command.new(
         "help",
-        ["help", "commands"],
+        ["commands"],
         "info",
         ["[command]"],
         [" "],
@@ -998,9 +1075,9 @@ commands = [
     ),
 
     # Status
-    cmd(
+    Command.new(
         "status",
-        ["status", "online", "test"],
+        ["online", "test"],
         "info",
         [],
         [" "],
@@ -1009,9 +1086,9 @@ commands = [
     ),
 
     # Invite
-    cmd(
+    Command.new(
         "invite",
-        ["invite"],
+        [],
         "info",
         [],
         [" "],
@@ -1020,9 +1097,9 @@ commands = [
     ),
 
     # Perms
-    cmd(
+    Command.new(
         "perms",
-        ["perms", "perm", "permissions", "permission"],
+        ["perm", "permissions", "permission"],
         "info",
         ["[member]"],
         [" "],
@@ -1033,9 +1110,9 @@ commands = [
     # Chat
 
     # RNG
-    cmd(
+    Command.new(
         "rng",
-        ["rng", "random", "randint"],
+        ["random", "randint"],
         "chat",
         ["<min>", "<max>"],
         [" "],
@@ -1044,9 +1121,9 @@ commands = [
     ),
 
     # Choice
-    cmd(
+    Command.new(
         "choice",
-        ["choice", "choose"],
+        ["choose"],
         "chat",
         ["<choices>"],
         ["$<|no_delimiter;|>"],
@@ -1055,9 +1132,9 @@ commands = [
     ),
 
     # Gay
-    cmd(
+    Command.new(
         "gay",
-        ["gay", "how-gay", "gay-level", "gay-meter"],
+        ["how-gay", "gay-level", "gay-meter"],
         "chat",
         ["[target]"],
         ["$<|no_delimiter;|>"],
@@ -1066,9 +1143,9 @@ commands = [
     ),
 
     # Penis
-    cmd(
+    Command.new(
         "penis",
-        ["penis", "penis-length", "penis-size"],
+        ["penis-length", "penis-size"],
         "chat",
         ["[target]"],
         ["$<|no_delimiter;|>"],
@@ -1078,10 +1155,32 @@ commands = [
 
     # Tools
 
+    # translate
+    Command.new(
+        "translate",
+        ["trans"],
+        "tools",
+        ["<text>"],
+        ["$<|no_delimiter;|>"],
+        [],
+        translate
+    ),
+
+    # Calc
+    Command.new(
+        "calc",
+        ["eval", "calculate", "evaluate"],
+        "tools",
+        ["<expression>"],
+        ["$<|no_delimiter;|>"],
+        [],
+        calc
+    ),
+
     # Python
-    cmd(
+    Command.new(
         "python",
-        ["python", "py", "execute", "exec", "exe"],
+        ["py", "execute", "exec", "exe"],
         "tools",
         ["<code>"],
         ["$<|no_delimiter;|>"],
@@ -1092,9 +1191,9 @@ commands = [
     # Music
 
     # Join
-    cmd(
+    Command.new(
         "join",
-        ["join", "connect"],
+        ["connect"],
         "music",
         [],
         [" "],
@@ -1103,9 +1202,9 @@ commands = [
     ),
 
     # Leave
-    cmd(
+    Command.new(
         "leave",
-        ["leave", "quit", "disconnect", "dc"],
+        ["quit", "disconnect", "dc"],
         "music",
         [],
         [" "],
@@ -1114,9 +1213,9 @@ commands = [
     ),
 
     # Play
-    cmd(
+    Command.new(
         "play",
-        ["play", "song", "music"],
+        ["song", "music"],
         "music",
         ["<song>"],
         ["$<|no_delimiter;|>"],
@@ -1125,9 +1224,9 @@ commands = [
     ),
 
     # Skip
-    cmd(
+    Command.new(
         "skip",
-        ["skip"],
+        [],
         "music",
         [],
         [" "],
@@ -1138,9 +1237,9 @@ commands = [
     # Moderation
 
     # Kick
-    cmd(
+    Command.new(
         "kick",
-        ["kick"],
+        [],
         "mod",
         ["<target>"],
         [" "],
@@ -1149,9 +1248,9 @@ commands = [
     ),
 
     # Ban
-    cmd(
+    Command.new(
         "ban",
-        ["ban"],
+        [],
         "mod",
         ["<target>"],
         [" "],
@@ -1162,9 +1261,9 @@ commands = [
     # Config
 
     # User Settings
-    cmd(
+    Command.new(
         "user-settings",
-        ["user-settings", "user-config", "user-options"],
+        ["user-config", "user-options", "settings", "config", "options"],
         "config",
         ["[member]"],
         [" "],
@@ -1173,9 +1272,9 @@ commands = [
     ),
 
     # Server Settings
-    cmd(
+    Command.new(
         "server-settings",
-        ["server-settings", "server-config", "server-options"],
+        ["server-config", "server-options"],
         "config",
         [],
         [" "],
@@ -1184,9 +1283,9 @@ commands = [
     ),
 
     # Language
-    cmd(
+    Command.new(
         "language",
-        ["language", "languages", "lang"],
+        ["languages", "lang"],
         "config",
         ["[language]"],
         [" "],
@@ -1197,9 +1296,9 @@ commands = [
     # Developer
     
     # Exit
-    cmd(
+    Command.new(
         "exit",
-        ["exit", "shutdown", "off"],
+        ["shutdown", "off"],
         "dev",
         [],
         [" "],
@@ -1209,14 +1308,26 @@ commands = [
     ),
 
     # ConScript
-    cmd(
+    Command.new(
         "conscript",
-        ["conscript", "cscript", "conbot-script"],
+        ["cscript", "conbot-script"],
         "dev",
         ["<code>"],
         ["$<|no_delimiter;|>"],
         [],
         conscript,
+        True
+    ),
+
+    # Guilds
+    Command.new(
+        "guilds",
+        ["servers", "guild-list", "server-list"],
+        "dev",
+        [],
+        [" "],
+        [],
+        guilds,
         True
     )
 
@@ -1256,8 +1367,8 @@ async def loop():
                         voice.source = discord.PCMVolumeTransformer(voice.source)
                         voice.source.volume = 0.25
 
-                        text = Loc("text_play_playing").server_loc(voice.guild)
-                        text = format_loc(text, [song_name])
+                        text = Loc.server("text_play_playing", voice.guild)
+                        text.format(song_name)
                         embed = get_embed(text)
                         text_channel = play_text_output[voice.guild.id]
                         await text_channel.send(embed=embed)
@@ -1276,10 +1387,9 @@ async def loop():
 
 ################################################################
 
-# Prints a message and sets the activity when ready
+# Prints a message, clears the song directory, and sets the activity when ready
 
 @client.event
-
 async def on_ready():
 
     print(f"Bot initialized as {client.user}")
@@ -1297,15 +1407,14 @@ async def on_ready():
 # Logs all member joins
 
 @client.event
-
 async def on_member_join(member):
 
     channel_id = read_server_config(member.guild.id, "log_channel")
-    if channel_id != None:
+    if channel_id:
         channel = member.guild.get_channel(channel_id)
-        text = Loc("text_join_msg").server_loc(member.guild)
-        text = format_loc(text, [member.mention])
-        embed = get_embed(text, "", member.name, member.avatar_url, datetime.datetime.now())
+        text = Loc.server("text_join_msg", member.guild)
+        text.format(member.mention)
+        embed = get_embed(text, "", author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now())
         await channel.send(embed=embed)
 
 ################################################################
@@ -1313,38 +1422,51 @@ async def on_member_join(member):
 # Logs all member leaves
 
 @client.event
-
 async def on_member_remove(member):
 
     channel_id = read_server_config(member.guild.id, "log_channel")
-    if channel_id != None:
+    if channel_id:
         channel = member.guild.get_channel(channel_id)
-        text = Loc("text_leave_msg").server_loc(member.guild)
-        text = format_loc(text, [member.mention])
-        embed = get_embed(text, "", member.name, member.avatar_url, datetime.datetime.now())
+        text = Loc.server("text_leave_msg", member.guild)
+        text.format(member.mention)
+        embed = get_embed(text, "", author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now())
         await channel.send(embed=embed)
+
+################################################################
+
+# Sends a first time guild message
+
+@client.event
+async def on_guild_join(guild):
+
+    channel = guild.public_updates_channel
+    if not channel:
+        channel = guild.system_channel
+    if not channel:
+        channel = guild.text_channels[0]
+    text = f"Thanks for adding me to your server!\n\n• The default command prefix is `{default_prefix}`\n• Use `{default_prefix}help` to get a list of available commands\n• Use `{default_prefix}lang` to change your language setting\n• The bot needs a role with administrator permissions to work correctly"
+    await channel.send(text)
 
 ################################################################
 
 # Checks and evaluates messages
 
 @client.event
-
 async def on_message(msg):
-
-    # Logs the message
-
-    await log(msg)
 
     # If the message author is a bot or the message is empty, return
 
     if msg.author.bot or msg.content == "":
         return
 
+    # Logs the message
+
+    await log(msg)
+
     # Gets the server command prefix
 
     prefix = read_server_config(msg.guild.id, "Prefix")
-    prefix = cond(prefix != None, prefix, default_prefix)
+    prefix = prefix if prefix else default_prefix
 
     # Checks for a command
 
@@ -1371,7 +1493,7 @@ async def on_message(msg):
                 perms = dict(iter(perms))
                 perms = [perms[perm] for perm in cmd.perms]
                 if not all(perms):
-                    text = Loc("err_missing_perms").user_loc(msg.author)
+                    text = Loc.member("err_missing_perms", msg.author)
                     embed = get_cembed(msg, text)
                     await msg.channel.send(embed=embed)
                     return
@@ -1386,7 +1508,7 @@ async def on_message(msg):
                     parts = parts.split("$<|sep;|>")
                 except Exception:
                     parts = []
-                parts = cond(parts != [""], parts, [])
+                parts = parts if parts != [""] else []
                 arg_count = len(parts)
 
                 # Gets the minimum amount of arguments
@@ -1399,11 +1521,11 @@ async def on_message(msg):
                 # Checks if the amount of arguments isn't too large
 
                 if arg_count > len(cmd.args):
-                    text = Loc("err_arg_overflow").user_loc(msg.author)
+                    text = Loc.member("err_arg_overflow", msg.author)
                     max_args = len(cmd.args)
-                    none = Loc("label_none").user_loc(msg.author).lower()
-                    max_args = cond(max_args > 0, max_args, none)
-                    text = format_loc(text, [str(arg_count), str(max_args)])
+                    none = Loc.member("label_none", msg.author)
+                    max_args = max_args if max_args > 0 else str(none).lower()
+                    text.format(str(arg_count), str(max_args))
                     embed = get_cembed(msg, text)
                     await msg.channel.send(embed=embed)
                     return
@@ -1411,8 +1533,8 @@ async def on_message(msg):
                 # Checks if the amount of arguments isn't too small
 
                 if arg_count < min_args:
-                    text = Loc("err_arg_underflow").user_loc(msg.author)
-                    text = format_loc(text, [arg_count, min_args])
+                    text = Loc.member("err_arg_underflow", msg.author)
+                    text.format(arg_count, min_args)
                     embed = get_cembed(msg, text)
                     await msg.channel.send(embed=embed)
                     return
@@ -1434,9 +1556,12 @@ async def on_message(msg):
                     await cmd.code(ctx)
                 except discord.errors.Forbidden as error:
                     if str(error).endswith("Missing Permissions"):
-                        text = Loc("err_missing_perms").user_loc(msg.author)
+                        text = Loc.member("err_missing_perms", msg.author)
                         embed = get_cembed(msg, text)
                         await msg.channel.send(embed=embed)
+                except Exception:
+                    error = f"```{traceback.format_exc()}```"
+                    await msg.channel.send(error)
 
                 return
 
@@ -1451,11 +1576,11 @@ async def on_message(msg):
 
         try:
             match = difflib.get_close_matches(command, calls, 1, 0.6)[0]
-            text = Loc("err_unknown_cmd_alt").user_loc(msg.author)
-            text = format_loc(text, [prefix, match])
+            text = Loc.member("err_unknown_cmd_alt", msg.author)
+            text.format(prefix, match)
         except IndexError:
-            text = Loc("err_unknown_cmd").user_loc(msg.author)
-            text = format_loc(text, [prefix])
+            text = Loc.member("err_unknown_cmd", msg.author)
+            text.format(prefix)
 
         # Send the unknown command message
 
@@ -1475,7 +1600,7 @@ async def on_message(msg):
     # TODO: Change
 
     """
-    if clean(msg.content).lower() in autoreplies.keys() and random.random() < (default_reply_chance if read_server_config(msg.guild.id, "Reply Chance") == None else read_server_config(msg.guild.id, "Reply Chance") / 100):
+    if clean(msg.content).lower() in autoreplies.keys() and random.random() < (default_reply_chance if not read_server_config(msg.guild.id, "Reply Chance") else read_server_config(msg.guild.id, "Reply Chance") / 100):
         await msg.channel.send(autoreplies[clean(msg.content).lower()])
     """
 

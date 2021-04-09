@@ -1,7 +1,14 @@
+################################################################
+
 loc_en_GB:
+
+################################################################
+
   # General
 
   language_name: "English (United Kingdom)"
+
+################################################################
 
   # Short text
 
@@ -18,6 +25,12 @@ loc_en_GB:
   label_user_config: "User Config"
   label_server_config: "Server Config"
   label_languages: "Languages"
+  label_result: "Result"
+  label_translate: "Google Translate"
+  label_perm: "Permission"
+  label_has: "Has?"
+
+################################################################
 
   # Long text
 
@@ -42,6 +55,9 @@ loc_en_GB:
   text_play_playing: "Now playing: `$1`"
   text_play_add_queue: "Added to queue: `$1`"
   text_exit: "Successfully shut the bot."
+  text_translate: "Translated from `$1` to `$2`"
+
+################################################################
 
   # Error messages
 
@@ -67,46 +83,100 @@ loc_en_GB:
   err_leave_no_voice: "The bot currently isn't in any voice channel!"
   err_missing_perms: "The bot has insufficient permissions to execute this command! It needs an administrator role to work correctly."
   err_skip_not_playing: "The song queue is empty!"
+  err_calc_bannned_char: "The entered expression contains illegal characters!"
+  err_calc_timeout: "Calculation was terminated, as it ran for longer than $1 seconds!"
+  err_calc_syntax_error: "Invalid syntax!"
 
-  # Config names
+################################################################
+
+  # Config Options
 
   config_language: "Language"
-  config_embed_color: "Embed Colour"
   config_log_channel: "Log Channel"
 
-  # Permission names
+################################################################
 
+  # Permissions
+
+  # General
+  perm_administrator: "Administrator"
+  perm_view_channel: "View Channels"
+  perm_manage_channels: "Manage Channels"
+  perm_manage_roles: "Manage Roles"
+  perm_manage_emojis: "Manage Emojis"
+  perm_view_audit_log: "View Audit Log"
+  perm_manage_webhooks: "Manage Webhooks"
+  perm_manage_guild: "Manage Server"
+
+  # Membership
+  perm_create_instant_invite: "Create Invite"
+  perm_change_nickname: "Change Nickname"
+  perm_manage_nicknames: "Manage Nicknames"
   perm_kick_members: "Kick Members"
   perm_ban_members: "Ban Members"
-  perm_manage_guild: "Manage Server"
-  perm_administrator: "Administrator"
 
-  # Command category names
+  # Text Channels
+  perm_send_messages: "Send Messages"
+  perm_embed_links: "Embed Links"
+  perm_attach_files: "Attach Files"
+  perm_add_reactions: "Add Reactions"
+  perm_external_emojis: "External Emoji"
+  perm_mention_everyone: "Mention @everyone"
+  perm_manage_messages: "Manage Messages"
+  perm_read_message_history: "Read History"
+  perm_send_tts_messages: "Use TTS"
+  perm_use_slash_commands: "Slash Commands"
 
+  # Voice Channels
+  perm_connect: "Connect"
+  perm_speak: "Speak"
+  perm_stream: "Stream Video"
+  perm_use_voice_activation: "Voice Activity"
+  perm_priority_speaker: "Priority Speaker"
+  perm_mute_members: "Mute Members"
+  perm_deafen_members: "Deafen Members"
+  perm_move_members: "Move Members"
+
+################################################################
+
+  # Commands
+
+  # Info
   cmd_category_info: "Info"
-  cmd_category_chat: "Chat"
-  cmd_category_tools: "Tools"
-  cmd_category_music: "Music"
-  cmd_category_mod: "Moderation"
-  cmd_category_config: "Config"
-
-  # Command descriptions
-
   cmd_desc_help: "Lists all commands, organized by categories. If `[command]` is specified, shows detailed information about the command instead."
   cmd_desc_status: "Displays a message confirming that the bot is online."
   cmd_desc_invite: "Sends a permanent invite to the current channel."
   cmd_desc_perms: "Shows all server permissions of the specified `[member]`."
+
+  # Chat
+  cmd_category_chat: "Chat"
   cmd_desc_rng: "Generates a random number ranging from `<min>` to `<max>`."
   cmd_desc_choice: "Chooses a random option from the list of specified `<choices>`. There must be at least 2 choices, separated by commas `,`."
   cmd_desc_gay: "Shows how gay is the `[target]`."
   cmd_desc_penis: "Shows how long is the `[target]`'s penis."
+
+  # Tools
+  cmd_category_tools: "Tools"
+  cmd_desc_translate: "Translates the specified `<text>` into English."
+  cmd_desc_calc: "Evaluates the specified `<expression>` and displays the result."
   cmd_desc_python: "Executes the specified `<code>` in Python 3. Wrapping the code in three backticks ` ``` ` is recommended."
+
+  # Music
+  cmd_category_music: "Music"
   cmd_desc_join: "Joins the voice channel you are currently in."
   cmd_desc_leave: "Leaves the voice channel the bot is currently in."
   cmd_desc_play: "Plays the specified `<song>`. Song can be either a name or a YouTube URL."
   cmd_desc_skip: "Skips the current song."
+
+  # Moderation
+  cmd_category_mod: "Moderation"
   cmd_desc_kick: "Kicks the specified `<target>`."
   cmd_desc_ban: "Bans the specified `<target>`."
+
+  # Config
+  cmd_category_config: "Config"
   cmd_desc_user_settings: "Shows either the specified `[member]`'s or your personal user settings."
   cmd_desc_server_settings: "Shows the server's settings."
   cmd_desc_language: "Lists all available bot languages. If `[language]` is specified, changes your language setting instead. `[language]` must be entered as a code, for example: `en_GB`"
+
+################################################################
