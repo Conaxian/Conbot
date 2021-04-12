@@ -47,6 +47,8 @@ async def download_song(guild, name, position):
     html = urllib.request.urlopen(search_url)
     html = html.read().decode()
     videos = re.findall(r"watch\?v=(\S{11})", html)
+    if len(videos) < 1:
+        return 1
     url = f"https://www.youtube.com/watch?v={videos[0]}"
 
     path = f"{constants.song_dir}/{guild.id}/{position}$<|sep;|>%(title)s.%(ext)s"
@@ -61,8 +63,15 @@ async def download_song(guild, name, position):
         }]
     }
 
-    with youtube_dl.YoutubeDL(ydl_options) as ydl:
-        ydl.download([url])
+    with youtube_dl.YoutubeDL(ydl_options) as ytdl:
+        file_info = ytdl.extract_info(url, download=False)
+        file_size = file_info["formats"][0]["filesize"]
+        file_length = file_info["duration"]
+        if file_size > constants.song_max_size or file_length > constants.song_max_length:
+            return 2
+        ytdl.download([url])
+    
+    return 0
 
 ################################################################
 

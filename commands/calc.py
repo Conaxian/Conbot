@@ -30,7 +30,9 @@ async def calc(ctx):
         text = pyexecute.execute(f"print({expr})")
         
         err_syntax = loclib.Loc.member("err_calc_syntax_error", ctx.author)
-        text = text if "Error" not in text else err_syntax
+        err_zero_div = loclib.Loc.member("err_calc_zero_division", ctx.author)
+        text = text if "ZeroDivisionError" not in text else str(err_zero_div)
+        text = text if "Error" not in text else str(err_syntax)
         text = text if len(text) <= 2000 else text[:2000]
 
     title = loclib.Loc.member("label_result", ctx.author)

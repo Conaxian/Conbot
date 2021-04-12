@@ -33,7 +33,7 @@ def get_embed(text, title=None, url=None, author_name=None, author_img=None, tim
         embed.add_field(name=field[0], value=field[1], inline=inline)
 
     if footer:
-        embed.set_footer(text=f"{utils.time()} UTC", icon_url="http://conax.cz/conbot/embed_clock.png")
+        embed.set_footer(text=f"{utils.time()} UTC", icon_url="http://conax.cz/cbfiles/embed_clock.png")
 
     return embed
 

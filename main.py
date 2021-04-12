@@ -29,6 +29,8 @@ import importlib
 import difflib
 import traceback
 
+# Conbot modules
+
 import constants
 import utils
 import conyaml
@@ -36,6 +38,8 @@ import cembed
 import cmdlib
 import loclib
 import songlib
+
+# Search for modules in the "commands" directory
 
 sys.path.append("commands")
 
@@ -75,6 +79,16 @@ commands = [
         ["commands"],
         "info",
         ["[command]"],
+        [" "],
+        []
+    ),
+
+    # Info
+    cmdlib.Command.new(
+        "about",
+        ["info", "conbot"],
+        "info",
+        [],
         [" "],
         []
     ),
@@ -129,7 +143,7 @@ commands = [
         ["choose"],
         "chat",
         ["<choices>"],
-        ["$<|no_delimiter;|>"],
+        [],
         []
     ),
 
@@ -139,7 +153,7 @@ commands = [
         ["how-gay", "gay-level", "gay-meter"],
         "chat",
         ["[target]"],
-        ["$<|no_delimiter;|>"],
+        [],
         []
     ),
 
@@ -149,7 +163,7 @@ commands = [
         ["penis-length", "penis-size"],
         "chat",
         ["[target]"],
-        ["$<|no_delimiter;|>"],
+        [],
         []
     ),
 
@@ -163,7 +177,7 @@ commands = [
         ["trans"],
         "tools",
         ["<text>"],
-        ["$<|no_delimiter;|>"],
+        [],
         []
     ),
 
@@ -173,7 +187,7 @@ commands = [
         ["eval", "calculate", "evaluate"],
         "tools",
         ["<expression>"],
-        ["$<|no_delimiter;|>"],
+        [],
         []
     ),
 
@@ -183,7 +197,7 @@ commands = [
         ["py", "execute", "exec", "exe"],
         "tools",
         ["<code>"],
-        ["$<|no_delimiter;|>"],
+        [],
         []
     ),
 
@@ -217,7 +231,7 @@ commands = [
         ["song", "music"],
         "music",
         ["<song>"],
-        ["$<|no_delimiter;|>"],
+        [],
         []
     ),
 
@@ -321,7 +335,7 @@ commands = [
         [],
         "dev",
         ["<channel, message>"],
-        ["$<|no_delimiter;|>"],
+        [],
         [],
         True
     )
@@ -343,7 +357,7 @@ for command in commands:
 
 ################################################################
 
-# Loop that keeps checking various things
+# Loop that keeps checking for various things
 
 async def loop():
 
@@ -359,7 +373,7 @@ async def loop():
                 os.system(f"rm -rf {path}")
                 os.mkdir(path)
 
-            # Check if the song finished playing and starts a new song
+            # Check if the current song has finished playing and starts a new song
 
             if not voice.is_playing() and not voice.is_paused():
 
@@ -596,15 +610,9 @@ async def on_message(msg):
         await msg.channel.send(embed=embed)
         return
 
-    # TOP SECRET
-
-    if msg.content.startswith("<i-want-to-cum-inside-twilight-sparkle>"):
-        server = client.get_guild(486956287293128715)
-        channel = server.get_channel(486956287742181421)
-        text = msg.content.replace("<i-want-to-cum-inside-twilight-sparkle>", "").strip()
-        await channel.send(text)
-
 ################################################################
+
+# Starts the server and runs the bot
 
 init()
 client.run(constants.token)

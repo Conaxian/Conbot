@@ -12,6 +12,13 @@ default_embed_color = 0x20a0e0
 
 loop_interval = 1
 
+song_max_size = 5_242_880
+song_max_length = 600
+
+conax_discord_tag = "0001"
+bot_invite_url = "https://www.conax.cz/conbot-link"
+bot_github_url = "https://github.com/Conaxian/conbot"
+
 files = {
     "log": "log.txt",
     "server_config": "server_config.yaml",

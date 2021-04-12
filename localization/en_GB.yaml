@@ -32,6 +32,9 @@ loc_en_GB:
   label_yes: "Yes"
   label_no: "No"
   label_default: "Default"
+  label_about: "About"
+  label_github: "GitHub"
+  label_bot_invite: "Add Bot"
 
 ################################################################
 
@@ -60,6 +63,7 @@ loc_en_GB:
   text_exit: "Successfully shut the bot."
   text_translate: "Translated from `$1` to `$2`"
   text_server_settings_success: "Successfully set the server **$1** to $2."
+  text_about: "Conbot is a multipurpose Discord bot made by Conax. Contact `Conax#$1` on Discord if you have any questions or problems."
 
 ################################################################
 
@@ -87,9 +91,12 @@ loc_en_GB:
   err_leave_no_voice: "The bot currently isn't in any voice channel!"
   err_missing_perms: "The bot has insufficient permissions to execute this command! It needs an administrator role to work correctly."
   err_skip_not_playing: "The song queue is empty!"
+  err_play_unknown_song: "No song found on YouTube!"
+  err_play_too_large_long: "Song is too large or too long! Max allowed size is `$1 MB` and max length is `$2 minutes`."
   err_calc_bannned_char: "The entered expression contains illegal characters!"
   err_calc_timeout: "Calculation was terminated, as it ran for longer than $1 seconds!"
   err_calc_syntax_error: "Invalid syntax!"
+  err_calc_zero_division: "You can't divide by zero!"
   err_settings_unknown_option: "Unknown option! Specify a valid option, for example `Language`."
   err_server_settings_perms: "You need the `Manage Server` permission to change the server settings!"
 
@@ -156,6 +163,7 @@ loc_en_GB:
   # Info
   cmd_category_info: "Info"
   cmd_desc_help: "Lists all commands, organized by categories. If `[command]` is specified, shows detailed information about the command instead."
+  cmd_desc_about: "Shows information about the bot."
   cmd_desc_status: "Displays a message confirming that the bot is online."
   cmd_desc_invite: "Sends a permanent invite to the current channel."
   cmd_desc_perms: "Shows all server permissions of the specified `[member]`."
