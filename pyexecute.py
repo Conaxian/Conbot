@@ -1,3 +1,5 @@
+################################################################
+
 class PyExecute:
 
     def __init__(self, exec_file, loc):
@@ -115,12 +117,15 @@ class PyExecute:
                     line = line.replace("import", "").replace(" ", "")
                     modules = line.split(",")
                     for module in modules:
+                        print(module)
                         if module not in self.trust_modules:
                             return [False, self.error_untrusted_module]
 
             for keyword in self.dangerous_keywords:
-                if keyword in code:
+                if keyword in [string.strip(".,;\\()[]{}_") for string in code.split(" ")]:
                     error = self.error_dangerous_keyword.replace("$1", keyword)
                     return [False, error]
 
             return [True, ""]
+
+################################################################

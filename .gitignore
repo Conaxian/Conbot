@@ -5,9 +5,8 @@ __pycache__/
 songs/
 
 server.py
-calc.py
-execute.py
-conscript.py
+calc_file.py
+exec_file.py
 
 log.txt
 user_config.yaml

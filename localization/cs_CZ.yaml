@@ -29,6 +29,9 @@ loc_cs_CZ:
   label_translate: "Google Translate"
   label_perm: "Permise"
   label_has: "Má?"
+  label_yes: "Ano"
+  label_no: "Ne"
+  label_default: "Výchozí"
 
 ################################################################
 
@@ -56,6 +59,7 @@ loc_cs_CZ:
   text_play_add_queue: "Přidáno do fronty: `$1`"
   text_exit: "Bot byl úspěšně vypnut."
   text_translate: "Přeloženo z `$1` do `$2`"
+  text_server_settings_success: "Nastavení serveru **$1** úspěšně nastaveno na $2."
 
 ################################################################
 
@@ -86,13 +90,21 @@ loc_cs_CZ:
   err_calc_bannned_char: "Zadaný výraz obsahuje nepovolené znaky!"
   err_calc_timeout: "Výpočet byl zastaven, protože běžel déle než $1 sekund!"
   err_calc_syntax_error: "Neplatná syntaxe!"
+  err_settings_unknown_option: "Neplatné nastavení! Zadej platnou možnost, například `Jazyk`."
+  err_server_settings_perms: "Pro změnu nastavení serveru potřebuješ permisi `Správa Serveru`!"
 
 ################################################################
 
   # Config Options
 
+  # Names
   config_language: "Jazyk"
-  config_log_channel: "Kanál se Záznamy"
+  config_log: "Záznam"
+  config_prefix: "Prefix"
+
+  # Invalid values
+  config_invalid_language: "Invalid language! Please enter a valid language code, for example: `en_US`"
+  config_invalid_log: "Invalid channel! Please enter a mention of a valid text channel in this guild."
 
 ################################################################
 
@@ -143,23 +155,23 @@ loc_cs_CZ:
 
   # Info
   cmd_category_info: "Info"
-  cmd_desc_help: "Vypíše všechny příkazy seřazené podle kategorií. Pokud je upřesněn `[command]`, zobrazí detailní informace o tomto příkazu."
+  cmd_desc_help: "Vypíše všechny příkazy seřazené podle kategorií. Pokud je upřesněn příkaz `[command]`, zobrazí detailní informace o tomto příkazu."
   cmd_desc_status: "Zobrazí zprávu potvrzující, že je bot online."
   cmd_desc_invite: "Pošle permanentní pozvánku do tohoto kanálu."
-  cmd_desc_perms: "Zobrazí všechny serverové permise od `[member]`."
+  cmd_desc_perms: "Zobrazí všechny serverové permise od člena `[member]`."
 
   # Chat
   cmd_category_chat: "Chat"
   cmd_desc_rng: "Vygeneruje náhodné číslo od `<min>` do `<max>`."
-  cmd_desc_choice: "Vybere náhodnou možnost ze seznamu možností (`<choices>`). Musíš zadat minimálně 2 možnosti oddělené čárkami `,`."
+  cmd_desc_choice: "Vybere náhodnou možnost ze seznamu možností `<choices>`. Musíš zadat minimálně 2 možnosti oddělené čárkami `,`."
   cmd_desc_gay: "Zobrazí, jak moc gay je `[target]`."
   cmd_desc_penis: "Zobrazí, jak dlouhý je penis od `[target]`."
 
   # Tools
   cmd_category_tools: "Nástroje"
   cmd_desc_translate: "Přeloží zadaný `<text>` do angličtiny."
-  cmd_desc_calc: "Vypočítá zadaný výraz (`<expression>`) a zobrazí výsledek."
-  cmd_desc_python: "Spustí zadaný kód (`<code>`) v Pythonu 3. Doporučuje se z obou stran oddělit kód obrácenými čárkami ` ``` `."
+  cmd_desc_calc: "Vypočítá zadaný výraz `<expression>` a zobrazí výsledek."
+  cmd_desc_python: "Spustí zadaný kód `<code>` v Pythonu 3. Doporučuje se z obou stran oddělit kód obrácenými čárkami ` ``` `."
 
   # Music
   cmd_category_music: "Hudba"
@@ -170,13 +182,13 @@ loc_cs_CZ:
 
   # Moderation
   cmd_category_mod: "Moderace"
-  cmd_desc_kick: "Vyhodí zadaného člena (`<target>`)."
-  cmd_desc_ban: "Zabanuje zadaného člena (`<target>`)."
+  cmd_desc_kick: "Vyhodí zadaného člena `<target>`."
+  cmd_desc_ban: "Zabanuje zadaného člena `<target>`."
 
   # Config
   cmd_category_config: "Nastavení"
-  cmd_desc_user_settings: "Zobrazí uživatelská nastavení - buď od zadaného člena (`[member]`), nebo tvá vlastní."
-  cmd_desc_server_settings: "Zobrazí nastavení serveru."
-  cmd_desc_language: "Vypíše všechny dostupné jazyky bota. Pokud je upřesněn jazyk (`[language]`), změní tvé nastavení jazyka. Jazyk musí být zadán ve formě kódu, například: `cs_CZ`"
+  cmd_desc_user_settings: "Zobrazí uživatelská nastavení - buď od zadaného člena `[member]`, nebo tvá vlastní."
+  cmd_desc_server_settings: "Pokud nejsou zadány žádné argumenty, zobrazí nastavení serveru. Pokud je zadána možnost `[option]`, nastaví hodnotu této možnosti na výchozí hodnotu. Pokud je zadána možnost `[option]` i hodnota `[value]`, nastaví hodnotu této možnosti na zadanou hodnotu."
+  cmd_desc_language: "Vypíše všechny dostupné jazyky bota. Pokud je upřesněn jazyk `[language]`, změní tvé nastavení jazyka. Jazyk musí být zadán ve formě kódu, například: `cs_CZ`"
 
 ################################################################

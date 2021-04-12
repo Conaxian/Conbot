@@ -29,6 +29,9 @@ loc_en_GB:
   label_translate: "Google Translate"
   label_perm: "Permission"
   label_has: "Has?"
+  label_yes: "Yes"
+  label_no: "No"
+  label_default: "Default"
 
 ################################################################
 
@@ -56,6 +59,7 @@ loc_en_GB:
   text_play_add_queue: "Added to queue: `$1`"
   text_exit: "Successfully shut the bot."
   text_translate: "Translated from `$1` to `$2`"
+  text_server_settings_success: "Successfully set the server **$1** to $2."
 
 ################################################################
 
@@ -86,13 +90,21 @@ loc_en_GB:
   err_calc_bannned_char: "The entered expression contains illegal characters!"
   err_calc_timeout: "Calculation was terminated, as it ran for longer than $1 seconds!"
   err_calc_syntax_error: "Invalid syntax!"
+  err_settings_unknown_option: "Unknown option! Specify a valid option, for example `Language`."
+  err_server_settings_perms: "You need the `Manage Server` permission to change the server settings!"
 
 ################################################################
 
   # Config Options
 
+  # Names
   config_language: "Language"
-  config_log_channel: "Log Channel"
+  config_log: "Log"
+  config_prefix: "Prefix"
+
+  # Invalid values
+  config_invalid_language: "Invalid language! Please enter a valid language code, for example: `en_US`"
+  config_invalid_log: "Invalid channel! Please enter a mention of a valid text channel in this guild."
 
 ################################################################
 
@@ -176,7 +188,7 @@ loc_en_GB:
   # Config
   cmd_category_config: "Config"
   cmd_desc_user_settings: "Shows either the specified `[member]`'s or your personal user settings."
-  cmd_desc_server_settings: "Shows the server's settings."
+  cmd_desc_server_settings: "If no arguments are specified, shows the server's settings. If `[option]` is specified, sets the option's value to default. If both `[option]` and `[value]` are specified, sets the option's value to this value."
   cmd_desc_language: "Lists all available bot languages. If `[language]` is specified, changes your language setting instead. `[language]` must be entered as a code, for example: `en_GB`"
 
 ################################################################
