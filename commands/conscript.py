@@ -1,17 +1,19 @@
 ################################################################
 
 import sys
+import traceback
 
 sys.path.append("..")
 
 import constants
 import cembed
 import loclib
+import conscript_lib
 from pyexecute import PyExecute
 
 ################################################################
 
-async def python(ctx):
+async def conscript(ctx):
 
     code = ctx.args["code"]
     code = code.strip(" `\n")
@@ -27,10 +29,22 @@ async def python(ctx):
 
     pyexecute = PyExecute(constants.files["pyexecute"], exec_loc)
     output = str(pyexecute.execute(code))
-    output = output if len(output) <= 2000 else output[:2000]
-
     title = loclib.Loc.member("label_output", ctx.author)
-    embed = cembed.get_cembed(ctx.msg, f"```{output}```", title)
-    await ctx.channel.send(embed=embed)
+
+    if output in [str(text) for text in exec_loc.values()]:
+        output = output if len(output) <= 2000 else output[:2000]
+        title = loclib.Loc.member("label_output", ctx.author)
+
+    else:
+        cs_base = conscript_lib.Base(ctx)
+        try:
+            exec(code, {"cb": cs_base})
+            output = None
+        except:
+            output = traceback.format_exc()
+
+    if output:
+        embed = cembed.get_cembed(ctx.msg, f"```{output}```", title)
+        await ctx.channel.send(embed=embed)
 
 ################################################################

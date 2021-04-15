@@ -1,5 +1,9 @@
 ################################################################
 
+import constants
+
+################################################################
+
 class PyExecute:
 
     def __init__(self, exec_file, loc):
@@ -30,7 +34,7 @@ class PyExecute:
             current_dir = os.path.dirname(__file__)
             current_path = os.path.abspath(current_dir)
             self.local_dir = current_path.replace("\\", "/")
-            self.timeout_worker = 5
+            self.timeout_worker = constants.exec_timeout
             self.check_script_timeout = 0.1
 
             self.time = time
@@ -42,12 +46,12 @@ class PyExecute:
             self.output = None
             self.execute_filename = exec_file
 
-            self.error_timeout = loc["err_exec_timeout"].replace("$1", str(self.timeout_worker))
+            self.error_timeout = loc["err_exec_timeout"]
             self.error_untrusted_module = loc["err_exec_banned_module"]
             self.error_dangerous_keyword = loc["err_exec_banned_keyword"]
 
             self.trust_modules = ["datetime", "math", "random", "hashlib", "time", "getpass", "socket", "urllib"]
-            self.dangerous_keywords = ["input", "exec", "eval", "compile", "open", "builtins", "os", "globals", "locals", "breakpoint", "dir", "delattr", "getattr", "repr", "vars"]
+            self.dangerous_keywords = ["input", "exec", "eval", "compile", "open", "builtins", "os", "globals", "locals", "breakpoint", "dir", "delattr", "getattr", "repr", "vars", "__dict__"]
             self.encoding = "ISO-8859-1"
 
             self.remove_last_char = lambda x: [x[:len(x)-3] if x[len(x)-3:] == "\r\n\n" else x][0]

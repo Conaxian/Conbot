@@ -306,16 +306,15 @@ commands = [
     ################################
 
     # Developer
-    
-    # Exit
+
+    # Shutdown
     cmdlib.Command.new(
         "shutdown",
         ["exit", "off"],
         "dev",
         [],
         [" "],
-        [],
-        True
+        []
     ),
 
     # Guilds
@@ -325,8 +324,7 @@ commands = [
         "dev",
         [],
         [" "],
-        [],
-        True
+        []
     ),
 
     # Announce
@@ -336,8 +334,17 @@ commands = [
         "dev",
         ["<channel, message>"],
         [],
+        []
+    ),
+
+    # Conscript
+    cmdlib.Command.new(
+        "conscript",
+        ["cscript", "botscript"],
+        "dev",
+        ["<code>"],
         [],
-        True
+        []
     )
     ################################
 ]
@@ -405,7 +412,7 @@ async def loop():
 
         # Wait between check turns
 
-        await asyncio.sleep(constants.loop_interval)
+        await asyncio.sleep(constants.loop_timeout)
 
 ################################################################
 
@@ -528,7 +535,7 @@ async def on_message(msg):
                     for delimiter in cmd.delimiters:
                         parts = parts.replace(delimiter, "$<|sep;|>")
                     parts = parts.split("$<|sep;|>")
-                except Exception:
+                except:
                     parts = []
                 parts = parts if parts != [""] else []
                 arg_count = len(parts)
@@ -581,21 +588,15 @@ async def on_message(msg):
                         text = loclib.Loc.member("err_missing_perms", msg.author)
                         embed = cembed.get_cembed(msg, text)
                         await msg.channel.send(embed=embed)
-                except Exception:
+                except:
                     error = f"```{traceback.format_exc()}```"
                     await msg.channel.send(error)
 
                 return
 
-        # Get the list of command calls (except dev commands)
-
-        calls = []
-        for cmd in commands:
-            if cmd.category != "dev":
-                calls += cmd.calls
-
         # Find a close match between the entered command and the list of command calls, if there isn't any, display the default unknown command message
 
+        calls = sum([cmd.calls for cmd in commands if cmd.category != "dev"], [])
         try:
             match = difflib.get_close_matches(command, calls, 1, 0.6)[0]
             text = loclib.Loc.member("err_unknown_cmd_alt", msg.author)

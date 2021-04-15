@@ -12,7 +12,7 @@ import utils
 def load_yaml(file):
 
     with open(file, "r") as f:
-        data = yaml.load(f, Loader=yaml.FullLoader)
+        data = yaml.safe_load(f)
     return data
 
 # Saves YAML data to a file

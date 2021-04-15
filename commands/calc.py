@@ -18,10 +18,8 @@ async def calc(ctx):
     allowed_chars = " \t0123456789.+-*/%()"
     text = None
 
-    for char in expr:
-        if char not in allowed_chars:
-            text = loclib.Loc.member("err_calc_bannned_char", ctx.author)
-            break
+    if not all(char in allowed_chars for char in expr):
+        text = loclib.Loc.member("err_calc_bannned_char", ctx.author)
 
     else:
         err_timeout = loclib.Loc.member("err_calc_timeout", ctx.author)

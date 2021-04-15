@@ -37,10 +37,11 @@ class Command:
         self.dev = dev
 
     @classmethod
-    def new(cls, name, aliases, category, args, delimiters, perms, dev=False):
+    def new(cls, name, aliases, category, args, delimiters, perms):
 
         aliases.append(name)
         desc = name.replace("-", "_")
+        dev = True if category == "dev" else False
         return cls(name, aliases, category, args, delimiters, perms, desc, None, dev)
 
 ################################################################

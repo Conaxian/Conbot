@@ -10,7 +10,8 @@ default_prefix = "?"
 default_reply_chance = 0.3333
 default_embed_color = 0x20a0e0
 
-loop_interval = 1
+loop_timeout = 1
+exec_timeout = 5
 
 song_max_size = 5_242_880
 song_max_length = 600
