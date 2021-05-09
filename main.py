@@ -1,0 +1,679 @@
+################################################################
+
+"""
+Conbot - Made by Conax
+
+If you find any bugs, or if you have any suggestions, please contact me. My Discord is Conax#0001.
+
+By using this software, you agree to the license terms in the LICENSE.txt file.
+"""
+
+################################################################
+
+# Note - Discord.py API Documentation: https://discordpy.readthedocs.io/en/latest/api.html
+
+################################################################
+
+# All required modules
+
+import discord
+from discord.ext import tasks
+import sys
+import time
+import datetime
+import importlib
+import difflib
+import traceback
+
+# Conbot modules
+
+import constants
+import utils
+import conyaml
+import cembed
+import cmdlib
+import loclib
+import songlib
+
+# Search for modules in the "commands" directory
+
+sys.path.append("commands")
+
+################################################################
+
+# Get all intents
+
+intents = discord.Intents.all()
+client = discord.Client(intents=intents)
+
+################################################################
+
+# Define a dictionary of command call times
+
+cmd_call_times = {}
+
+################################################################
+
+# Define all config options
+
+user_config = [
+    conyaml.Config("language", "en_US", "backticks", "lang_code")
+]
+
+server_config = [
+    conyaml.Config("language", "en_US", "backticks", "lang_code"),
+    conyaml.Config("prefix", "?", "backticks", "any"),
+    conyaml.Config("log", None, "channel_mention", "text_channel"),
+    # TODO:
+    # conyaml.Config("mute_role", None, "role_mention", "role")
+]
+
+################################################################
+
+# Define all commands
+
+commands = [
+    ################################
+
+    # Info
+
+    # Help
+    cmdlib.Command.new(
+        "help",
+        ["commands"],
+        "info",
+        ["[command]"],
+        [" "],
+        []
+    ),
+
+    # Info
+    cmdlib.Command.new(
+        "about",
+        ["info", "conbot"],
+        "info",
+        [],
+        [" "],
+        []
+    ),
+
+    # Status
+    cmdlib.Command.new(
+        "status",
+        ["online", "test"],
+        "info",
+        [],
+        [" "],
+        []
+    ),
+
+    # Invite
+    cmdlib.Command.new(
+        "invite",
+        [],
+        "info",
+        [],
+        [" "],
+        []
+    ),
+
+    # Perms
+    cmdlib.Command.new(
+        "perms",
+        ["perm", "permissions", "permission"],
+        "info",
+        ["[member]"],
+        [" "],
+        []
+    ),
+
+    ################################
+
+    # Chat
+
+    # RNG
+    cmdlib.Command.new(
+        "rng",
+        ["random", "randint"],
+        "chat",
+        ["<min>", "<max>"],
+        [" "],
+        []
+    ),
+
+    # Choice
+    cmdlib.Command.new(
+        "choice",
+        ["choose"],
+        "chat",
+        ["<choices>"],
+        [],
+        []
+    ),
+
+    # Gay
+    cmdlib.Command.new(
+        "gay",
+        ["how-gay", "gay-level", "gay-meter"],
+        "chat",
+        ["[target]"],
+        [],
+        []
+    ),
+
+    # Penis
+    cmdlib.Command.new(
+        "penis",
+        ["penis-length", "penis-size"],
+        "chat",
+        ["[target]"],
+        [],
+        []
+    ),
+
+    ################################
+
+    # Tools
+
+    # Translate
+    cmdlib.Command.new(
+        "translate",
+        ["trans"],
+        "tools",
+        ["<text>"],
+        [],
+        []
+    ),
+
+    # Calc
+    cmdlib.Command.new(
+        "calc",
+        ["eval", "calculate", "evaluate"],
+        "tools",
+        ["<expression>"],
+        [],
+        []
+    ),
+
+    # Python
+    cmdlib.Command.new(
+        "python",
+        ["py", "execute", "exec", "exe"],
+        "tools",
+        ["<code>"],
+        [],
+        []
+    ),
+
+    ################################
+
+    # Music
+
+    # Join
+    cmdlib.Command.new(
+        "join",
+        ["connect"],
+        "music",
+        [],
+        [" "],
+        []
+    ),
+
+    # Leave
+    cmdlib.Command.new(
+        "leave",
+        ["quit", "disconnect", "dc"],
+        "music",
+        [],
+        [" "],
+        []
+    ),
+
+    # Play
+    cmdlib.Command.new(
+        "play",
+        ["p", "song", "music"],
+        "music",
+        ["<song>"],
+        [],
+        []
+    ),
+
+    # Skip
+    cmdlib.Command.new(
+        "skip",
+        [],
+        "music",
+        [],
+        [" "],
+        []
+    ),
+
+    # Queue
+    cmdlib.Command.new(
+        "queue",
+        ["song-list"],
+        "music",
+        [],
+        [" "],
+        []
+    ),
+
+    ################################
+
+    # Moderation
+
+    # Kick
+    cmdlib.Command.new(
+        "kick",
+        [],
+        "mod",
+        ["<target>"],
+        [" "],
+        ["kick_members"]
+    ),
+
+    # Ban
+    cmdlib.Command.new(
+        "ban",
+        [],
+        "mod",
+        ["<target>"],
+        [" "],
+        ["ban_members"]
+    ),
+
+    # Unban
+    cmdlib.Command.new(
+        "unban",
+        ["pardon"],
+        "mod",
+        ["<target>"],
+        [" "],
+        ["ban_members"]
+    ),
+
+    # Warn
+    cmdlib.Command.new(
+        "warn",
+        [],
+        "mod",
+        ["<target, reason>"],
+        [],
+        ["manage_messages"]
+    ),
+
+    # Warns
+    cmdlib.Command.new(
+        "warns",
+        ["warnings", "warn-list"],
+        "mod",
+        [],
+        [" "],
+        []
+    ),
+
+    ################################
+
+    # Config
+
+    # User Settings
+    cmdlib.Command.new(
+        "user-settings",
+        ["user-config", "user-options", "settings", "config", "options"],
+        "config",
+        ["[member]"],
+        [" "],
+        []
+    ),
+
+    # Server Settings
+    cmdlib.Command.new(
+        "server-settings",
+        ["server-config", "server-options", "guild-settings", "guild-config", "guild-options"],
+        "config",
+        ["[option]", "[value]"],
+        [" "],
+        []
+    ),
+
+    # Language
+    cmdlib.Command.new(
+        "language",
+        ["languages", "lang"],
+        "config",
+        ["[language]"],
+        [" "],
+        []
+    ),
+
+    ################################
+
+    # Developer
+
+    # Shutdown
+    cmdlib.Command.new(
+        "shutdown",
+        ["exit", "off"],
+        "dev",
+        [],
+        [" "],
+        []
+    ),
+
+    # Guilds
+    cmdlib.Command.new(
+        "guilds",
+        ["servers", "guild-list", "server-list"],
+        "dev",
+        [],
+        [" "],
+        []
+    ),
+
+    # Announce
+    cmdlib.Command.new(
+        "announce",
+        [],
+        "dev",
+        ["<channel, message>"],
+        [],
+        []
+    ),
+
+    # Conscript
+    cmdlib.Command.new(
+        "conscript",
+        ["cscript", "botscript"],
+        "dev",
+        ["<code>"],
+        [],
+        []
+    ),
+
+    # Conscript
+    cmdlib.Command.new(
+        "googletrans-nonsense",
+        ["googletrans-nonsense"],
+        "dev",
+        ["<text>"],
+        [],
+        []
+    )
+    ################################
+]
+
+################################################################
+
+# Import all commands
+
+for command in commands:
+
+    module_name = command.name.replace("-", "_")
+    try:
+        try:
+            cmd_code = getattr(importlib.import_module(module_name), module_name)
+        except:
+            cmd_code = getattr(importlib.import_module(f"{module_name}_"), module_name)
+    except ModuleNotFoundError:
+        cmd_code = getattr(importlib.import_module("wip"), "wip")
+    command.code = cmd_code
+
+################################################################
+
+# Keep control of music related tasks
+
+@tasks.loop(seconds=constants.music_loop_time)
+async def music_loop():
+
+    # Disconnect from empty voice channels
+
+    voices = client.voice_clients
+    for voice in voices:
+        if len(voice.channel.members) <= 1:
+            await voice.disconnect()
+
+        # Check if the current song has finished playing
+
+        if not voice.is_playing() and not voice.is_paused():
+
+            # Remove the current song from queue
+
+            queue = songlib.queues.get(voice.guild.id, [])
+            if len(queue) >= 1 and queue[0]["playing"]:
+                queue.pop(0)
+
+                # If there are more songs in the queue, start playing the next song
+
+                if len(queue) >= 1:
+                    song = queue[0]
+                    await songlib.play_song(voice, song)
+                    text = loclib.Loc.server("text_play_playing", voice.guild)
+                    text.format(song["info"]["title"])
+                    embed = cembed.get_embed(text)
+                    await song["context"].channel.send(embed=embed)
+
+################################################################
+
+# Print a message, and set the activity when ready
+
+@client.event
+async def on_ready():
+
+    print(f"Bot initialized as {client.user}")
+    music_loop.start()
+
+################################################################
+
+# Log all member joins
+
+@client.event
+async def on_member_join(member):
+
+    channel_id = conyaml.read_server_config(member.guild.id, "log")
+    if channel_id:
+        channel = member.guild.get_channel(channel_id)
+        text = loclib.Loc.server("text_join_msg", member.guild)
+        text.format(member.mention)
+        embed = cembed.get_embed(text, "", author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
+        await channel.send(embed=embed)
+
+################################################################
+
+# Log all member leaves
+
+@client.event
+async def on_member_remove(member):
+
+    channel_id = conyaml.read_server_config(member.guild.id, "log")
+    if channel_id:
+        channel = member.guild.get_channel(channel_id)
+        text = loclib.Loc.server("text_leave_msg", member.guild)
+        text.format(member.mention)
+        embed = cembed.get_embed(text, "", author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
+        await channel.send(embed=embed)
+
+################################################################
+
+# Send a first time guild message, changes the bot's status
+
+@client.event
+async def on_guild_join(guild):
+
+    channel = guild.public_updates_channel
+    if not channel:
+        channel = guild.system_channel
+    if not channel:
+        channel = guild.text_channels[0]
+    await channel.send(constants.welcome_text)
+
+################################################################
+
+# Check and evaluates messages
+
+@client.event
+async def on_message(msg):
+
+    # If the message author is a bot or the message is empty, return
+
+    if msg.author.bot or msg.content == "":
+        return
+
+    # TODO: Remove (just for fun)
+    # Autoreply
+
+    if msg.content == "protony":
+        await msg.channel.send("a protony")
+        return
+
+    # Get the server command prefix
+
+    prefix = conyaml.read_server_config(msg.guild.id, "prefix")
+    prefix = prefix if prefix else constants.default_prefix
+
+    # If the message is a mention of the bot, send the current prefix
+
+    if utils.mention_id(msg.content.strip()) == client.user.id:
+        text = loclib.Loc.member("text_current_prefix", msg.author)
+        text.format(prefix)
+        await msg.channel.send(text)
+        return
+
+    # Log the message
+
+    await utils.log(msg)
+
+    # Check for a command
+
+    if msg.content.startswith(prefix) and set(msg.content) != {prefix}:
+
+        # Check if the user isn't spamming commands
+
+        call_time = cmd_call_times.get(msg.author.id, float("-inf"))
+        if call_time > time.time() - constants.cmd_call_cooldown:
+            return
+
+        # Register the call time
+
+        cmd_call_times[msg.author.id] = time.time()
+
+        # Get the command name
+
+        command = msg.content.split(" ")[0]
+        command = command[len(prefix):]
+        command = command.lower().replace("_", "-")
+
+        # Look for the command, ignore dev commands unless the message author is a dev
+
+        for cmd in commands:
+
+            if cmd.category == "dev" and msg.author.id not in constants.devs:
+                continue
+
+            if command in cmd.calls:
+
+                # Check if the user has sufficient permissions to use the command
+
+                perms = msg.author.guild_permissions
+                perms = dict(iter(perms))
+                perms = [perms[perm] for perm in cmd.perms]
+                if not all(perms):
+                    text = loclib.Loc.member("err_missing_perms_user", msg.author)
+                    embed = cembed.get_cembed(msg, text)
+                    await msg.channel.send(embed=embed)
+                    return
+
+                # Create a list of command parts, and get the amount of specified arguments
+
+                try:
+                    parts = msg.content.split(" ")
+                    parts = " ".join(parts[1:])
+                    for delimiter in cmd.delimiters:
+                        parts = parts.replace(delimiter, "$<|sep;|>")
+                    parts = parts.split("$<|sep;|>")
+                except:
+                    parts = []
+                parts = parts if parts != [""] else []
+                arg_count = len(parts)
+
+                # Get the minimum amount of arguments
+
+                min_args = 0
+                for arg in cmd.args:
+                    if arg.startswith("<"):
+                        min_args += 1
+
+                # Check if the amount of arguments isn't too large
+
+                if arg_count > len(cmd.args):
+                    text = loclib.Loc.member("err_arg_overflow", msg.author)
+                    max_args = len(cmd.args)
+                    none = loclib.Loc.member("label_none", msg.author)
+                    max_args = max_args if max_args > 0 else str(none).lower()
+                    text.format(str(arg_count), str(max_args))
+                    embed = cembed.get_cembed(msg, text)
+                    await msg.channel.send(embed=embed)
+                    return
+
+                # Check if the amount of arguments isn't too small
+
+                if arg_count < min_args:
+                    text = loclib.Loc.member("err_arg_underflow", msg.author)
+                    text.format(arg_count, min_args)
+                    embed = cembed.get_cembed(msg, text)
+                    await msg.channel.send(embed=embed)
+                    return
+                
+                # Create a dictionary of arguments
+
+                args = {}
+                for i in range(len(cmd.args)):
+                    arg_name = cmd.args[i].strip("<>[]")
+                    try:
+                        args[arg_name] = parts[i]
+                    except IndexError:
+                        args[arg_name] = None
+
+                # Call the command, print an error message if the bot has insufficient permissions
+
+                ctx = cmdlib.Context(client, msg, prefix, args, commands, user_config, server_config)
+                try:
+                    await cmd.code(ctx)
+                except discord.errors.Forbidden as error:
+                    if str(error).endswith("Missing Permissions"):
+                        text = loclib.Loc.member("err_missing_perms_bot", msg.author)
+                        embed = cembed.get_cembed(msg, text)
+                        await msg.channel.send(embed=embed)
+                except:
+                    error = traceback.format_exc()
+                    print(error)
+
+                return
+
+        # Find a close match between the entered command and the list of command calls, if there isn't any, display the default unknown command message
+
+        calls = sum([cmd.calls for cmd in commands if cmd.category != "dev"], [])
+        try:
+            match = difflib.get_close_matches(command, calls, 1, 0.6)[0]
+            text = loclib.Loc.member("err_unknown_cmd_alt", msg.author)
+            text.format(prefix, match)
+        except IndexError:
+            text = loclib.Loc.member("err_unknown_cmd", msg.author)
+            text.format(prefix)
+
+        # Send the unknown command message
+
+        embed = cembed.get_cembed(msg, text)
+        await msg.channel.send(embed=embed)
+        return
+
+################################################################
+
+# Run the bot, catch HTTP Exceptions
+
+try:
+    client.run(constants.token)
+except discord.errors.HTTPException as error:
+    print(error.response)
+
+################################################################

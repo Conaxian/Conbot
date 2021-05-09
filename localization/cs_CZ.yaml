@@ -1,0 +1,215 @@
+################################################################
+
+loc_cs_CZ:
+
+################################################################
+
+  # General
+
+  language_name: "Čeština"
+
+################################################################
+
+  # Short text
+
+  label_none: "Nic"
+  label_help: "Help"
+  label_syntax: "Syntaxe"
+  label_aliases: "Aliasy"
+  label_req_perms: "Požadované permise"
+  label_desc: "Popis"
+  label_invite_link: "Odkaz Pozvánky"
+  label_gay_meter: "Gay Metr"
+  label_penis_length: "Délka Penisu"
+  label_output: "Výstup"
+  label_user_config: "Uživatelské Nastavení"
+  label_server_config: "Serverové Nastavení"
+  label_languages: "Jazyky"
+  label_result: "Výsledek"
+  label_translate: "Google Translate"
+  label_perm: "Permise"
+  label_has: "Má?"
+  label_yes: "Ano"
+  label_no: "Ne"
+  label_default: "Výchozí"
+  label_about: "O"
+  label_github: "GitHub"
+  label_bot_invite: "Přidat Bota"
+  label_queue: "Fronta Songů"
+
+################################################################
+
+  # Long text
+
+  text_join_msg: "$1 se připojil/a na server."
+  text_leave_msg: "$1 se odpojil/a ze serveru."
+  text_current_prefix: "Současný prefix bota je `$1`"
+  text_status_online: "Bot je online!"
+  text_perms_list: "Toto je seznam všech permisí $1 na tomto serveru."
+  text_perms_title: "Permise na $1"
+  text_gay: "$1 je z $2% gay :rainbow_flag:"
+  text_penis: "Penis od $1: $2"
+  text_kick_reason: "Vyhozen/a $1"
+  text_kick_success: "$1 byl/a úspěšně vyhozen/a."
+  text_ban_reason: "Zabanován/a $1."
+  text_ban_success: "$1 byl/a úspěšně zabanován/a."
+  text_warn_success: "$1 byl/a úspěšně varován/a za: $2"
+  text_wip: "Nedokončeno"
+  text_lang_list: "Toto je seznam všech dostupných jazyků tohoto bota."
+  text_lang_changed: "Tvůj jazyk byl úspěšně změněn na češtinu."
+  text_join: "Připojen do hlasového kanálu `$1`."
+  text_leave: "Odpojen z hlasového kanálu `$1`."
+  text_play_playing: "Nyní se přehrává: `$1`"
+  text_play_add_queue: "Přidáno do fronty: `$1`"
+  text_skip: "Přeskakuji song: `$1`"
+  text_exit: "Bot byl úspěšně vypnut."
+  text_translate: "Přeloženo z `$1` do `$2`"
+  text_server_settings_success: "Nastavení serveru **$1** úspěšně nastaveno na $2."
+  text_about: "Conbot je multifunkční Discord bot vytvořený Conaxem. Kontaktujte `Conax#$1` na Discordu pokud máte jakékoliv otázky nebo problémy."
+  text_warns_title: "Varování v $1"
+  text_warns_last: "Jen posledních $1 varování je zobrazeno."
+  text_warns_desc: "Varován/a za `$1` dne `$2` v `$3` UTC"
+  text_warns_none: "Žádná zaznamenaná varování!"
+  text_queue_song: "Přehrál/a $1 - Délka: `$2`"
+  text_max_queue_length: "Fronta songů může mít maximálně `$1` songů."
+
+################################################################
+
+  # Error messages
+
+  err_unknown_cmd: "Neznámý příkaz! Použij `$1help` pro zobrazení dostupných příkazů!"
+  err_unknown_cmd_alt: "Neznámý příkaz! Neměl jsi na mysli `$1$2`?"
+  err_missing_perms: "Nemáš požadované permise pro použití tohoto příkazu!"
+  err_arg_overflow: "Příliš mnoho zadaných argumentů! (počet argumentů: **$1**, maximální povolený počet: **$2**)"
+  err_arg_underflow: "Nedostatek zadaných argumentů! (počet argumentů: **$1**, minimální požadovaný počet: **$2**)"
+  err_help_unknown_cmd: "Neznámý příkaz! Poskytni platný příkaz jako argument, například: `help`"
+  err_unknown_member: "Člen nebyl nalezen! Poskytni platný mention, například: $1"
+  err_rng_no_floats: "Argumenty musí být celá čísla!"
+  err_rng_range_larger: "Minimální číslo nesmí být větší než maximální číslo!"
+  err_rng_range_equal: "Minimální číslo nesmí být rovno maximálnímu číslu!"
+  err_choice_not_enough: "Nedostatek možností! Poskytni alespoň 2 možnosti oddělené `$1`"
+  err_kick_perms_author: "Nemáš dostatečné permise pro vyhození tohoto člena, protože má vyšší nebo stejnou roli jako ty."
+  err_ban_perms_author: "Nemáš dostatečné permise pro zabanování tohoto člena, protože má vyšší nebo stejnou roli jako ty."
+  err_warn_perms_author: "Nemáš dostatečné permise pro varování tohoto člena, protože má vyšší nebo stejnou roli jako ty."
+  err_unknown_lang: "Neznámý jazyk! Použij tento příkaz bez jakýchkoliv argumentů pro zobrazení seznamu dostupných jazyků!"
+  err_exec_timeout: "Skript byl zastaven, protože běžel déle než $1 sekund!"
+  err_exec_banned_module: "Chyba: Detekován zakázaný modul!"
+  err_exec_banned_keyword: "Chyba: Klíčové slovo $1 není povoleno!"
+  err_join_no_voice: "Pro použití tohoto příkazu musíš být v hlasovém kanále!"
+  err_join_voice_connected: "Bot už je připojený v hlasovém kanále!"
+  err_leave_no_voice: "Bot se nenachází v žádném hlasovém kanále!"
+  err_missing_perms: "Bot nemá dostatečné permise k provedení tohoto příkazu! Pro správné fungování potřebuje administrátorskou roli."
+  err_empty_queue: "Fronta songů je prázdná!"
+  err_play_unknown_song: "Na YouTube nebyl nalezen žádný song!"
+  err_play_too_long: "Song je příliš dlouhý! Maximální povolená délka je `$1 minut`."
+  err_calc_bannned_char: "Zadaný výraz obsahuje nepovolené znaky!"
+  err_calc_timeout: "Výpočet byl zastaven, protože běžel déle než $1 sekund!"
+  err_calc_syntax_error: "Neplatná syntaxe!"
+  err_calc_zero_division: "Nelze dělit nulou!"
+  err_settings_unknown_option: "Neplatné nastavení! Zadej platnou možnost, například `Jazyk`."
+  err_server_settings_perms: "Pro změnu nastavení serveru potřebuješ permisi `Správa Serveru`!"
+
+################################################################
+
+  # Config Options
+
+  # Names
+  config_language: "Jazyk"
+  config_log: "Záznam"
+  config_prefix: "Prefix"
+
+  # Invalid values
+  config_invalid_language: "Invalid language! Please enter a valid language code, for example: `en_US`"
+  config_invalid_log: "Invalid channel! Please enter a mention of a valid text channel in this guild."
+
+################################################################
+
+  # Permissions
+  
+  # General
+  perm_administrator: "Administrátor"
+  perm_view_channel: "Zobrazit Kanály"
+  perm_manage_channels: "Správa Kanálů"
+  perm_manage_roles: "Správa Rolí"
+  perm_manage_emojis: "Správa Emoji"
+  perm_view_audit_log: "Zobrazit Audit Log"
+  perm_manage_webhooks: "Správa Webhooks"
+  perm_manage_guild: "Správa Serveru"
+
+  # Membership
+  perm_create_instant_invite: "Vytvořit Pozvánku"
+  perm_change_nickname: "Změna Přezdívky"
+  perm_manage_nicknames: "Správa Přezdívek"
+  perm_kick_members: "Vyhodit Členy"
+  perm_ban_members: "Banovat Členy"
+
+  # Text Channels
+  perm_send_messages: "Odesílat Zprávy"
+  perm_embed_links: "Vložit Odkazy"
+  perm_attach_files: "Přiložit Soubory"
+  perm_add_reactions: "Přidat Reakce"
+  perm_external_emojis: "Externí Emoji"
+  perm_mention_everyone: "Zmínit @everyone"
+  perm_manage_messages: "Správa Zpráv"
+  perm_read_message_history: "Číst Historii"
+  perm_send_tts_messages: "Posílat TTS Zprávy"
+  perm_use_slash_commands: "Příkazy s Lomítkem"
+
+  # Voice Channels
+  perm_connect: "Připojit se"
+  perm_speak: "Mluvit"
+  perm_stream: "Streamovat Video"
+  perm_use_voice_activation: "Hlasová Aktivita"
+  perm_priority_speaker: "Přednostní Mluvčí"
+  perm_mute_members: "Ztlumit Členy"
+  perm_deafen_members: "Ohlušit Členy"
+  perm_move_members: "Přesunout Členy"
+
+################################################################
+
+  # Commands
+
+  # Info
+  cmd_category_info: "Info"
+  cmd_desc_help: "Vypíše všechny příkazy seřazené podle kategorií. Pokud je upřesněn příkaz `[command]`, zobrazí detailní informace o tomto příkazu."
+  cmd_desc_about: "Zobrazí informace o botovi."
+  cmd_desc_status: "Zobrazí zprávu potvrzující, že je bot online."
+  cmd_desc_invite: "Pošle permanentní pozvánku do tohoto kanálu."
+  cmd_desc_perms: "Zobrazí všechny serverové permise od člena `[member]`."
+
+  # Chat
+  cmd_category_chat: "Chat"
+  cmd_desc_rng: "Vygeneruje náhodné číslo od `<min>` do `<max>`."
+  cmd_desc_choice: "Vybere náhodnou možnost ze seznamu možností `<choices>`. Musíš zadat minimálně 2 možnosti oddělené čárkami `,`."
+  cmd_desc_gay: "Zobrazí, jak moc gay je `[target]`."
+  cmd_desc_penis: "Zobrazí, jak dlouhý je penis od `[target]`."
+
+  # Tools
+  cmd_category_tools: "Nástroje"
+  cmd_desc_translate: "Přeloží zadaný `<text>` do angličtiny. Pokud je první slovo platným dvoupísmenným kódem jazyka, přeloží z tohoto jazyka."
+  cmd_desc_calc: "Vypočítá zadaný výraz `<expression>` a zobrazí výsledek."
+  cmd_desc_python: "Spustí zadaný kód `<code>` v Pythonu 3. Doporučuje se z obou stran oddělit kód obrácenými čárkami ` ``` `."
+
+  # Music
+  cmd_category_music: "Hudba"
+  cmd_desc_join: "Připojí bota do hlasového kanálu, ve kterém se nacházíš."
+  cmd_desc_leave: "Odpojí bota z hlasového kanálu, ve kterém se nachází."
+  cmd_desc_play: "Přehraje upřesněný `<song>` z YouTube. Song může být buď jméno, nebo YouTube URL."
+  cmd_desc_skip: "Přeskočí současný song."
+  cmd_desc_queue: "Zobrazí současnou frontu songů."
+
+  # Moderation
+  cmd_category_mod: "Moderace"
+  cmd_desc_kick: "Vyhodí zadaného člena (`<target>`)."
+  cmd_desc_ban: "Zabanuje zadaného člena (`<target>`)."
+  cmd_desc_unban: "Zruší ban zadaného člena (`<target>`). `<target>` musí být ID uživatele."
+  cmd_desc_warn: "Varuje zadaného člena ze zadaného důvodu (`<target, reason>`)."
+  cmd_desc_warns: "Zobrazí historii varování na tomto serveru."
+
+  # Config
+  cmd_category_config: "Nastavení"
+  cmd_desc_user_settings: "Zobrazí uživatelská nastavení - buď od zadaného člena `[member]`, nebo tvá vlastní."
+  cmd_desc_server_settings: "Pokud nejsou zadány žádné argumenty, zobrazí nastavení serveru. Pokud je zadána možnost `[option]`, nastaví hodnotu této možnosti na výchozí hodnotu. Pokud je zadána možnost `[option]` i hodnota `[value]`, nastaví hodnotu této možnosti na zadanou hodnotu. Pokud možnost (`[option]`) obsahuje mezery, nahraď je podtržítky `_`."
+  cmd_desc_language: "Vypíše všechny dostupné jazyky bota. Pokud je upřesněn jazyk `[language]`, změní tvé nastavení jazyka. Jazyk musí být zadán ve formě kódu, například: `cs_CZ`"
+
+################################################################

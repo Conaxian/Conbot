@@ -1,0 +1,215 @@
+################################################################
+
+loc_en_US:
+
+################################################################
+
+  # General
+
+  language_name: "English (United States)"
+
+################################################################
+
+  # Short text
+
+  label_none: "None"
+  label_help: "Help"
+  label_syntax: "Syntax"
+  label_aliases: "Aliases"
+  label_req_perms: "Required Permissions"
+  label_desc: "Description"
+  label_invite_link: "Invite Link"
+  label_gay_meter: "Gay Meter"
+  label_penis_length: "Penis Length"
+  label_output: "Output"
+  label_user_config: "User Config"
+  label_server_config: "Server Config"
+  label_languages: "Languages"
+  label_result: "Result"
+  label_translate: "Google Translate"
+  label_perm: "Permission"
+  label_has: "Has?"
+  label_yes: "Yes"
+  label_no: "No"
+  label_default: "Default"
+  label_about: "About"
+  label_github: "GitHub"
+  label_bot_invite: "Add Bot"
+  label_queue: "Song Queue"
+
+################################################################
+
+  # Long text
+
+  text_join_msg: "$1 has joined the server."
+  text_leave_msg: "$1 has left the server."
+  text_current_prefix: "The current bot prefix is `$1`"
+  text_status_online: "Bot is online!"
+  text_perms_list: "This is a list of all permissions of $1 on this server."
+  text_perms_title: "Permissions in $1"
+  text_gay: "$1 is $2% gay :rainbow_flag:"
+  text_penis: "$1's penis: $2"
+  text_kick_reason: "Kicked by $1"
+  text_kick_success: "Successfully kicked $1."
+  text_ban_reason: "Banned by $1"
+  text_ban_success: "Successfully banned $1."
+  text_warn_success: "$1 has been warned for: $2"
+  text_wip: "Work In Progress"
+  text_lang_list: "This is a list of all available languages of this bot."
+  text_lang_changed: "Successfully changed your language to American English."
+  text_join: "Joined the `$1` voice channel."
+  text_leave: "Left the `$1` voice channel."
+  text_play_playing: "Now playing: `$1`"
+  text_play_add_queue: "Added to queue: `$1`"
+  text_skip: "Skipping song: `$1`"
+  text_exit: "Successfully shut the bot."
+  text_translate: "Translated from `$1` to `$2`"
+  text_server_settings_success: "Successfully set the server **$1** to $2."
+  text_about: "Conbot is a multipurpose Discord bot made by Conax. Contact `Conax#$1` on Discord if you have any questions or problems."
+  text_warns_title: "Warns in $1"
+  text_warns_last: "Only the last $1 warns are shown."
+  text_warns_desc: "Warned for `$1` on `$2` at `$3` UTC"
+  text_warns_none: "No recorded warns!"
+  text_queue_song: "Requested by $1 - Duration: `$2`"
+  text_max_queue_length: "The song queue can have `$1` songs at most."
+
+################################################################
+
+  # Error messages
+
+  err_unknown_cmd: "Unknown command! Use `$1help` to get a list of available commands!"
+  err_unknown_cmd_alt: "Unknown command! Did you mean `$1$2`?"
+  err_missing_perms_user: "You have insufficient permissions to use this command!"
+  err_missing_perms_bot: "The bot has insufficient permissions to execute this command! It needs an administrator role to work correctly."
+  err_arg_overflow: "Too many arguments specified! (got **$1**, expected **$2** at most)"
+  err_arg_underflow: "Not enough arguments specified! (got **$1**, expected at least **$2**)"
+  err_help_unknown_cmd: "Unknown command! Please provide a valid command as an argument, for example `help`"
+  err_unknown_member: "Member not found! Please provide a valid user mention, for example: $1"
+  err_rng_no_floats: "Arguments must be integers (whole numbers)!"
+  err_rng_range_larger: "Min number cannot be larger than the max number!"
+  err_rng_range_equal: "Min number cannot be equal to the max number!"
+  err_choice_not_enough: "Not enough choices! Specify at least 2 options separated by `$1`"
+  err_kick_perms_author: "You have insufficient permissions to kick this member, as they have a higher or equal role to yours."
+  err_ban_perms_author: "You have insufficient permissions to ban this member, as they have a higher or equal role to yours."
+  err_warn_perms_author: "You have insufficient permissions to warn this member, as they have a higher or equal role to yours."
+  err_unknown_lang: "Unknown language! Use this command without an argument to get a list of available languages!"
+  err_exec_timeout: "Script was terminated, as it ran for longer than $1 seconds!"
+  err_exec_banned_module: "Error: Unauthorized module detected!"
+  err_exec_banned_keyword: "Error: Keyword $1 is not allowed!"
+  err_join_no_voice: "You must be in a voice channel to use this command!"
+  err_join_voice_connected: "The bot is already connected to a voice channel!"
+  err_leave_no_voice: "The bot currently isn't in any voice channel!"
+  err_empty_queue: "The song queue is empty!"
+  err_play_unknown_song: "No song found on YouTube!"
+  err_play_too_long: "Song is too long! Max allowed length is `$1 minutes`."
+  err_calc_bannned_char: "The entered expression contains illegal characters!"
+  err_calc_timeout: "Calculation was terminated, as it ran for longer than $1 seconds!"
+  err_calc_syntax_error: "Invalid syntax!"
+  err_calc_zero_division: "You can't divide by zero!"
+  err_settings_unknown_option: "Unknown option! Specify a valid option, for example `Language`."
+  err_server_settings_perms: "You need the `Manage Server` permission to change the server settings!"
+
+################################################################
+
+  # Config Options
+
+  # Names
+  config_language: "Language"
+  config_log: "Log"
+  config_prefix: "Prefix"
+
+  # Invalid values
+  config_invalid_language: "Invalid language! Please enter a valid language code, for example: `en_US`"
+  config_invalid_log: "Invalid channel! Please enter a mention of a valid text channel in this guild."
+
+################################################################
+
+  # Permissions
+  
+  # General
+  perm_administrator: "Administrator"
+  perm_view_channel: "View Channels"
+  perm_manage_channels: "Manage Channels"
+  perm_manage_roles: "Manage Roles"
+  perm_manage_emojis: "Manage Emojis"
+  perm_view_audit_log: "View Audit Log"
+  perm_manage_webhooks: "Manage Webhooks"
+  perm_manage_guild: "Manage Server"
+
+  # Membership
+  perm_create_instant_invite: "Create Invite"
+  perm_change_nickname: "Change Nickname"
+  perm_manage_nicknames: "Manage Nicknames"
+  perm_kick_members: "Kick Members"
+  perm_ban_members: "Ban Members"
+
+  # Text Channels
+  perm_send_messages: "Send Messages"
+  perm_embed_links: "Embed Links"
+  perm_attach_files: "Attach Files"
+  perm_add_reactions: "Add Reactions"
+  perm_external_emojis: "External Emoji"
+  perm_mention_everyone: "Mention @everyone"
+  perm_manage_messages: "Manage Messages"
+  perm_read_message_history: "Read History"
+  perm_send_tts_messages: "Use TTS"
+  perm_use_slash_commands: "Slash Commands"
+
+  # Voice Channels
+  perm_connect: "Connect"
+  perm_speak: "Speak"
+  perm_stream: "Stream Video"
+  perm_use_voice_activation: "Voice Activity"
+  perm_priority_speaker: "Priority Speaker"
+  perm_mute_members: "Mute Members"
+  perm_deafen_members: "Deafen Members"
+  perm_move_members: "Move Members"
+
+################################################################
+
+  # Commands
+
+  # Info
+  cmd_category_info: "Info"
+  cmd_desc_help: "Lists all commands, organized by categories. If `[command]` is specified, shows detailed information about the command instead."
+  cmd_desc_about: "Shows information about the bot."
+  cmd_desc_status: "Displays a message confirming that the bot is online."
+  cmd_desc_invite: "Sends a permanent invite to the current channel."
+  cmd_desc_perms: "Shows all server permissions of the specified `[member]`."
+
+  # Chat
+  cmd_category_chat: "Chat"
+  cmd_desc_rng: "Generates a random number ranging from `<min>` to `<max>`."
+  cmd_desc_choice: "Chooses a random option from the list of specified `<choices>`. There must be at least 2 choices, separated by commas `,`."
+  cmd_desc_gay: "Shows how gay is the `[target]`."
+  cmd_desc_penis: "Shows how long is the `[target]`'s penis."
+
+  # Tools
+  cmd_category_tools: "Tools"
+  cmd_desc_translate: "Translates the specified text (`<text>`) into English. If the first word of `<text>` is a valid two-letter language code, translates from this language."
+  cmd_desc_calc: "Evaluates the specified `<expression>` and displays the result."
+  cmd_desc_python: "Executes the specified `<code>` in Python 3. Wrapping the code in three backticks ` ``` ` is recommended."
+
+  # Music
+  cmd_category_music: "Music"
+  cmd_desc_join: "Joins the voice channel you are currently in."
+  cmd_desc_leave: "Leaves the voice channel the bot is currently in."
+  cmd_desc_play: "Plays the specified `<song>` from YouTube. Song can be either a name or a YouTube URL."
+  cmd_desc_skip: "Skips the current song."
+  cmd_desc_queue: "Shows the current song queue."
+
+  # Moderation
+  cmd_category_mod: "Moderation"
+  cmd_desc_kick: "Kicks the specified `<target>`."
+  cmd_desc_ban: "Bans the specified `<target>`."
+  cmd_desc_unban: "Unbans the specified `<target>`. `<target>` must be a User ID."
+  cmd_desc_warn: "Warns the specified target member for the specified reason (`<target, reason>`)."
+  cmd_desc_warns: "Shows the warn history of this server."
+
+  # Config
+  cmd_category_config: "Config"
+  cmd_desc_user_settings: "Shows either the specified `[member]`'s or your personal user settings."
+  cmd_desc_server_settings: "If no arguments are specified, shows the server's settings. If `[option]` is specified, sets the option's value to default. If both `[option]` and `[value]` are specified, sets the option's value to this value. If the `[option]` contains spaces, replace them with underscores `_`."
+  cmd_desc_language: "Lists all available bot languages. If `[language]` is specified, changes your language setting instead. `[language]` must be entered as a code, for example: `en_US`"
+
+################################################################
