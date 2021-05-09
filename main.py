@@ -5,7 +5,7 @@ Conbot - Made by Conax
 
 If you find any bugs, or if you have any suggestions, please contact me. My Discord is Conax#0001.
 
-By using this software, you agree to the license terms in the LICENSE.txt file.
+By using this software, you agree to the license terms in LICENSE.txt.
 """
 
 ################################################################
