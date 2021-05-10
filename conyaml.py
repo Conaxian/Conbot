@@ -11,7 +11,7 @@ import utils
 
 def load_yaml(file):
 
-    with open(file, "r") as f:
+    with open(file, "r", encoding="utf-8") as f:
         data = yaml.safe_load(f)
     data = {} if not data else data
     return data
@@ -21,7 +21,7 @@ def load_yaml(file):
 def save_yaml(file, data):
 
     yaml_string = yaml.dump(data, default_flow_style=False)
-    with open(file, "w") as f:
+    with open(file, "w", encoding="utf-8") as f:
         f.write(yaml_string)
 
 ################################################################
