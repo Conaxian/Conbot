@@ -64,7 +64,7 @@ class PyExecute:
 
         if self.unix:
             tasklist_cmd = f"ps -p {self.pid}"
-            tasklist_condition = "/0"
+            tasklist_condition = "<defunct>"
         else:
             tasklist_cmd = f'tasklist /FI "pid eq {self.pid}"'
             tasklist_condition = "INFO: No tasks are running"
