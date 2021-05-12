@@ -69,9 +69,7 @@ class PyExecute:
             tasklist_cmd = f'tasklist /FI "pid eq {self.pid}"'
             tasklist_condition = "INFO: No tasks are running"
         tasklist = os.popen(tasklist_cmd).read()
-        if tasklist_condition in tasklist:
-            return self.unix
-        return not self.unix
+        return tasklist_condition not in tasklist
 
     def run(self, code):
 
