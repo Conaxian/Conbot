@@ -10,6 +10,11 @@ import constants
 
 ################################################################
 
+kw_delimiters = [" ", "\n", "\t", ".", ",", ":", ";", "\\", "=", "+", "-", "*", "/", "%", "@", "(", ")", "[", "]", "{", "}"]
+kw_delimiters_str = "".join(kw_delimiters)
+
+################################################################
+
 class PyExecute:
 
     def __init__(self, py_file, loc_dict, run_check_timeout=constants.run_check_timeout, exec_timeout=constants.exec_timeout, 
@@ -35,22 +40,25 @@ class PyExecute:
     def scan(self, code):
 
         lines = code.split("\n")
-        for line in lines:
+        kw_code = code
+        for delimiter in kw_delimiters:
+            kw_code = kw_code.replace(delimiter, ".")
+        words = kw_code.split(".")
+        words = [word.strip(kw_delimiters_str) for word in words]
 
-            # Check imports for dangerous modules
+        # Check imports for dangerous modules
+        for line in lines:
             if "import" in line:
                 imported = line.replace("import", "").replace(" \n\t", "")
                 modules = set(imported.split(","))
                 if not modules.issubset(set(self.module_whitelist)):
                     return self.loc_dict["banned_module"]
 
-            # Check code for banned keywords
-            for keyword in self.keyword_blacklist:
-                words = code.split(" ")
-                words = [word.strip(".,;\\()[]{}_") for word in words]
-                if keyword in words:
-                    error = self.loc_dict["banned_keyword"]
-                    return error.replace("$1", keyword)
+        # Check code for banned keywords
+        for keyword in self.keyword_blacklist:
+            if keyword in words:
+                error = self.loc_dict["banned_keyword"]
+                return error.replace("$1", keyword)
 
     def is_running(self):
 
@@ -77,7 +85,11 @@ class PyExecute:
 
         python_cmd = "python3" if self.unix else "python"
         popen_args = [python_cmd, self.file_path]
-        process = subprocess.Popen(popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        if self.unix:
+            process = subprocess.Popen(popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            process = subprocess.Popen(popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW)
         self.pid = process.pid
 
         limit = time.time() + self.exec_timeout
