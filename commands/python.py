@@ -7,7 +7,7 @@ sys.path.append("..")
 import constants
 import cembed
 import loclib
-from pyexecute import PyExecute
+import pyexecute
 
 ################################################################
 
@@ -21,13 +21,15 @@ async def python(ctx):
         code = code[2:]
 
     exec_loc = {}
-    for loc_name in ["err_exec_timeout", "err_exec_banned_module", "err_exec_banned_keyword"]:
-        exec_loc[loc_name] = loclib.Loc.member(loc_name, ctx.author)
-    exec_loc["err_exec_timeout"].format(constants.exec_timeout)
+    exec_loc["timeout"] = loclib.Loc.member("err_exec_timeout", ctx.author)
+    exec_loc["banned_module"] = loclib.Loc.member("err_exec_banned_module", ctx.author)
+    exec_loc["banned_keyword"] = loclib.Loc.member("err_exec_banned_keyword", ctx.author)
+    exec_loc["timeout"].format(constants.exec_timeout)
 
-    pyexecute = PyExecute(constants.files["pyexecute"], exec_loc)
-    output = await ctx.client.loop.run_in_executor(None, lambda: pyexecute.execute(code))
-    output = output if len(output) <= 2000 else output[:2000]
+    pyexec = pyexecute.PyExecute(constants.files["pyexecute"], exec_loc)
+    exec_code = lambda: pyexec.execute(code)
+    output = await ctx.client.loop.run_in_executor(None, exec_code)
+    output = str(output)[:2000]
 
     title = loclib.Loc.member("label_output", ctx.author)
     embed = cembed.get_cembed(ctx.msg, f"```{output}```", title)

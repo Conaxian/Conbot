@@ -7,7 +7,7 @@ import utils
 
 ################################################################
 
-# Loads YAML data from a file
+# Load YAML data from a file
 
 def load_yaml(file):
 
@@ -16,7 +16,7 @@ def load_yaml(file):
     data = {} if not data else data
     return data
 
-# Saves YAML data to a file
+# Save YAML data to a file
 
 def save_yaml(file, data):
 
@@ -26,7 +26,7 @@ def save_yaml(file, data):
 
 ################################################################
 
-# Reads YAML config option from a file
+# Read YAML config option from a file
 
 def read_config(file, id, option):
 
@@ -36,7 +36,7 @@ def read_config(file, id, option):
     except Exception:
         return
 
-# Sets YAML config option to a file
+# Set YAML config option to a file
 
 def set_config(file, id, option, value):
 
@@ -51,25 +51,25 @@ def set_config(file, id, option, value):
 
 ################################################################
 
-# Reads user config
+# Read user config
 
 def read_user_config(user_id, option):
 
     return read_config(constants.files["user_config"], user_id, option)
 
-# Sets user config
+# Set user config
 
 def set_user_config(user_id, option, value):
 
     set_config(constants.files["user_config"], user_id, option, value)
 
-# Reads server config
+# Read server config
 
 def read_server_config(server_id, option):
 
     return read_config(constants.files["server_config"], server_id, option)
 
-# Sets server config
+# Set server config
 
 def set_server_config(server_id, option, value):
 
@@ -77,7 +77,7 @@ def set_server_config(server_id, option, value):
 
 ################################################################
 
-# Gets the list of warns
+# Get the list of warns
 
 def get_warns(server_id):
 
@@ -87,7 +87,7 @@ def get_warns(server_id):
     except Exception:
         return []
 
-# Adds a warn
+# Add a warn
 
 def add_warn(server_id, member_id, reason):
 

@@ -9,7 +9,7 @@ import constants
 import cembed
 import loclib
 import conscript_lib
-from pyexecute import PyExecute
+import pyexecute
 
 ################################################################
 
@@ -27,22 +27,22 @@ async def conscript(ctx):
         exec_loc[loc_name] = loclib.Loc.member(loc_name, ctx.author)
     exec_loc["err_exec_timeout"].format(constants.exec_timeout)
 
-    pyexecute = PyExecute(constants.files["pyexecute"], exec_loc)
-    output = str(pyexecute.execute(code))
+    pyexec = pyexecute.PyExecute(constants.files["pyexecute"], exec_loc)
+    output = str(pyexec.execute(code))
     title = loclib.Loc.member("label_output", ctx.author)
 
     if output in [str(text) for text in exec_loc.values()]:
-        output = output if len(output) <= 2000 else output[:2000]
+        output = output[:2000]
         title = loclib.Loc.member("label_output", ctx.author)
 
     else:
         cs_base = conscript_lib.Base(ctx)
         try:
             code = "\n".join([f"\t{line}" for line in code.split("\n")])
-            code = f"async def main():\n{code}\nfunction = main"
+            code = f"async def main():\n{code}"
             local_vars = {}
             exec(code, {"cb": cs_base}, local_vars)
-            await local_vars["function"]()
+            await local_vars["main"]()
             output = None
         except:
             output = traceback.format_exc()

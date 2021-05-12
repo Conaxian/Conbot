@@ -1,134 +1,97 @@
 ################################################################
 
+import os
+import time
+import subprocess
+import signal
+import platform
+
 import constants
 
 ################################################################
 
 class PyExecute:
 
-    def __init__(self, exec_file, loc):
+    def __init__(self, py_file, loc_dict, run_check_timeout=constants.run_check_timeout, exec_timeout=constants.exec_timeout, 
+    module_whitelist=constants.module_whitelist, keyword_blacklist=constants.keyword_blacklist):
 
-        self.__run__ = self.__execute_main__(exec_file, loc)
+        self.loc_dict = loc_dict
+        self.run_check_timeout = run_check_timeout
+        self.exec_timeout = exec_timeout
+        self.module_whitelist = module_whitelist
+        self.keyword_blacklist = keyword_blacklist
+
+        current_dir = os.path.dirname(__file__)
+        current_path = os.path.abspath(current_dir)
+        self.file_path = os.path.join(current_path, py_file)
+        self.unix = platform.system() != "Windows"
         self.exec_time = 0
 
-    def execute(self, code=None):
-        
-        output = self.__run__.run_code(code)
-        self.exec_time = output[1]
-        return output[0]
+    def execute(self, code):
 
-    def is_safe(self, code=None):
+        output = self.run(code)
+        return output
 
-        return self.__run__.is_safe(code)
-    
-    class __execute_main__:
+    def scan(self, code):
 
-        def __init__(self, exec_file, loc):
+        lines = code.split("\n")
+        for line in lines:
 
-            import time
-            import os
-            import subprocess
-            import threading
-            import signal
+            # Check imports for dangerous modules
+            if "import" in line:
+                imported = line.replace("import", "").replace(" \n\t", "")
+                modules = set(imported.split(","))
+                if not modules.issubset(set(self.module_whitelist)):
+                    return self.loc_dict["banned_module"]
 
-            current_dir = os.path.dirname(__file__)
-            current_path = os.path.abspath(current_dir)
-            self.local_dir = current_path.replace("\\", "/")
-            self.timeout_worker = constants.exec_timeout
-            self.check_script_timeout = 0.1
+            # Check code for banned keywords
+            for keyword in self.keyword_blacklist:
+                words = code.split(" ")
+                words = [word.strip(".,;\\()[]{}_") for word in words]
+                if keyword in words:
+                    error = self.loc_dict["banned_keyword"]
+                    return error.replace("$1", keyword)
 
-            self.time = time
-            self.os = os
-            self.subprocess = subprocess
-            self.threading = threading
-            self.signal = signal
+    def is_running(self):
 
-            self.output = None
-            self.execute_filename = exec_file
-
-            self.error_timeout = loc["err_exec_timeout"]
-            self.error_untrusted_module = loc["err_exec_banned_module"]
-            self.error_dangerous_keyword = loc["err_exec_banned_keyword"]
-
-            self.trust_modules = ["datetime", "math", "random", "hashlib", "time", "getpass", "socket", "urllib"]
-            self.dangerous_keywords = ["input", "exec", "eval", "compile", "open", "builtins", "os", "globals", "locals", "breakpoint", "dir", "delattr", "getattr", "repr", "vars", "__dict__"]
-            self.encoding = "ISO-8859-1"
-
-            self.remove_last_char = lambda x: [x[:len(x)-3] if x[len(x)-3:] == "\r\n\n" else x][0]
-
-        def worker(self, do_return=False):
-
-            self.output = None
-            popen_args = ["python3", self.execute_filename]
-            if not do_return:
-                process = self.subprocess.Popen(popen_args, stdout=self.subprocess.DEVNULL, stderr=self.subprocess.STDOUT)
-                self.pid = process.pid
-            else:
-                process = self.subprocess.Popen(popen_args, stdout=self.subprocess.PIPE, stderr=self.subprocess.PIPE)
-                self.pid = process.pid
-                stdout, stderr = process.communicate()
-                self.exec_time = self.time.time() - self.execute_start
-                output = (stdout + b"\n" + stderr)
-                output = output.decode(self.encoding)
-                output = self.remove_last_char(output)
-                return [output, self.exec_time]
-        
-        def check_if_running(self):
-
-            tasklist_command = f"ps -p {self.pid}"
+        if self.unix:
+            tasklist_cmd = f"ps -p {self.pid}"
             tasklist_condition = "/0"
-            is_running = self.os.popen(tasklist_command).read()
-            if tasklist_condition not in is_running:
-                return False
-        
-        def run_code(self, code):
+        else:
+            tasklist_cmd = f'tasklist /FI "pid eq {self.pid}"'
+            tasklist_condition = "INFO: No tasks are running"
+        tasklist = os.popen(tasklist_cmd).read()
+        if tasklist_condition in tasklist:
+            return self.unix
+        return not self.unix
 
-            self.execute_start = self.time.time()
-            self.code = code
+    def run(self, code):
 
-            result = self.is_safe(self.code)
-            if not result[0]:
-                self.exec_time = self.time.time() - self.execute_start
-                return [result[1], self.exec_time]
-            else:
-                self.code = code
-                with open(self.execute_filename, "w") as file:
-                    file.write(self.code)
-                self.worker()
+        self.exec_start = time.time()
+        error = self.scan(code)
+        if error:
+            self.exec_time = time.time() - self.exec_start
+            return error
+        with open(self.file_path, "w", encoding="utf-8") as f:
+            f.write(code)
 
-                end = self.time.time() + self.timeout_worker
-                while self.time.time() < end:
-                    self.time.sleep(self.check_script_timeout)
-                    if self.check_if_running() == False:
-                        output = self.worker(do_return=True)
-                        return output
+        python_cmd = "python3" if self.unix else "python"
+        popen_args = [python_cmd, self.file_path]
+        process = subprocess.Popen(popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        self.pid = process.pid
 
-                self.os.kill(self.pid, self.signal.SIGTERM)
-                self.exec_time = self.time.time() - self.execute_start
-                return [self.error_timeout, self.exec_time]
+        limit = time.time() + self.exec_timeout
+        while time.time() < limit:
+            time.sleep(self.run_check_timeout)
+            if not self.is_running():
+                stdout, stderr = process.communicate()
+                self.output = (stdout + b"\n" + stderr).decode("utf-8")
+                self.exec_time = time.time() - self.exec_start
+                return self.output
 
-        def is_safe(self, code=None):
-
-            if code == None:
-                if hasattr(self, "code"):
-                    code = self.input_code
-                    code_lines = code.split("\n")
-            else:
-                code_lines = code.split("\n")
-            
-            for line in code_lines:
-                if "import" in line:
-                    line = line.replace("import", "").replace(" ", "")
-                    modules = line.split(",")
-                    for module in modules:
-                        if module not in self.trust_modules:
-                            return [False, self.error_untrusted_module]
-
-            for keyword in self.dangerous_keywords:
-                if keyword in [string.strip(".,;\\()[]{}_") for string in code.split(" ")]:
-                    error = self.error_dangerous_keyword.replace("$1", keyword)
-                    return [False, error]
-
-            return [True, ""]
+        kill_signal = signal.SIGTERM if self.unix else signal.CTRL_C_EVENT
+        os.kill(self.pid, kill_signal)
+        self.exec_time = time.time() - self.exec_start
+        return self.loc_dict["timeout"]
 
 ################################################################
