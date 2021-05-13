@@ -18,6 +18,10 @@ class Context:
         self.server_config = server_config
         self.global_vars = kwargs
 
+    async def async_exec(self, func):
+
+        return await self.client.loop.run_in_executor(None, func)
+
 ################################################################
 
 # Class for commands

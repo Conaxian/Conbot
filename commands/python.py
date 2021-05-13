@@ -27,8 +27,8 @@ async def python(ctx):
     exec_loc["timeout"].format(constants.exec_timeout)
 
     pyexec = pyexecute.PyExecute(constants.files["pyexecute"], exec_loc)
-    exec_code = lambda: pyexec.execute(code)
-    output = await ctx.client.loop.run_in_executor(None, exec_code)
+    execute_code = lambda: pyexec.execute(code)
+    output = await ctx.async_exec(execute_code)
     output = str(output)[:2000]
 
     title = loclib.Loc.member("label_output", ctx.author)
