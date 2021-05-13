@@ -63,10 +63,15 @@ def time(offset=datetime.timedelta()):
 
 # Translate a string
 
-def translate(string, src="en", dest="en"):
+def translate(string, src=None, dest=None):
 
     translator = googletrans.Translator()
-    translation = translator.translate(string, src=src, dest=dest)
+    kwargs = {}
+    if src:
+        kwargs["src"] = src
+    if dest:
+        kwargs["dest"] = dest
+    translation = translator.translate(string, **kwargs)
     return translation
 
 ################################################################

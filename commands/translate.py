@@ -12,17 +12,14 @@ import loclib
 
 async def translate(ctx):
 
-    src_lang = "en"
+    src_lang = None
     words = ctx.args["text"].split()[0]
     first_word = ctx.args["text"].split()[0].strip("`")
     if len(first_word) == 2 and len(words) > 1:
         src_lang = first_word
 
     try:
-        if src_lang != "en":
-            translation = utils.translate(ctx.args["text"][3:] if src_lang != "en" else ctx.args["text"], src_lang)
-        else:
-            raise ValueError
+        translation = utils.translate(ctx.args["text"][3:], src_lang if src_lang else ctx.args["text"])
     except ValueError:
         translation = utils.translate(ctx.args["text"])
 
