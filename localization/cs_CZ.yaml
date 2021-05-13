@@ -36,6 +36,7 @@ loc_cs_CZ:
   label_github: "GitHub"
   label_bot_invite: "Přidat Bota"
   label_queue: "Fronta Songů"
+  label_numeral: "Číslovka"
 
 ################################################################
 
@@ -112,6 +113,7 @@ loc_cs_CZ:
   err_calc_zero_division: "Nelze dělit nulou!"
   err_settings_unknown_option: "Neplatné nastavení! Zadej platnou možnost, například `Jazyk`."
   err_server_settings_perms: "Pro změnu nastavení serveru potřebuješ permisi `Správa Serveru`!"
+  err_invalid_number: "Neplatné číslo! Zadej platné číslo, například `42`."
 
 ################################################################
 
@@ -185,6 +187,7 @@ loc_cs_CZ:
   cmd_category_chat: "Chat"
   cmd_desc_rng: "Vygeneruje náhodné číslo od `<min>` do `<max>`."
   cmd_desc_choice: "Vybere náhodnou možnost ze seznamu možností `<choices>`. Musíš zadat minimálně 2 možnosti oddělené čárkami `,`."
+  cmd_desc_numeral: "Vypíše slovní reprezantaci zadaného čísla (`<number>`)."
   cmd_desc_gay: "Zobrazí, jak moc gay je `[target]`."
   cmd_desc_penis: "Zobrazí, jak dlouhý je penis od `[target]`."
 

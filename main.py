@@ -151,6 +151,16 @@ commands = [
         []
     ),
 
+    # Numeral
+    cmdlib.Command.new(
+        "numeral",
+        ["num2word", "num2words"],
+        "chat",
+        ["<number>"],
+        [" "],
+        []
+    ),
+
     # Gay
     cmdlib.Command.new(
         "gay",

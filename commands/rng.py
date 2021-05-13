@@ -30,7 +30,7 @@ async def rng(ctx):
         return
     
     number = random.randint(min_num, max_num)
-    embed = cembed.get_cembed(ctx.msg, str(number))
+    embed = cembed.get_cembed(ctx.msg, f"`{str(number)}`")
     await ctx.channel.send(embed=embed)
 
 ################################################################

@@ -36,6 +36,7 @@ loc_en_GB:
   label_github: "GitHub"
   label_bot_invite: "Add Bot"
   label_queue: "Song Queue"
+  label_numeral: "Numeral"
 
 ################################################################
 
@@ -112,6 +113,7 @@ loc_en_GB:
   err_calc_zero_division: "You can't divide by zero!"
   err_settings_unknown_option: "Unknown option! Specify a valid option, for example `Language`."
   err_server_settings_perms: "You need the `Manage Server` permission to change the server settings!"
+  err_invalid_number: "Invalid number! Please specify a valid number, for example `42`."
 
 ################################################################
 
@@ -185,6 +187,7 @@ loc_en_GB:
   cmd_category_chat: "Chat"
   cmd_desc_rng: "Generates a random number ranging from `<min>` to `<max>`."
   cmd_desc_choice: "Chooses a random option from the list of specified `<choices>`. There must be at least 2 choices, separated by commas `,`."
+  cmd_desc_numeral: "Displays a word representation of the specified `<number>`."
   cmd_desc_gay: "Shows how gay is the `[target]`."
   cmd_desc_penis: "Shows how long is the `[target]`'s penis."
 
