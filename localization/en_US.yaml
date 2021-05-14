@@ -114,6 +114,7 @@ loc_en_US:
   err_settings_unknown_option: "Unknown option! Specify a valid option, for example `Language`."
   err_server_settings_perms: "You need the `Manage Server` permission to change the server settings!"
   err_invalid_number: "Invalid number! Please specify a valid number, for example `42`."
+  err_number_too_large: "The entered number is too large!"
 
 ################################################################
 

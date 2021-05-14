@@ -114,6 +114,7 @@ loc_cs_CZ:
   err_settings_unknown_option: "Neplatné nastavení! Zadej platnou možnost, například `Jazyk`."
   err_server_settings_perms: "Pro změnu nastavení serveru potřebuješ permisi `Správa Serveru`!"
   err_invalid_number: "Neplatné číslo! Zadej platné číslo, například `42`."
+  err_number_too_large: "Zadané číslo je příliš velké!"
 
 ################################################################
 
