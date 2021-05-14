@@ -5,7 +5,6 @@ import num2words
 
 sys.path.append("..")
 
-import utils
 import cembed
 import loclib
 
