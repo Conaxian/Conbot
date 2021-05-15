@@ -70,6 +70,12 @@ server_config = [
 
 ################################################################
 
+autoreplies = {
+    "f": "F"
+}
+
+################################################################
+
 # Define all commands
 
 commands = [
@@ -529,17 +535,10 @@ async def on_message(msg):
     if msg.author.bot or msg.content == "":
         return
 
-    # TODO: Remove (just for fun)
-    # Autoreply
-
-    if msg.content == "protony":
-        await msg.channel.send("a protony")
-        return
-
     # Get the server command prefix
 
     prefix = conyaml.read_server_config(msg.guild.id, "prefix")
-    prefix = prefix if prefix else constants.default_prefix
+    prefix = prefix or constants.default_prefix
 
     # If the message is a mention of the bot, send the current prefix
 
@@ -552,6 +551,12 @@ async def on_message(msg):
     # Log the message
 
     await utils.log(msg)
+
+    # Check for an autoreply
+
+    autoreply = msg.content.strip(" \n\t*_~`>|").lower()
+    if autoreply in autoreplies:
+        await msg.channel.send(autoreplies[autoreply])
 
     # Check for a command
 
