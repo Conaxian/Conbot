@@ -1,10 +1,8 @@
 ################################################################
 
 import discord
-import urllib
-import aiohttp
-import re
 import youtube_dl
+import youtubesearchpython.__future__ as ytsearch
 
 import constants
 
@@ -37,15 +35,10 @@ queues = {}
 
 async def yt_search(name):
 
-    name = urllib.parse.quote(name, safe="")
-    search_url = f"https://www.youtube.com/results?search_query={name}"
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(search_url) as response:
-            html = await response.text()
-
-    videos = re.findall(r"watch\?v=(\S{11})", html)
-    return f"https://www.youtube.com/watch?v={videos[0]}" if len(videos) >= 1 else None
+    videos = ytsearch.VideosSearch(name, limit=1)
+    video = (await videos.next())["result"]
+    video_id = video[0]["id"] if video else None
+    return f"https://www.youtube.com/watch?v={video_id}" if video_id else None
 
 ################################################################
 
