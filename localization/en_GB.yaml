@@ -183,6 +183,7 @@ loc_en_GB:
   cmd_desc_status: "Displays a message confirming that the bot is online."
   cmd_desc_invite: "Sends a permanent invite to the current channel."
   cmd_desc_perms: "Shows all server permissions of the specified `[member]`."
+  cmd_desc_avatar: "Displays the avatar of the specified `[member]`."
 
   # Chat
   cmd_category_chat: "Chat"

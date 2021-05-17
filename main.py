@@ -16,6 +16,7 @@ By using this software, you agree to the license terms in LICENSE.txt.
 
 # All required modules
 
+from asyncio.windows_events import CONNECT_PIPE_MAX_DELAY
 import discord
 from discord.ext import tasks
 import sys
@@ -127,6 +128,16 @@ commands = [
     cmdlib.Command.new(
         "perms",
         ["perm", "permissions", "permission"],
+        "info",
+        ["[member]"],
+        [" "],
+        []
+    ),
+
+    # Avatar
+    cmdlib.Command.new(
+        "avatar",
+        ["profile-pic", "pfp"],
         "info",
         ["[member]"],
         [" "],
@@ -491,7 +502,7 @@ async def on_member_join(member):
         channel = member.guild.get_channel(channel_id)
         text = loclib.Loc.server("text_join_msg", member.guild)
         text.format(member.mention)
-        embed = cembed.get_embed(text, "", author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
+        embed = cembed.get_embed(text, author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
         await channel.send(embed=embed)
 
 ################################################################
@@ -506,7 +517,7 @@ async def on_member_remove(member):
         channel = member.guild.get_channel(channel_id)
         text = loclib.Loc.server("text_leave_msg", member.guild)
         text.format(member.mention)
-        embed = cembed.get_embed(text, "", author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
+        embed = cembed.get_embed(text, author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
         await channel.send(embed=embed)
 
 ################################################################

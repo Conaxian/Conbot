@@ -182,7 +182,8 @@ loc_cs_CZ:
   cmd_desc_about: "Zobrazí informace o botovi."
   cmd_desc_status: "Zobrazí zprávu potvrzující, že je bot online."
   cmd_desc_invite: "Pošle permanentní pozvánku do tohoto kanálu."
-  cmd_desc_perms: "Zobrazí všechny serverové permise od člena `[member]`."
+  cmd_desc_perms: "Zobrazí všechny serverové permise od zadaného člena (`[member]`)."
+  cmd_desc_avatar: "Zobrazí avatar zadaného člena (`[member]`)."
 
   # Chat
   cmd_category_chat: "Chat"

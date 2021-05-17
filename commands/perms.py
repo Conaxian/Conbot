@@ -10,6 +10,13 @@ import loclib
 
 ################################################################
 
+perm_list = ["administrator", "view_channel", "manage_channels", "manage_roles", "manage_emojis", "view_audit_log", "manage_webhooks", "manage_guild"]
+perm_list += ["send_messages", "embed_links", "attach_files", "add_reactions", "external_emojis", "mention_everyone", "manage_messages", "read_message_history", "send_tts_messages", "use_slash_commands"]
+perm_list += ["create_instant_invite", "change_nickname", "manage_nicknames", "kick_members", "ban_members"]
+perm_list += ["connect", "speak", "stream", "use_voice_activation", "priority_speaker", "mute_members", "deafen_members", "move_members"]
+
+################################################################
+
 async def perms(ctx):
 
     if not ctx.args["member"]:
@@ -26,10 +33,6 @@ async def perms(ctx):
 
     perms = member.guild_permissions
     fields = {}
-    perm_list = ["administrator", "view_channel", "manage_channels", "manage_roles", "manage_emojis", "view_audit_log", "manage_webhooks", "manage_guild"]
-    perm_list += ["send_messages", "embed_links", "attach_files", "add_reactions", "external_emojis", "mention_everyone", "manage_messages", "read_message_history", "send_tts_messages", "use_slash_commands"]
-    perm_list += ["create_instant_invite", "change_nickname", "manage_nicknames", "kick_members", "ban_members"]
-    perm_list += ["connect", "speak", "stream", "use_voice_activation", "priority_speaker", "mute_members", "deafen_members", "move_members"]
     yes = loclib.Loc.member("label_yes", ctx.author)
     no = loclib.Loc.member("label_no", ctx.author)
 
