@@ -16,7 +16,6 @@ By using this software, you agree to the license terms in LICENSE.txt.
 
 # All required modules
 
-from asyncio.windows_events import CONNECT_PIPE_MAX_DELAY
 import discord
 from discord.ext import tasks
 import sys
