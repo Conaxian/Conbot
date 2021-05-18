@@ -71,6 +71,8 @@ server_config = [
 
 ################################################################
 
+# Define autoreplies
+
 autoreplies = {
     "f": "F"
 }
