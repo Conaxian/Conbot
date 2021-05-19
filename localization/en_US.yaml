@@ -115,6 +115,7 @@ loc_en_US:
   err_server_settings_perms: "You need the `Manage Server` permission to change the server settings!"
   err_invalid_number: "Invalid number! Please specify a valid number, for example `42`."
   err_number_too_large: "The entered number is too large!"
+  err_unknown_emoji: "Unknown emoji! Please provide a valid custom emoji name, for example: `omegalul`"
 
 ################################################################
 
@@ -195,6 +196,7 @@ loc_en_US:
 
   # Tools
   cmd_category_tools: "Tools"
+  cmd_desc_emoji: "Sends a custom server emoji with the specified `<name>`."
   cmd_desc_translate: "Translates the specified text (`<text>`) into English. If the first word of `<text>` is a valid two-letter language code, translates from this language."
   cmd_desc_calc: "Evaluates the specified `<expression>` and displays the result."
   cmd_desc_python: "Executes the specified `<code>` in Python 3. Wrapping the code in three backticks ` ``` ` is recommended."

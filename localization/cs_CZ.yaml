@@ -115,6 +115,7 @@ loc_cs_CZ:
   err_server_settings_perms: "Pro změnu nastavení serveru potřebuješ permisi `Správa Serveru`!"
   err_invalid_number: "Neplatné číslo! Zadej platné číslo, například `42`."
   err_number_too_large: "Zadané číslo je příliš velké!"
+  err_unknown_emoji: "Neznámé emoji! Poskytni platný název emoji, například: `omegalul`"
 
 ################################################################
 
@@ -195,6 +196,7 @@ loc_cs_CZ:
 
   # Tools
   cmd_category_tools: "Nástroje"
+  cmd_desc_emoji: "Pošle serverové emoji se zadaným jménem (`<name>`)."
   cmd_desc_translate: "Přeloží zadaný `<text>` do angličtiny. Pokud je první slovo platným dvoupísmenným kódem jazyka, přeloží z tohoto jazyka."
   cmd_desc_calc: "Vypočítá zadaný výraz `<expression>` a zobrazí výsledek."
   cmd_desc_python: "Spustí zadaný kód `<code>` v Pythonu 3. Doporučuje se z obou stran oddělit kód obrácenými čárkami ` ``` `."

@@ -203,6 +203,16 @@ commands = [
 
     # Tools
 
+    # Emoji
+    cmdlib.Command.new(
+        "emoji",
+        ["emote"],
+        "tools",
+        ["<name>"],
+        [" "],
+        []
+    ),
+
     # Translate
     cmdlib.Command.new(
         "translate",
@@ -419,7 +429,7 @@ commands = [
         []
     ),
 
-    # Conscript
+    # Google Translate Nonsense
     cmdlib.Command.new(
         "googletrans-nonsense",
         ["googletrans-nonsense"],

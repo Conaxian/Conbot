@@ -80,7 +80,7 @@ def translate(string, src=None, dest=None):
 
 async def log(msg):
 
-    with open(constants.files["log"], "a") as f:
+    with open(constants.files["log"], "a", encoding="utf-8") as f:
         space_length = max(len(date()), len(msg.guild.name), len(msg.channel.name), len(str(msg.author)))
         spacing = lambda string: " " * (space_length - len(string))
         msg_datetime = f"{date()}{spacing(date())} | {time()} UTC"
