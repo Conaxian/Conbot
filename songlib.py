@@ -5,6 +5,8 @@ import youtube_dl
 import youtubesearchpython.__future__ as ytsearch
 
 import constants
+import cembed
+import loclib
 
 ################################################################
 
@@ -63,5 +65,39 @@ async def play_song(voice, song):
     song["playing"] = True
     voice.source = discord.PCMVolumeTransformer(voice.source)
     voice.source.volume = constants.player_volume
+
+################################################################
+
+# Check the music player, if a song has finished playing, remove it from the queue and start playing the next song (if there is any)
+
+async def player_check(voices):
+
+    # Disconnect from empty voice channels
+
+    for voice in voices:
+        queue = queues.get(voice.guild.id, [])
+
+        if len(voice.channel.members) <= 1:
+            await voice.disconnect()
+            queue.clear()
+
+        # Check if the current song has finished playing
+
+        elif not voice.is_playing() and not voice.is_paused():
+
+            # Remove the current song from queue
+
+            if len(queue) >= 1 and queue[0]["playing"]:
+                queue.pop(0)
+
+                # If there are more songs in the queue, start playing the next song
+
+                if len(queue) >= 1:
+                    song = queue[0]
+                    await play_song(voice, song)
+                    text = loclib.Loc.server("text_play_playing", voice.guild)
+                    text.format(song["info"]["title"])
+                    embed = cembed.get_embed(text)
+                    await song["context"].channel.send(embed=embed)
 
 ################################################################

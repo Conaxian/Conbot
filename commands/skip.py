@@ -26,7 +26,8 @@ async def skip(ctx):
             text_skip.format(queue[0]["info"]["title"])
             embed_skip = cembed.get_cembed(ctx.msg, text_skip)
             await ctx.channel.send(embed=embed_skip)
-            if len(queue) > 1:
+            await songlib.player_check(ctx.client.voice_clients)
+            if len(queue) >= 1:
                 return
 
     await ctx.channel.send(embed=embed)

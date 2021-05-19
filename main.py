@@ -449,37 +449,12 @@ for command in commands:
 
 ################################################################
 
-# Keep control of music related tasks
+# Periodically check the music player
 
 @tasks.loop(seconds=constants.music_loop_time)
-async def music_loop():
+async def player_loop():
 
-    # Disconnect from empty voice channels
-
-    voices = client.voice_clients
-    for voice in voices:
-        if len(voice.channel.members) <= 1:
-            await voice.disconnect()
-
-        # Check if the current song has finished playing
-
-        if not voice.is_playing() and not voice.is_paused():
-
-            # Remove the current song from queue
-
-            queue = songlib.queues.get(voice.guild.id, [])
-            if len(queue) >= 1 and queue[0]["playing"]:
-                queue.pop(0)
-
-                # If there are more songs in the queue, start playing the next song
-
-                if len(queue) >= 1:
-                    song = queue[0]
-                    await songlib.play_song(voice, song)
-                    text = loclib.Loc.server("text_play_playing", voice.guild)
-                    text.format(song["info"]["title"])
-                    embed = cembed.get_embed(text)
-                    await song["context"].channel.send(embed=embed)
+    await songlib.player_check(client.voice_clients)
 
 ################################################################
 
@@ -489,7 +464,7 @@ async def music_loop():
 async def on_ready():
 
     print(f"Bot initialized as {client.user}")
-    music_loop.start()
+    player_loop.start()
 
 ################################################################
 
