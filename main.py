@@ -73,7 +73,9 @@ server_config = [
 # Define autoreplies
 
 autoreplies = {
-    "f": "F"
+    "f": "F",
+    "conax": "Conax is cool",
+    "conbot": "Conbot is cool"
 }
 
 ################################################################
