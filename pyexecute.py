@@ -6,7 +6,7 @@ import subprocess
 import signal
 import platform
 
-import constants
+import const
 
 ################################################################
 
@@ -17,8 +17,8 @@ kw_delimiters_str = "".join(kw_delimiters)
 
 class PyExecute:
 
-    def __init__(self, py_file, loc_dict, run_check_timeout=constants.run_check_timeout, exec_timeout=constants.exec_timeout, 
-    module_whitelist=constants.module_whitelist, keyword_blacklist=constants.keyword_blacklist):
+    def __init__(self, py_file, loc_dict, run_check_timeout=const.run_check_timeout, exec_timeout=const.exec_timeout, 
+    module_whitelist=const.module_whitelist, keyword_blacklist=const.keyword_blacklist):
 
         self.loc_dict = loc_dict
         self.run_check_timeout = run_check_timeout

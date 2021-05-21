@@ -1,6 +1,6 @@
 ################################################################
 
-import constants
+import const
 import conyaml
 
 ################################################################
@@ -63,7 +63,7 @@ class Loc:
 
 def load_localization(lang):
 
-    loc = conyaml.load_yaml(constants.loc_files[lang])
+    loc = conyaml.load_yaml(const.loc_files[lang])
     loc = loc[f"loc_{lang}"]
     return loc
 
@@ -71,6 +71,6 @@ def load_localization(lang):
 
 # Preloads the localization files
 
-loc_dict = {lang:load_localization(lang) for lang in constants.loc_files.keys()}
+loc_dict = {lang:load_localization(lang) for lang in const.loc_files.keys()}
 
 ################################################################

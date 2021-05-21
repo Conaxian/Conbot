@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("..")
 
-import constants
+import const
 import cembed
 import loclib
 from pyexecute import PyExecute
@@ -24,7 +24,7 @@ async def calc(ctx):
     else:
         err_timeout = loclib.Loc.member("err_calc_timeout", ctx.author)
         exec_loc = {"err_exec_timeout": err_timeout, "err_exec_banned_module": "", "err_exec_banned_keyword": ""}
-        pyexecute = PyExecute(constants.files["pycalc"], exec_loc)
+        pyexecute = PyExecute(const.files["pycalc"], exec_loc)
         text = pyexecute.execute(f"print({expr})")
         
         err_syntax = loclib.Loc.member("err_calc_syntax_error", ctx.author)

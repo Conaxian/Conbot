@@ -2,7 +2,7 @@
 
 import yaml
 
-import constants
+import const
 import utils
 
 ################################################################
@@ -55,25 +55,25 @@ def set_config(file, id, option, value):
 
 def read_user_config(user_id, option):
 
-    return read_config(constants.files["user_config"], user_id, option)
+    return read_config(const.files["user_config"], user_id, option)
 
 # Set user config
 
 def set_user_config(user_id, option, value):
 
-    set_config(constants.files["user_config"], user_id, option, value)
+    set_config(const.files["user_config"], user_id, option, value)
 
 # Read server config
 
 def read_server_config(server_id, option):
 
-    return read_config(constants.files["server_config"], server_id, option)
+    return read_config(const.files["server_config"], server_id, option)
 
 # Set server config
 
 def set_server_config(server_id, option, value):
 
-    set_config(constants.files["server_config"], server_id, option, value)
+    set_config(const.files["server_config"], server_id, option, value)
 
 ################################################################
 
@@ -81,7 +81,7 @@ def set_server_config(server_id, option, value):
 
 def get_warns(server_id):
 
-    data = load_yaml(constants.files["warns"])
+    data = load_yaml(const.files["warns"])
     try:
         return list(data[server_id].values())
     except Exception:
@@ -91,13 +91,13 @@ def get_warns(server_id):
 
 def add_warn(server_id, member_id, reason):
 
-    data = load_yaml(constants.files["warns"])
+    data = load_yaml(const.files["warns"])
     if server_id not in data.keys():
         data[server_id] = {}
     warn_indices = data[server_id].keys()
     warn_index = max(warn_indices) + 1 if warn_indices else 1
     data[server_id][warn_index] = {"member": member_id, "reason": reason, "time": f"{utils.date()}-{utils.time()}"}
-    save_yaml(constants.files["warns"], data)
+    save_yaml(const.files["warns"], data)
 
 ################################################################
 
@@ -147,7 +147,7 @@ class Config:
             return value
 
         elif self.vtype == "lang_code":
-            return value if value in constants.loc_files.keys() else None
+            return value if value in const.loc_files.keys() else None
 
         elif self.vtype == "text_channel":
             channel_id = utils.mention_id(value)

@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("..")
 
-import constants
+import const
 import utils
 import cembed
 import loclib
@@ -30,9 +30,9 @@ async def play(ctx):
             embed = cembed.get_cembed(ctx.msg, text)
             await ctx.channel.send(embed=embed)
 
-    if len(songlib.queues.get(ctx.guild.id, [])) >= constants.song_queue_limit:
+    if len(songlib.queues.get(ctx.guild.id, [])) >= const.song_queue_limit:
         text = loclib.Loc.member("text_max_queue_length", ctx.author)
-        text.format(constants.song_queue_limit)
+        text.format(const.song_queue_limit)
         embed = cembed.get_cembed(ctx.msg, text)
         await ctx.channel.send(embed=embed)
         return
@@ -48,7 +48,7 @@ async def play(ctx):
         song, info = await songlib.get_song(song_url, ctx.client.loop)
         if not song:
             text = loclib.Loc.member("err_play_too_long", ctx.author)
-            max_length = constants.song_max_length / 60
+            max_length = const.song_max_length / 60
             max_length = str(round(max_length, 2)).rstrip("0").rstrip(".")
             text.format(max_length)
 

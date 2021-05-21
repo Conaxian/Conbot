@@ -2,7 +2,7 @@
 
 import discord
 
-import constants
+import const
 import utils
 
 ################################################################
@@ -11,7 +11,7 @@ import utils
 
 def get_embed(text="", title=None, url=None, image=None, author_name=None, author_img=None, timestamp=None, fields={}, inline=False, footer=True, color=None):
 
-    color = color if color else constants.default_embed_color
+    color = color if color else const.default_embed_color
     embed = discord.Embed(description=str(text), colour=color)
 
     if title:

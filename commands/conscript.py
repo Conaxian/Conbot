@@ -5,7 +5,7 @@ import traceback
 
 sys.path.append("..")
 
-import constants
+import const
 import cembed
 import loclib
 import conscript_lib
@@ -25,9 +25,9 @@ async def conscript(ctx):
     exec_loc = {}
     for loc_name in ["err_exec_timeout", "err_exec_banned_module", "err_exec_banned_keyword"]:
         exec_loc[loc_name] = loclib.Loc.member(loc_name, ctx.author)
-    exec_loc["err_exec_timeout"].format(constants.exec_timeout)
+    exec_loc["err_exec_timeout"].format(const.exec_timeout)
 
-    pyexec = pyexecute.PyExecute(constants.files["pyexecute"], exec_loc)
+    pyexec = pyexecute.PyExecute(const.files["pyexecute"], exec_loc)
     output = str(pyexec.execute(code))
     title = loclib.Loc.member("label_output", ctx.author)
 

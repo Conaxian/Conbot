@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("..")
 
-import constants
+import const
 import conyaml
 import cembed
 import loclib
@@ -18,7 +18,7 @@ async def language(ctx):
     if not lang:
 
         fields = {}
-        for language in constants.loc_files.keys():
+        for language in const.loc_files.keys():
             lang_name = loclib.loc_dict[language]["language_name"]
             lang_code = f"`{language}`"
             fields[lang_name] = lang_code
@@ -30,7 +30,7 @@ async def language(ctx):
     else:
 
         lang = lang.replace("-", "_")
-        if lang in constants.loc_files.keys():
+        if lang in const.loc_files.keys():
             conyaml.set_user_config(ctx.author.id, "language", lang)
             text = loclib.Loc.member("text_lang_changed", ctx.author)
 

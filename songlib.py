@@ -4,7 +4,7 @@ import discord
 import youtube_dl
 import youtubesearchpython.__future__ as ytsearch
 
-import constants
+import const
 import cembed
 import loclib
 
@@ -50,7 +50,7 @@ async def get_song(url, loop):
 
     with youtube_dl.YoutubeDL(ytdl_options) as ytdl:
         song_info = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=False))
-        if song_info["duration"] > constants.song_max_length:
+        if song_info["duration"] > const.song_max_length:
             return None, None
         song_file = song_info["url"]
         return discord.FFmpegPCMAudio(song_file, **ffmpeg_options), song_info
@@ -64,7 +64,7 @@ async def play_song(voice, song):
     voice.play(song["song"])
     song["playing"] = True
     voice.source = discord.PCMVolumeTransformer(voice.source)
-    voice.source.volume = constants.player_volume
+    voice.source.volume = const.player_volume
 
 ################################################################
 

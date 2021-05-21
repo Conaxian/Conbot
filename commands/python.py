@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("..")
 
-import constants
+import const
 import cembed
 import loclib
 import pyexecute
@@ -24,9 +24,9 @@ async def python(ctx):
     exec_loc["timeout"] = loclib.Loc.member("err_exec_timeout", ctx.author)
     exec_loc["banned_module"] = loclib.Loc.member("err_exec_banned_module", ctx.author)
     exec_loc["banned_keyword"] = loclib.Loc.member("err_exec_banned_keyword", ctx.author)
-    exec_loc["timeout"].format(constants.exec_timeout)
+    exec_loc["timeout"].format(const.exec_timeout)
 
-    pyexec = pyexecute.PyExecute(constants.files["pyexecute"], exec_loc)
+    pyexec = pyexecute.PyExecute(const.files["pyexecute"], exec_loc)
     execute_code = lambda: pyexec.execute(code)
     output = await ctx.async_exec(execute_code)
     output = str(output)[:2000]

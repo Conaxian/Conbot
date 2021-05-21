@@ -27,7 +27,7 @@ import traceback
 
 # Conbot modules
 
-import constants
+import const
 import utils
 import conyaml
 import cembed
@@ -461,7 +461,7 @@ for command in commands:
 
 # Periodically check the music player
 
-@tasks.loop(seconds=constants.music_loop_time)
+@tasks.loop(seconds=const.music_loop_time)
 async def player_loop():
 
     await songlib.player_check(client.voice_clients)
@@ -518,7 +518,7 @@ async def on_guild_join(guild):
         channel = guild.system_channel
     if not channel:
         channel = guild.text_channels[0]
-    await channel.send(constants.welcome_text)
+    await channel.send(const.welcome_text)
 
 ################################################################
 
@@ -535,7 +535,7 @@ async def on_message(msg):
     # Get the server command prefix
 
     prefix = conyaml.read_server_config(msg.guild.id, "prefix")
-    prefix = prefix or constants.default_prefix
+    prefix = prefix or const.default_prefix
 
     # If the message is a mention of the bot, send the current prefix
 
@@ -562,7 +562,7 @@ async def on_message(msg):
         # Check if the user isn't spamming commands
 
         call_time = cmd_call_times.get(msg.author.id, float("-inf"))
-        if call_time > time.time() - constants.cmd_call_cooldown:
+        if call_time > time.time() - const.cmd_call_cooldown:
             return
 
         # Register the call time
@@ -579,7 +579,7 @@ async def on_message(msg):
 
         for cmd in commands:
 
-            if cmd.category == "dev" and msg.author.id not in constants.devs:
+            if cmd.category == "dev" and msg.author.id not in const.devs:
                 continue
 
             if command in cmd.calls:
@@ -666,7 +666,7 @@ async def on_message(msg):
 
         calls = sum([cmd.calls for cmd in commands if cmd.category != "dev"], [])
         try:
-            match = difflib.get_close_matches(command, calls, 1, 0.6)[0]
+            match = difflib.get_close_matches(command, calls, 1, const.cmd_help_min_diff)[0]
             text = loclib.Loc.member("err_unknown_cmd_alt", msg.author)
             text.format(prefix, match)
         except IndexError:
@@ -684,7 +684,7 @@ async def on_message(msg):
 # Run the bot, catch HTTP Exceptions
 
 try:
-    client.run(constants.token)
+    client.run(const.token)
 except discord.errors.HTTPException as error:
     print(error.response)
 
