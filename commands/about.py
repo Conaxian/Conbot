@@ -17,6 +17,7 @@ async def about(ctx):
     title = loclib.Loc.member("label_about", ctx.author)
     title_bot_invite = loclib.Loc.member("label_bot_invite", ctx.author)
     title_github = loclib.Loc.member("label_github", ctx.author)
+
     fields = {title_bot_invite: const.bot_invite_url, title_github: const.bot_github_url}
     embed = cembed.get_cembed(ctx.msg, text, title, fields=fields, inline=True)
     await ctx.channel.send(embed=embed)

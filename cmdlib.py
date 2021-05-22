@@ -49,3 +49,11 @@ class Command:
         return cls(name, aliases, category, args, delimiters, perms, desc, None, dev)
 
 ################################################################
+
+# Exception for sending messages
+
+class CmdError(Exception):
+
+    pass
+
+################################################################

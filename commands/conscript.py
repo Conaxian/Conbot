@@ -32,7 +32,6 @@ async def conscript(ctx):
     title = loclib.Loc.member("label_output", ctx.author)
 
     if output in [str(text) for text in exec_loc.values()]:
-        output = output[:2000]
         title = loclib.Loc.member("label_output", ctx.author)
 
     else:
@@ -48,6 +47,7 @@ async def conscript(ctx):
             output = traceback.format_exc()
 
     if output:
+        output = output[:2000]
         embed = cembed.get_cembed(ctx.msg, f"```{output}```", title)
         await ctx.channel.send(embed=embed)
 

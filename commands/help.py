@@ -5,6 +5,7 @@ import sys
 sys.path.append("..")
 
 import cembed
+import cmdlib
 import loclib
 
 ################################################################
@@ -43,10 +44,7 @@ async def help(ctx):
                 cmd = command
         
         if not cmd or cmd.category == "dev":
-            text = loclib.Loc.member("err_help_unknown_cmd", ctx.author)
-            embed = cembed.get_cembed(ctx.msg, text)
-            await ctx.channel.send(embed=embed)
-            return
+            raise cmdlib.CmdError("err_help_unknown_cmd")
 
         fields = {}
         none = loclib.Loc.member("label_none", ctx.author)

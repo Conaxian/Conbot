@@ -7,6 +7,7 @@ sys.path.append("..")
 import const
 import conyaml
 import cembed
+import cmdlib
 import loclib
 
 ################################################################
@@ -20,8 +21,7 @@ async def language(ctx):
         fields = {}
         for language in const.loc_files.keys():
             lang_name = loclib.loc_dict[language]["language_name"]
-            lang_code = f"`{language}`"
-            fields[lang_name] = lang_code
+            fields[lang_name] = f"`{language}`"
 
         text = loclib.Loc.member("text_lang_list", ctx.author)
         title = loclib.Loc.member("label_languages", ctx.author)
@@ -33,9 +33,8 @@ async def language(ctx):
         if lang in const.loc_files.keys():
             conyaml.set_user_config(ctx.author.id, "language", lang)
             text = loclib.Loc.member("text_lang_changed", ctx.author)
-
         else:
-            text = loclib.Loc.member("err_unknown_lang", ctx.author)
+            raise cmdlib.CmdError("err_unknown_lang")
 
         embed = cembed.get_cembed(ctx.msg, text)
 

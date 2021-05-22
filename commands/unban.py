@@ -7,6 +7,7 @@ sys.path.append("..")
 
 import utils
 import cembed
+import cmdlib
 import loclib
 
 ################################################################
@@ -21,27 +22,16 @@ async def unban(ctx):
 
     if not target:
         target = utils.get(banned_users, id=target_id)
-        for user in banned_users:
-            if user.id == target_id:
-                target = user
-                break
-
-    if not target:
-        text = loclib.Loc.member("err_unknown_user", ctx.author)
-        text.format(ctx.client.user.id)
-    if text:
-        embed = cembed.get_cembed(ctx.msg, text)
-        await ctx.channel.send(embed=embed)
-        return
+        if not target:
+            raise cmdlib.CmdError("err_unknown_user", ctx.client.user.id)
 
     reason = loclib.Loc.member("text_unban_reason", ctx.author)
     reason.format(ctx.author)
     try:
         await ctx.guild.unban(target, reason=str(reason))
+        text = loclib.Loc.member("text_unban_success", ctx.author)
     except discord.errors.NotFound:
         text = loclib.Loc.member("text_unban_not_found", ctx.author)
-    if not text:
-        text = loclib.Loc.member("text_unban_success", ctx.author)
 
     target_mention = f"<@!{target_id}>"
     text.format(target_mention)

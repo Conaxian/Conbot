@@ -107,7 +107,7 @@ loc_cs_CZ:
   err_empty_queue: "Fronta songů je prázdná!"
   err_play_unknown_song: "Na YouTube nebyl nalezen žádný song!"
   err_play_too_long: "Song je příliš dlouhý! Maximální povolená délka je `$1 minut`."
-  err_calc_bannned_char: "Zadaný výraz obsahuje nepovolené znaky!"
+  err_calc_banned_char: "Zadaný výraz obsahuje nepovolené znaky!"
   err_calc_timeout: "Výpočet byl zastaven, protože běžel déle než $1 sekund!"
   err_calc_syntax_error: "Neplatná syntaxe!"
   err_calc_zero_division: "Nelze dělit nulou!"

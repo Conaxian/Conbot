@@ -6,6 +6,7 @@ sys.path.append("..")
 
 import conyaml
 import cembed
+import cmdlib
 import loclib
 
 ################################################################
@@ -42,16 +43,14 @@ async def server_settings(ctx):
 
                 break
             else:
-                text = loclib.Loc.member("err_settings_unknown_option", ctx.author)
+                raise cmdlib.CmdError("err_settings_unknown_option")
 
         embed = cembed.get_cembed(ctx.msg, text)
         await ctx.channel.send(embed=embed)
 
     elif option:
 
-        text = loclib.Loc.member("err_server_settings_perms", ctx.author)
-        embed = cembed.get_cembed(ctx.msg, text)
-        await ctx.channel.send(embed=embed)
+        raise cmdlib.CmdError("err_server_settings_perms")
 
     else:
 

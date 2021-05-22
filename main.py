@@ -648,16 +648,25 @@ async def on_message(msg):
                     except IndexError:
                         args[arg_name] = None
 
-                # Call the command, print an error message if the bot has insufficient permissions
+                # Call the command, handle all possible errors and send/print the respective error message
 
                 ctx = cmdlib.Context(client, msg, prefix, args, commands, user_config, server_config)
                 try:
                     await cmd.code(ctx)
+
+                except cmdlib.CmdError as error:
+                    format_args = error.args[1:]
+                    text = loclib.Loc.member(error.args[0], msg.author)
+                    text.format(*format_args)
+                    embed = cembed.get_cembed(msg, text)
+                    await msg.channel.send(embed=embed)
+
                 except discord.errors.Forbidden as error:
                     if str(error).endswith("Missing Permissions"):
                         text = loclib.Loc.member("err_missing_perms_bot", msg.author)
                         embed = cembed.get_cembed(msg, text)
                         await msg.channel.send(embed=embed)
+
                 except:
                     error = traceback.format_exc()
                     print(error)

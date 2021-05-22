@@ -7,6 +7,7 @@ sys.path.append("..")
 import const
 import utils
 import cembed
+import cmdlib
 import loclib
 import songlib
 
@@ -17,10 +18,7 @@ async def play(ctx):
     voice = ctx.author.voice
 
     if not voice:
-        text = loclib.Loc.member("err_join_no_voice", ctx.author)
-        embed = cembed.get_cembed(ctx.msg, text)
-        await ctx.channel.send(embed=embed)
-        return
+        raise cmdlib.CmdError("err_join_no_voice")
 
     else:
         if not utils.get(ctx.client.voice_clients, guild=ctx.guild):
@@ -42,15 +40,14 @@ async def play(ctx):
     song_url = await songlib.yt_search(ctx.args["song"])
 
     if not song_url:
-        text = loclib.Loc.member("err_play_unknown_song", ctx.author)
+        raise cmdlib.CmdError("err_play_unknown_song")
 
     else:
         song, info = await songlib.get_song(song_url, ctx.client.loop)
         if not song:
-            text = loclib.Loc.member("err_play_too_long", ctx.author)
             max_length = const.song_max_length / 60
             max_length = str(round(max_length, 2)).rstrip("0").rstrip(".")
-            text.format(max_length)
+            raise cmdlib.CmdError("err_play_too_long", max_length)
 
     if text:
         embed = cembed.get_cembed(ctx.msg, text)

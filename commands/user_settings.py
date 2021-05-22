@@ -7,6 +7,7 @@ sys.path.append("..")
 import utils
 import conyaml
 import cembed
+import cmdlib
 import loclib
 
 ################################################################
@@ -19,13 +20,8 @@ async def user_settings(ctx):
         target_id = utils.mention_id(target_mention)
         if target_id != 0:
             target = ctx.guild.get_member(target_id)
-
-    if not target:
-        text = loclib.Loc.member("err_unknown_member", ctx.author)
-        text.format(ctx.client.user.mention)
-        embed = cembed.get_cembed(ctx.msg, text)
-        ctx.channel.send(embed=embed)
-        return
+        if not target:
+            raise cmdlib.CmdError("err_unknown_member", ctx.client.user.mention)
 
     fields = {}
     for config in ctx.user_config:
