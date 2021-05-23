@@ -23,7 +23,7 @@ song_queue_limit = 10     # Seconds
 exec_timeout = 5          # Seconds
 run_check_timeout = 0.025 # Seconds
 module_whitelist = ["datetime", "math", "random", "hashlib", "time", "getpass", "socket", "urllib"]
-keyword_blacklist = ["input", "exec", "eval", "compile", "open", "builtins", "os", "globals", "locals", "breakpoint", "dir", "delattr", "getattr", "repr", "vars", "__dict__"]
+keyword_blacklist = ["input", "exec", "eval", "compile", "open", "builtins", "os", "globals", "locals", "breakpoint", "dir", "delattr", "getattr", "repr", "vars", "__dict__", "__base__"]
 
 # Misc
 max_displayed_warns = 10 # Seconds
