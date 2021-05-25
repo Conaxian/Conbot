@@ -2,106 +2,111 @@
 
 import os
 import time
+import ast
 import subprocess
 import signal
-import platform
 
 import const
 
 ################################################################
 
-kw_delimiters = [" ", "\n", "\t", ".", ",", ":", ";", "\\", "=", "+", "-", "*", "/", "%", "@", "(", ")", "[", "]", "{", "}"]
-kw_delimiters_str = "".join(kw_delimiters)
+class ExecTimeoutError(Exception):
+    pass
+
+class UnsafeCodeError(Exception):
+    pass
+
+################################################################
+
+class Result:
+
+    def __init__(self, stdout, stderr, exec_time):
+
+        self.stdout = stdout
+        self.stderr = stderr
+        self.exec_time = exec_time
 
 ################################################################
 
 class PyExecute:
 
-    def __init__(self, py_file, loc_dict, run_check_timeout=const.run_check_timeout, exec_timeout=const.exec_timeout, 
-    module_whitelist=const.module_whitelist, keyword_blacklist=const.keyword_blacklist):
+    class _Task:
 
-        self.loc_dict = loc_dict
-        self.run_check_timeout = run_check_timeout
-        self.exec_timeout = exec_timeout
-        self.module_whitelist = module_whitelist
-        self.keyword_blacklist = keyword_blacklist
+        def __init__(self, executor, code):
+
+            self.executor = executor
+            self.code = code
+
+        def is_running(self):
+
+            if self.executor.win:
+                tasklist_cmd = f'tasklist /FI "pid eq {self.pid}"'
+                tasklist_cond = "INFO: No tasks are running"
+            else:
+                tasklist_cmd = f"ps -p {self.pid}"
+                tasklist_cond = "<defunct>"
+            tasklist = os.popen(tasklist_cmd).read()
+            return tasklist_cond not in tasklist
+
+        def run(self):
+
+            self.exec_start = time.time()
+            with open(self.executor.file_path, "w", encoding="utf-8") as file:
+                file.write(self.code)
+
+            popen_args = [self.executor.python_cmd, self.executor.file_path]
+            popen_kwargs = {"stdout": subprocess.PIPE, "stderr": subprocess.PIPE}
+            if self.executor.win:
+                popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW
+            self.process = subprocess.Popen(popen_args, **popen_kwargs)
+            self.pid = self.process.pid
+
+    def __init__(self, filename, timeout=5, checks_per_second=40, python_cmd=None):
+
+        self.filename = filename
+        self.timeout = timeout
+        self.check_interval = 1 / checks_per_second
 
         current_dir = os.path.dirname(__file__)
         current_path = os.path.abspath(current_dir)
-        self.file_path = os.path.join(current_path, py_file)
-        self.unix = platform.system() != "Windows"
-        self.exec_time = 0
-
-    def execute(self, code):
-
-        output = self.run(code)
-        return output
+        self.file_path = os.path.join(current_path, filename)
+        self.win = os.name == "nt"
+        self.python_cmd = python_cmd or ("python" if self.win else "python3")
 
     def scan(self, code):
 
-        lines = code.split("\n")
-        kw_code = code
-        for delimiter in kw_delimiters:
-            kw_code = kw_code.replace(delimiter, ".")
-        words = kw_code.split(".")
-        words = [word.strip(kw_delimiters_str) for word in words]
+        tree = ast.parse(code)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name) and node.id in const.banned_names:
+                raise UnsafeCodeError(node.id)
+            if isinstance(node, ast.Attribute) and node.attr in const.banned_names:
+                raise UnsafeCodeError(node.attr)
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    if alias.name not in const.allowed_modules:
+                        raise UnsafeCodeError(alias.name)
+            if isinstance(node, ast.ImportFrom) and node.module not in const.allowed_modules:
+                raise UnsafeCodeError(node.module)
 
-        # Check imports for dangerous modules
-        for line in lines:
-            if "import" in line:
-                imported = line.replace("import", "").replace(" \n\t", "")
-                modules = set(imported.split(","))
-                if not modules.issubset(set(self.module_whitelist)):
-                    return self.loc_dict["banned_module"]
+    def execute(self, code, admin=False):
 
-        # Check code for banned keywords
-        for keyword in self.keyword_blacklist:
-            if keyword in words:
-                error = self.loc_dict["banned_keyword"]
-                return error.replace("$1", keyword)
+        code = code.strip(" \t\n")
+        task = self._Task(self, code)
+        if not admin:
+            self.scan(code)
+        task.run()
 
-    def is_running(self):
-
-        if self.unix:
-            tasklist_cmd = f"ps -p {self.pid}"
-            tasklist_condition = "<defunct>"
-        else:
-            tasklist_cmd = f'tasklist /FI "pid eq {self.pid}"'
-            tasklist_condition = "INFO: No tasks are running"
-        tasklist = os.popen(tasklist_cmd).read()
-        return tasklist_condition not in tasklist
-
-    def run(self, code):
-
-        self.exec_start = time.time()
-        error = self.scan(code)
-        if error:
-            self.exec_time = time.time() - self.exec_start
-            return error
-        with open(self.file_path, "w", encoding="utf-8") as f:
-            f.write(code)
-
-        python_cmd = "python3" if self.unix else "python"
-        popen_args = [python_cmd, self.file_path]
-        if self.unix:
-            process = subprocess.Popen(popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        else:
-            process = subprocess.Popen(popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
-            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW)
-        self.pid = process.pid
-
-        limit = time.time() + self.exec_timeout
+        limit = time.time() + self.timeout
         while time.time() < limit:
-            time.sleep(self.run_check_timeout)
-            if not self.is_running():
-                stdout, stderr = process.communicate()
-                self.output = (stdout + b"\n" + stderr).decode("utf-8")
-                self.exec_time = time.time() - self.exec_start
-                return self.output
+            time.sleep(self.check_interval)
+            if not task.is_running():
+                result = task.process.communicate()
+                stdout, stderr = [bytestr.decode("utf-8").strip() for bytestr in result]
+                exec_time = time.time() - task.exec_start
+                return Result(stdout, stderr, exec_time)
 
-        kill_signal = signal.SIGTERM if self.unix else signal.CTRL_C_EVENT
-        os.kill(self.pid, kill_signal)
-        self.exec_time = time.time() - self.exec_start
-        return self.loc_dict["timeout"]
+        kill_signal = signal.CTRL_C_EVENT if self.win else signal.SIGTERM
+        os.kill(task.pid, kill_signal)
+        raise ExecTimeoutError(time.time() - task.exec_start)
 
 ################################################################

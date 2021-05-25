@@ -76,6 +76,8 @@ loc_cs_CZ:
   text_warns_none: "Žádná zaznamenaná varování!"
   text_queue_song: "Přehrál/a $1 - Délka: `$2`"
   text_max_queue_length: "Fronta songů může mít maximálně `$1` songů."
+  text_exec_success: "Dokončeno s výstupním kódem 0 za `$1` sekund"
+  text_exec_failure: "Dokončeno s výstupním kódem 1"
 
 ################################################################
 
@@ -98,8 +100,8 @@ loc_cs_CZ:
   err_warn_perms_author: "Nemáš dostatečné permise pro varování tohoto člena, protože má vyšší nebo stejnou roli jako ty."
   err_unknown_lang: "Neznámý jazyk! Použij tento příkaz bez jakýchkoliv argumentů pro zobrazení seznamu dostupných jazyků!"
   err_exec_timeout: "Skript byl zastaven, protože běžel déle než $1 sekund!"
-  err_exec_banned_module: "Chyba: Detekován zakázaný modul!"
-  err_exec_banned_keyword: "Chyba: Klíčové slovo $1 není povoleno!"
+  err_exec_banned_module: "Chyba: Modul $1 není povolen!"
+  err_exec_banned_name: "Chyba: Jméno $1 není povoleno!"
   err_join_no_voice: "Pro použití tohoto příkazu musíš být v hlasovém kanále!"
   err_join_voice_connected: "Bot už je připojený v hlasovém kanále!"
   err_leave_no_voice: "Bot se nenachází v žádném hlasovém kanále!"

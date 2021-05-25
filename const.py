@@ -20,10 +20,14 @@ song_max_length = 60 * 60 # Seconds
 song_queue_limit = 10     # Seconds
 
 # Python Execution
+python_cmd = None         # Python command, None means automatically decide based on OS
 exec_timeout = 5          # Seconds
-run_check_timeout = 0.025 # Seconds
-module_whitelist = ["datetime", "math", "random", "hashlib", "time", "getpass", "socket", "urllib"]
-keyword_blacklist = ["input", "exec", "eval", "compile", "open", "builtins", "os", "globals", "locals", "breakpoint", "dir", "delattr", "getattr", "repr", "vars", "__dict__", "__base__"]
+checks_per_second = 40    # Frequency
+allowed_modules = ["datetime", "math", "random", "hashlib", "time", "getpass", "socket", "urllib"]
+banned_names = ["exec", "eval", "compile", 
+"globals", "locals", "vars", "builtins", "dir", 
+"open", "input", "breakpoint", "getattr", "delattr",
+"__dict__", "__base__"]
 
 # Misc
 max_displayed_warns = 10 # Seconds

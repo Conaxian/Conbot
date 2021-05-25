@@ -41,7 +41,7 @@ sys.path.append("commands")
 
 ################################################################
 
-# Get all intents
+# Get all intents, create the client
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)

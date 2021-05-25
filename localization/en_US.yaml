@@ -76,6 +76,8 @@ loc_en_US:
   text_warns_none: "No recorded warns!"
   text_queue_song: "Requested by $1 - Duration: `$2`"
   text_max_queue_length: "The song queue can have `$1` songs at most."
+  text_exec_success: "Finished with exit code 0 in `$1` seconds"
+  text_exec_failure: "Finished with exit code 1"
 
 ################################################################
 
@@ -99,8 +101,8 @@ loc_en_US:
   err_warn_perms_author: "You have insufficient permissions to warn this member, as they have a higher or equal role to yours."
   err_unknown_lang: "Unknown language! Use this command without an argument to get a list of available languages!"
   err_exec_timeout: "Script was terminated, as it ran for longer than $1 seconds!"
-  err_exec_banned_module: "Error: Unauthorized module detected!"
-  err_exec_banned_keyword: "Error: Keyword $1 is not allowed!"
+  err_exec_banned_module: "Error: Module $1 is not allowed!"
+  err_exec_banned_name: "Error: Name $1 is not allowed!"
   err_join_no_voice: "You must be in a voice channel to use this command!"
   err_join_voice_connected: "The bot is already connected to a voice channel!"
   err_leave_no_voice: "The bot currently isn't in any voice channel!"
