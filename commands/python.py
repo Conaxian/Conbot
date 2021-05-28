@@ -8,7 +8,7 @@ import const
 import cembed
 import cmdlib
 import loclib
-from pyexecute import ExecTimeoutError, PyExecute, UnsafeCodeError
+from pyexecute import PyExecute, UnsafeCodeError, ExecTimeoutError
 
 ################################################################
 

@@ -8,7 +8,12 @@ import const
 import cembed
 import cmdlib
 import loclib
-from pyexecute import PyExecute
+from pyexecute import PyExecute, ExecTimeoutError
+
+################################################################
+
+executor = PyExecute(const.files["pycalc"], 
+const.exec_timeout, const.checks_per_second, const.python_cmd)
 
 ################################################################
 
@@ -21,17 +26,21 @@ async def calc(ctx):
     if not all(char in allowed_chars for char in expr):
         raise cmdlib.CmdError("err_calc_banned_char")
 
-    else:
-        err_timeout = loclib.Loc.member("err_calc_timeout", ctx.author)
-        exec_loc = {"err_exec_timeout": err_timeout, "err_exec_banned_module": "", "err_exec_banned_keyword": ""}
-        pyexecute = PyExecute(const.files["pycalc"], exec_loc)
-        text = pyexecute.execute(f"print(round({expr}, 10))")
+    try:
+        execute_code = lambda: executor.execute(f"print(round({expr}, 10))")
+        result = await ctx.async_exec(execute_code)
+        output, error = result.stdout, result.stderr
 
-        err_syntax = loclib.Loc.member("err_calc_syntax_error", ctx.author)
-        err_zero_div = loclib.Loc.member("err_calc_zero_division", ctx.author)
-        text = text if "ZeroDivisionError" not in text else str(err_zero_div)
-        text = text if "Error" not in text else str(err_syntax)
-        text = text if len(text) <= 2000 else text[:2000]
+        if output:
+            text = output[:2000].strip() + " "
+        else:
+            err_syntax = loclib.Loc.member("err_calc_syntax_error", ctx.author)
+            err_zero_div = loclib.Loc.member("err_calc_zero_division", ctx.author)
+            text = err_zero_div if "ZeroDivisionError" in error else err_syntax
+
+    except ExecTimeoutError:
+        text = loclib.Loc.member("err_exec_timeout", ctx.author)
+        text.format(const.exec_timeout)
 
     title = loclib.Loc.member("label_result", ctx.author)
     embed = cembed.get_cembed(ctx.msg, f"```{text}```", title)

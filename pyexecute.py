@@ -3,6 +3,7 @@
 import os
 import time
 import ast
+import traceback
 import subprocess
 import signal
 
@@ -92,11 +93,19 @@ class PyExecute:
 
         code = code.strip(" \t\n")
         task = self._Task(self, code)
-        if not admin:
-            self.scan(code)
-        task.run()
 
+        if not admin:
+            try:
+                self.scan(code)
+            except SyntaxError:
+                error = traceback.format_exc()
+                lines = error.split("\n")[-5:-1]
+                stderr = "\n".join(lines)
+                return Result("", stderr, 0)
+
+        task.run()
         limit = time.time() + self.timeout
+
         while time.time() < limit:
             time.sleep(self.check_interval)
             if not task.is_running():
