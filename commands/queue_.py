@@ -32,6 +32,6 @@ async def queue(ctx):
 
         embed = cembed.get_cembed(ctx.msg, title=title, author_name=ctx.guild.name, author_img=ctx.guild.icon_url, fields=fields)
 
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################

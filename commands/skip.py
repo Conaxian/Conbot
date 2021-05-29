@@ -24,7 +24,7 @@ async def skip(ctx):
             text = loclib.Loc.member("text_skip", ctx.author)
             text.format(queue[0]["info"]["title"])
             embed = cembed.get_cembed(ctx.msg, text)
-            await ctx.channel.send(embed=embed)
+            await ctx.send(embed=embed)
             await songlib.player_check(ctx.client.voice_clients)
             if len(queue) >= 1:
                 return

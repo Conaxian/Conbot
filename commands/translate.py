@@ -29,6 +29,6 @@ async def translate(ctx):
     title = loclib.Loc.member("label_translate", ctx.author)
 
     embed = cembed.get_cembed(ctx.msg, text, title)
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################

@@ -33,6 +33,6 @@ async def user_settings(ctx):
 
     title = loclib.Loc.member("label_user_config", ctx.author)
     embed = cembed.get_cembed(ctx.msg, "", title, author_name=target.name, author_img=target.avatar_url, fields=fields)
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################

@@ -74,6 +74,6 @@ async def help(ctx):
 
         embed = cembed.get_cembed(ctx.msg, "", cmd_call, fields=fields)
 
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################

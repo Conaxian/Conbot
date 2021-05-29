@@ -34,6 +34,6 @@ async def warns(ctx):
         text = loclib.Loc.member("text_warns_none", ctx.author)
         embed = cembed.get_cembed(ctx.msg, text, title, author_name=ctx.guild.name, author_img=ctx.guild.icon_url)
 
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################

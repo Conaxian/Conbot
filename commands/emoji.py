@@ -17,6 +17,6 @@ async def emoji(ctx):
     emoji = utils.get(ctx.client.emojis, name=name)
     if not emoji or not emoji.guild.get_member(ctx.author.id) or not emoji.available:
         raise cmdlib.CmdError("err_unknown_emoji")
-    await ctx.channel.send(str(emoji))
+    await ctx.send(str(emoji))
 
 ################################################################

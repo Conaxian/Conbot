@@ -26,13 +26,13 @@ async def play(ctx):
             text = loclib.Loc.member("text_join", ctx.author)
             text.format(voice.channel)
             embed = cembed.get_cembed(ctx.msg, text)
-            await ctx.channel.send(embed=embed)
+            await ctx.send(embed=embed)
 
     if len(songlib.queues.get(ctx.guild.id, [])) >= const.song_queue_limit:
         text = loclib.Loc.member("text_max_queue_length", ctx.author)
         text.format(const.song_queue_limit)
         embed = cembed.get_cembed(ctx.msg, text)
-        await ctx.channel.send(embed=embed)
+        await ctx.send(embed=embed)
         return
 
     voice = utils.get(ctx.client.voice_clients, guild=ctx.guild)
@@ -51,7 +51,7 @@ async def play(ctx):
 
     if text:
         embed = cembed.get_cembed(ctx.msg, text)
-        await ctx.channel.send(embed=embed)
+        await ctx.send(embed=embed)
         return
 
     if ctx.guild.id in songlib.queues.keys() and songlib.queues[ctx.guild.id]:
@@ -65,6 +65,6 @@ async def play(ctx):
 
     text.format(info["title"])
     embed = cembed.get_embed(text)
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################

@@ -25,6 +25,6 @@ async def leave(ctx):
         raise cmdlib.CmdError("err_leave_no_voice")
 
     embed = cembed.get_cembed(ctx.msg, text)
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################

@@ -511,11 +511,7 @@ async def on_member_remove(member):
 @client.event
 async def on_guild_join(guild):
 
-    channel = guild.public_updates_channel
-    if not channel:
-        channel = guild.system_channel
-    if not channel:
-        channel = guild.text_channels[0]
+    channel = guild.public_updates_channel or guild.system_channel or guild.text_channels[0]
     await channel.send(const.welcome_text)
 
 ################################################################

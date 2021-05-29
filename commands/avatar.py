@@ -23,6 +23,6 @@ async def avatar(ctx):
             raise cmdlib.CmdError("err_unknown_member", ctx.client.user.mention)
 
     embed = cembed.get_cembed(ctx.msg, image=member.avatar_url, author_name=member.name, author_img=member.avatar_url)
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 ################################################################
