@@ -50,6 +50,6 @@ async def python(ctx):
 
     title = loclib.Loc.member("label_output", ctx.author)
     embed = cembed.get_cembed(ctx.msg, f"```{output}```\n{finish_text}", title)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

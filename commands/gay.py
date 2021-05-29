@@ -21,6 +21,6 @@ async def gay(ctx):
     title = loclib.Loc.member("label_gay_meter", ctx.author)
 
     embed = cembed.get_cembed(ctx.msg, text, title)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

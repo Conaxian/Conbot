@@ -44,6 +44,6 @@ async def calc(ctx):
 
     title = loclib.Loc.member("label_result", ctx.author)
     embed = cembed.get_cembed(ctx.msg, f"```{text}```", title)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

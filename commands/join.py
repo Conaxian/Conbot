@@ -27,6 +27,6 @@ async def join(ctx):
         text.format(voice.channel)
 
     embed = cembed.get_cembed(ctx.msg, text)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

@@ -30,6 +30,6 @@ async def kick(ctx):
     text.format(target_mention)
 
     embed = cembed.get_cembed(ctx.msg, text)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

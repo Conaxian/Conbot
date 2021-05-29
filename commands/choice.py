@@ -24,6 +24,6 @@ async def choice(ctx):
         text = random.choice(choices)
 
     embed = cembed.get_cembed(ctx.msg, text)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

@@ -506,7 +506,7 @@ async def on_member_remove(member):
 
 ################################################################
 
-# Send a first time guild message, changes the bot's status
+# Send a first time guild message
 
 @client.event
 async def on_guild_join(guild):
@@ -536,18 +536,18 @@ async def on_message(msg):
     if utils.mention_id(msg.content.strip()) == client.user.id:
         text = loclib.Loc.member("text_current_prefix", msg.author)
         text.format(prefix)
-        await msg.channel.send(text)
+        await msg.channel.send(text, reference=msg, mention_author=False)
         return
 
     # Log the message
 
     await utils.log(msg)
 
-    # Check for an autoreply
+    # Reply if the message is an autoreply trigger
 
     autoreply = msg.content.strip(" \n\t*_~`>|").lower()
     if autoreply in autoreplies:
-        await msg.channel.send(autoreplies[autoreply])
+        await msg.channel.send(autoreplies[autoreply], reference=msg, mention_author=False)
 
     # Check for a command
 
@@ -586,7 +586,7 @@ async def on_message(msg):
                 if not all(perms):
                     text = loclib.Loc.member("err_missing_perms_user", msg.author)
                     embed = cembed.get_cembed(msg, text)
-                    await msg.channel.send(embed=embed)
+                    await msg.channel.send(embed=embed, reference=msg, mention_author=False)
                     return
 
                 # Create a list of command parts, and get the amount of specified arguments
@@ -618,7 +618,7 @@ async def on_message(msg):
                     max_args = max_args if max_args > 0 else str(none).lower()
                     text.format(str(arg_count), str(max_args))
                     embed = cembed.get_cembed(msg, text)
-                    await msg.channel.send(embed=embed)
+                    await msg.channel.send(embed=embed, reference=msg, mention_author=False)
                     return
 
                 # Check if the amount of arguments isn't too small
@@ -627,7 +627,7 @@ async def on_message(msg):
                     text = loclib.Loc.member("err_arg_underflow", msg.author)
                     text.format(arg_count, min_args)
                     embed = cembed.get_cembed(msg, text)
-                    await msg.channel.send(embed=embed)
+                    await msg.channel.send(embed=embed, reference=msg, mention_author=False)
                     return
 
                 # Create a dictionary of arguments
@@ -651,13 +651,13 @@ async def on_message(msg):
                     text = loclib.Loc.member(error.args[0], msg.author)
                     text.format(*format_args)
                     embed = cembed.get_cembed(msg, text)
-                    await msg.channel.send(embed=embed)
+                    await msg.channel.send(embed=embed, reference=msg, mention_author=False)
 
                 except discord.errors.Forbidden as error:
                     if str(error).endswith("Missing Permissions"):
                         text = loclib.Loc.member("err_missing_perms_bot", msg.author)
                         embed = cembed.get_cembed(msg, text)
-                        await msg.channel.send(embed=embed)
+                        await msg.channel.send(embed=embed, reference=msg, mention_author=False)
 
                 except:
                     error = traceback.format_exc()
@@ -679,7 +679,7 @@ async def on_message(msg):
         # Send the unknown command message
 
         embed = cembed.get_cembed(msg, text)
-        await msg.channel.send(embed=embed)
+        await msg.channel.send(embed=embed, reference=msg, mention_author=False)
         return
 
 ################################################################

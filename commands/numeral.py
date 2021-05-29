@@ -29,6 +29,6 @@ async def numeral(ctx):
     except ValueError:
         raise cmdlib.CmdError("err_invalid_number")
 
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

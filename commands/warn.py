@@ -30,6 +30,6 @@ async def warn(ctx):
     text.format(target_mention, f"`{reason}`")
 
     embed = cembed.get_cembed(ctx.msg, text)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

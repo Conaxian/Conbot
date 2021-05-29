@@ -49,6 +49,6 @@ async def conscript(ctx):
     if output:
         output = output[:2000]
         embed = cembed.get_cembed(ctx.msg, f"```{output}```", title)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
 ################################################################

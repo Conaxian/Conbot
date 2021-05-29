@@ -20,6 +20,6 @@ async def about(ctx):
 
     fields = {title_bot_invite: const.bot_invite_url, title_github: const.bot_github_url}
     embed = cembed.get_cembed(ctx.msg, text, title, fields=fields, inline=True)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

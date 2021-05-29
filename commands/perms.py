@@ -45,6 +45,6 @@ async def perms(ctx):
     perms_title.format(ctx.guild.name)
 
     embed = cembed.get_cembed(ctx.msg, perms_text, perms_title, author_name=member.name, author_img=member.avatar_url, fields=fields, inline=True)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

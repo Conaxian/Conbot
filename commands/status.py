@@ -13,6 +13,6 @@ async def status(ctx):
 
     online_msg = loclib.Loc.member("text_status_online", ctx.author)
     embed = cembed.get_cembed(ctx.msg, online_msg)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

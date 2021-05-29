@@ -13,6 +13,6 @@ async def wip(ctx):
 
     text = loclib.Loc.member("text_wip", ctx.author)
     embed = cembed.get_cembed(ctx.msg, text)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

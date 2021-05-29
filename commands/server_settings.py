@@ -59,6 +59,6 @@ async def server_settings(ctx):
         title = loclib.Loc.member("label_server_config", ctx.author)
         embed = cembed.get_cembed(ctx.msg, "", title, author_name=ctx.guild.name, author_img=ctx.guild.icon_url, fields=fields)
 
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

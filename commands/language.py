@@ -38,6 +38,6 @@ async def language(ctx):
 
         embed = cembed.get_cembed(ctx.msg, text)
 
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################

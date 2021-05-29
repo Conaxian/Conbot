@@ -26,6 +26,6 @@ async def googletrans_nonsense(ctx):
     title = loclib.Loc.member("label_translate", ctx.author)
 
     embed = cembed.get_cembed(ctx.msg, text, title)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 ################################################################
