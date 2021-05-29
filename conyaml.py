@@ -129,7 +129,7 @@ class Config:
 
         elif self.ftype == "channel_mention":
             fvalue = f"<#{value}>"
-        
+
         elif self.ftype == "role_mention":
             fvalue = f"<@&{value}>"
 
@@ -139,7 +139,7 @@ class Config:
         elif self.ftype == "default":
             fvalue = value
 
-        return fvalue if fvalue else None
+        return fvalue
 
     def validate(self, ctx, value):
 
@@ -147,13 +147,13 @@ class Config:
             return value
 
         elif self.vtype == "lang_code":
-            return value if value in const.loc_files.keys() else None
+            value = value.replace("-", "_")
+            return value if value in const.loc_files else None
 
         elif self.vtype == "text_channel":
             channel_id = utils.mention_id(value)
-            for channel in ctx.guild.text_channels:
-                if channel_id == channel.id:
-                    return channel_id
+            if utils.get(ctx.guild.text_channels, id=channel_id):
+                return channel_id
 
         elif self.vtype == "role":
             role_id = utils.mention_id(value)

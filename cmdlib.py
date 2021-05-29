@@ -18,6 +18,12 @@ class Context:
         self.server_config = server_config
         self.global_vars = kwargs
 
+    async def send(self, content=None, *args, tts=False, embed=None, file=None, files=None, 
+    delete_after=None, nonce=None, allowed_mentions=None, reference=None, mention_author=None):
+
+        await self.channel.send(content, *args, tts=tts, embed=embed, file=file, files=files, delete_after=delete_after, 
+        nonce=nonce, allowed_mentions=allowed_mentions, reference=reference, mention_author=mention_author)
+
     async def async_exec(self, func):
 
         return await self.client.loop.run_in_executor(None, func)

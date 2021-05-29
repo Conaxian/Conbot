@@ -41,14 +41,10 @@ sys.path.append("commands")
 
 ################################################################
 
-# Get all intents, create the client
+# Get all intents, create the client, define a dictionary of command call times
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-
-################################################################
-
-# Define a dictionary of command call times
 
 cmd_call_times = {}
 
@@ -524,14 +520,14 @@ async def on_guild_join(guild):
 
 ################################################################
 
-# Check and evaluates messages
+# Check and evaluate messages
 
 @client.event
 async def on_message(msg):
 
     # If the message author is a bot or the message is empty, return
 
-    if msg.author.bot or msg.content == "":
+    if msg.author.bot or not msg.content:
         return
 
     # Get the server command prefix
@@ -637,7 +633,7 @@ async def on_message(msg):
                     embed = cembed.get_cembed(msg, text)
                     await msg.channel.send(embed=embed)
                     return
-                
+
                 # Create a dictionary of arguments
 
                 args = {}
