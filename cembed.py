@@ -36,8 +36,10 @@ def get_embed(text="", title=None, url=None, image=None, author_name=None, autho
         field[1] = "\u200b" if str(field[1]).isspace() else str(field[1])
         embed.add_field(name=field[0], value=field[1], inline=inline)
 
-    if footer:
+    if footer == True:
         embed.set_footer(text=f"{utils.time()} UTC", icon_url="http://conax.cz/cbfiles/embed_clock.png")
+    elif isinstance(footer, str):
+        embed.set_footer(text=footer)
 
     return embed
 
@@ -45,7 +47,7 @@ def get_embed(text="", title=None, url=None, image=None, author_name=None, autho
 
 # Creates an embed using information obtained from the message
 
-def get_cembed(msg, text="", title=None, url=None, image=None, author_name=None, author_img=None, timestamp=None, fields={}, inline=False,  footer=True):
+def get_cembed(msg, text="", title=None, url=None, image=None, author_name=None, author_img=None, timestamp=None, fields={}, inline=False, footer=True):
 
     return get_embed(text, title, url, image, author_name, author_img, timestamp, fields, inline, footer, msg.author.color)
 

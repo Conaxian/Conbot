@@ -244,6 +244,18 @@ commands = [
 
     ################################
 
+    # Images
+    cmdlib.Command.new(
+        "meme",
+        ["memes"],
+        "images",
+        [],
+        [" "],
+        []
+    ),
+
+    ################################
+
     # Music
 
     # Join
@@ -487,7 +499,8 @@ async def on_member_join(member):
         channel = member.guild.get_channel(channel_id)
         text = loclib.Loc.server("text_join_msg", member.guild)
         text.format(member.mention)
-        embed = cembed.get_embed(text, author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
+        embed = cembed.get_embed(text, author_name=member.name, 
+        author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
         await channel.send(embed=embed)
 
 ################################################################
@@ -502,7 +515,8 @@ async def on_member_remove(member):
         channel = member.guild.get_channel(channel_id)
         text = loclib.Loc.server("text_leave_msg", member.guild)
         text.format(member.mention)
-        embed = cembed.get_embed(text, author_name=member.name, author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
+        embed = cembed.get_embed(text, author_name=member.name, 
+        author_img=member.avatar_url, timestamp=datetime.datetime.now(), footer=False)
         await channel.send(embed=embed)
 
 ################################################################
@@ -523,17 +537,14 @@ async def on_guild_join(guild):
 async def on_message(msg):
 
     # If the message author is a bot or the message is empty, return
-
     if msg.author.bot or not msg.content:
         return
 
     # Get the server command prefix
-
     prefix = conyaml.read_server_config(msg.guild.id, "prefix")
     prefix = prefix or const.default_prefix
 
     # If the message is a mention of the bot, send the current prefix
-
     if utils.mention_id(msg.content.strip()) == client.user.id:
         text = loclib.Loc.member("text_current_prefix", msg.author)
         text.format(prefix)
@@ -541,37 +552,30 @@ async def on_message(msg):
         return
 
     # Log the message
-
     await utils.log(msg)
 
     # Reply if the message is an autoreply trigger
-
     autoreply = msg.content.strip(" \n\t*_~`>|").lower()
     if autoreply in autoreplies:
         await msg.channel.send(autoreplies[autoreply], reference=msg, mention_author=False)
 
     # Check for a command
-
     if msg.content.startswith(prefix) and set(msg.content) != {prefix}:
 
         # Check if the user isn't spamming commands
-
         call_time = cmd_call_times.get(msg.author.id, float("-inf"))
         if call_time > time.time() - const.cmd_call_cooldown:
             return
 
         # Register the call time
-
         cmd_call_times[msg.author.id] = time.time()
 
         # Get the command name
-
         command = msg.content.split(" ")[0]
         command = command[len(prefix):]
         command = command.lower().replace("_", "-")
 
         # Look for the command, ignore dev commands unless the message author is a dev
-
         for cmd in commands:
 
             if cmd.category == "dev" and msg.author.id not in const.devs:
@@ -580,7 +584,6 @@ async def on_message(msg):
             if command in cmd.calls:
 
                 # Check if the user has sufficient permissions to use the command
-
                 perms = msg.author.guild_permissions
                 perms = dict(iter(perms))
                 perms = [perms[perm] for perm in cmd.perms]
@@ -591,7 +594,6 @@ async def on_message(msg):
                     return
 
                 # Create a list of command parts, and get the amount of specified arguments
-
                 try:
                     parts = msg.content.split(" ")
                     parts = " ".join(parts[1:])
@@ -604,14 +606,12 @@ async def on_message(msg):
                 arg_count = len(parts)
 
                 # Get the minimum amount of arguments
-
                 min_args = 0
                 for arg in cmd.args:
                     if arg.startswith("<"):
                         min_args += 1
 
                 # Check if the amount of arguments isn't too large
-
                 if arg_count > len(cmd.args):
                     text = loclib.Loc.member("err_arg_overflow", msg.author)
                     max_args = len(cmd.args)
@@ -623,7 +623,6 @@ async def on_message(msg):
                     return
 
                 # Check if the amount of arguments isn't too small
-
                 if arg_count < min_args:
                     text = loclib.Loc.member("err_arg_underflow", msg.author)
                     text.format(arg_count, min_args)
@@ -632,7 +631,6 @@ async def on_message(msg):
                     return
 
                 # Create a dictionary of arguments
-
                 args = {}
                 for i in range(len(cmd.args)):
                     arg_name = cmd.args[i].strip("<>[]")
@@ -642,7 +640,6 @@ async def on_message(msg):
                         args[arg_name] = None
 
                 # Call the command, handle all possible errors and send/print the respective error message
-
                 ctx = cmdlib.Context(client, msg, prefix, args, commands, user_config, server_config)
                 try:
                     await cmd.code(ctx)
@@ -667,7 +664,6 @@ async def on_message(msg):
                 return
 
         # Find a close match between the entered command and the list of command calls, if there isn't any, display the default unknown command message
-
         calls = sum([cmd.calls for cmd in commands if cmd.category != "dev"], [])
         try:
             match = difflib.get_close_matches(command, calls, 1, const.cmd_help_min_diff)[0]
@@ -678,7 +674,6 @@ async def on_message(msg):
             text.format(prefix)
 
         # Send the unknown command message
-
         embed = cembed.get_cembed(msg, text)
         await msg.channel.send(embed=embed, reference=msg, mention_author=False)
         return

@@ -72,7 +72,7 @@ async def help(ctx):
         desc = loclib.Loc.member(f"cmd_desc_{cmd.desc}", ctx.author)
         fields[desc_title] = desc
 
-        embed = cembed.get_cembed(ctx.msg, "", cmd_call, fields=fields)
+        embed = cembed.get_cembed(ctx.msg, title=cmd_call, fields=fields)
 
     await ctx.reply(embed=embed)
 

@@ -203,6 +203,10 @@ loc_en_GB:
   cmd_desc_calc: "Evaluates the specified `<expression>` and displays the result."
   cmd_desc_python: "Executes the specified `<code>` in Python 3. Wrapping the code in three backticks ` ``` ` is recommended."
 
+  # Images
+  cmd_category_images: "Images"
+  cmd_desc_meme: "Sends a random meme from several subreddits."
+
   # Music
   cmd_category_music: "Music"
   cmd_desc_join: "Joins the voice channel you are currently in."

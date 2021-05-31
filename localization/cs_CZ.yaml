@@ -203,6 +203,10 @@ loc_cs_CZ:
   cmd_desc_calc: "Vypočítá zadaný výraz `<expression>` a zobrazí výsledek."
   cmd_desc_python: "Spustí zadaný kód `<code>` v Pythonu 3. Doporučuje se z obou stran oddělit kód obrácenými čárkami ` ``` `."
 
+  # Images
+  cmd_category_images: "Images"
+  cmd_desc_meme: "Sends a random meme from several subreddits."
+
   # Music
   cmd_category_music: "Hudba"
   cmd_desc_join: "Připojí bota do hlasového kanálu, ve kterém se nacházíš."
