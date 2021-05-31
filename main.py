@@ -70,6 +70,7 @@ server_config = [
 
 autoreplies = {
     "f": "F",
+    "no u": "No u",
     "conax": "Conax is cool",
     "conbot": "Conbot is cool"
 }
