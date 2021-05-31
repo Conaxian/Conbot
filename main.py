@@ -245,6 +245,8 @@ commands = [
     ################################
 
     # Images
+
+    # Meme
     cmdlib.Command.new(
         "meme",
         ["memes"],
