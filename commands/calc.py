@@ -32,7 +32,7 @@ async def calc(ctx):
         output, error = result.stdout, result.stderr
 
         if output:
-            text = output[:2000].strip() + " "
+            text = output.strip() + " "
         else:
             err_syntax = loclib.Loc.member("err_calc_syntax_error", ctx.author)
             err_zero_div = loclib.Loc.member("err_calc_zero_division", ctx.author)
@@ -43,6 +43,8 @@ async def calc(ctx):
         text.format(const.exec_timeout)
 
     title = loclib.Loc.member("label_result", ctx.author)
+    max_text_length = const.max_embed_desc_length - len("``````")
+    text = text[:max_text_length]
     embed = cembed.get_cembed(ctx.msg, f"```{text}```", title)
     await ctx.reply(embed=embed)
 

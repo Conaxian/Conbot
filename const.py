@@ -16,6 +16,7 @@ default_prefix = "?"
 cmd_call_cooldown = 1          # Seconds
 cmd_help_min_diff = 0.6        # Percentage from 0.0 to 1.0
 default_embed_color = 0x20a0e0 # Hex Color Value
+max_embed_desc_length = 2048   # Characters
 
 # Images
 meme_subreddits = ["memes", "dankmemes"]
