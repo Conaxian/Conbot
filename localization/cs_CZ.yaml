@@ -127,10 +127,12 @@ loc_cs_CZ:
   config_language: "Jazyk"
   config_log: "Záznam"
   config_prefix: "Prefix"
+  config_mute_role: "Mute Role"
 
   # Invalid values
-  config_invalid_language: "Invalid language! Please enter a valid language code, for example: `en_US`"
-  config_invalid_log: "Invalid channel! Please enter a mention of a valid text channel in this guild."
+  config_invalid_language: "Neplatný jazyk! Zadej platný jazyk, například: `en_US`"
+  config_invalid_log: "Neplatný kanál! Zadej mention platného textového kanálu na tomto serveru."
+  config_invalid_mute_role: "Neplatná role! Zadej mention platné role na tomto serveru."
 
 ################################################################
 

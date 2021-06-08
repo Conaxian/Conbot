@@ -127,10 +127,12 @@ loc_en_US:
   config_language: "Language"
   config_log: "Log"
   config_prefix: "Prefix"
+  config_mute_role: "Mute Role"
 
   # Invalid values
   config_invalid_language: "Invalid language! Please enter a valid language code, for example: `en_US`"
   config_invalid_log: "Invalid channel! Please enter a mention of a valid text channel in this guild."
+  config_invalid_mute_role: "Invalid mute role! Please enter a mention of a valid role in this guild."
 
 ################################################################
 

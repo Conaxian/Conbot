@@ -53,15 +53,14 @@ cmd_call_times = {}
 # Define all config options
 
 user_config = [
-    conyaml.Config("language", "en_US", "backticks", "lang_code")
+    conyaml.Config("language", "en_US", "backticks", "lang_code"),
 ]
 
 server_config = [
     conyaml.Config("language", "en_US", "backticks", "lang_code"),
     conyaml.Config("prefix", "?", "backticks", "any"),
     conyaml.Config("log", None, "channel_mention", "text_channel"),
-    # TODO:
-    # conyaml.Config("mute_role", None, "role_mention", "role")
+    conyaml.Config("mute_role", None, "role_mention", "role"),
 ]
 
 ################################################################
@@ -72,7 +71,7 @@ autoreplies = {
     "f": "F",
     "no u": "No u",
     "conax": "Conax is cool",
-    "conbot": "Conbot is cool"
+    "conbot": "Conbot is cool",
 }
 
 ################################################################
@@ -450,7 +449,7 @@ commands = [
         ["<text>"],
         [],
         []
-    )
+    ),
     ################################
 ]
 
