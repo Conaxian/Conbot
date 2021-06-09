@@ -59,21 +59,22 @@ files = {
     "server_config": "server_config.yaml", # Server Config
     "user_config": "user_config.yaml",     # User Config
     "warns": "server_warns.yaml",          # Server Warns
+    "mutes": "server_mutes.yaml",          # Server Mutes
     "pyexecute": "exec_file.py",           # Python Execution File
-    "pycalc": "calc_file.py"               # Python Calculation File
+    "pycalc": "calc_file.py",              # Python Calculation File
 }
 
 # Localization Files
 loc_files = {
     "en_US": "localization/en_US.yaml",
     "en_GB": "localization/en_GB.yaml",
-    "cs_CZ": "localization/cs_CZ.yaml"
+    "cs_CZ": "localization/cs_CZ.yaml",
 }
 
 # Developer IDs (developers have access to dev commands)
 devs = [
     209607873787985920, # Conax
-    474247464799436820  # Markeon
+    474247464799436820, # Markeon
 ]
 
 ################################################################

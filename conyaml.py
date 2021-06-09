@@ -33,7 +33,7 @@ def read_config(file, id, option):
     data = load_yaml(file)
     try:
         return data[id][option]
-    except Exception:
+    except:
         return
 
 # Set YAML config option to a file
@@ -51,25 +51,21 @@ def set_config(file, id, option, value):
 
 ################################################################
 
-# Read user config
+# Read or set user config
 
 def read_user_config(user_id, option):
 
     return read_config(const.files["user_config"], user_id, option)
 
-# Set user config
-
 def set_user_config(user_id, option, value):
 
     set_config(const.files["user_config"], user_id, option, value)
 
-# Read server config
+# Read or set server config
 
 def read_server_config(server_id, option):
 
     return read_config(const.files["server_config"], server_id, option)
-
-# Set server config
 
 def set_server_config(server_id, option, value):
 
@@ -84,7 +80,7 @@ def get_warns(server_id):
     data = load_yaml(const.files["warns"])
     try:
         return list(data[server_id].values())
-    except Exception:
+    except:
         return []
 
 # Add a warn
@@ -96,8 +92,37 @@ def add_warn(server_id, member_id, reason):
         data[server_id] = {}
     warn_indices = data[server_id].keys()
     warn_index = max(warn_indices) + 1 if warn_indices else 1
-    data[server_id][warn_index] = {"member": member_id, "reason": reason, "time": f"{utils.date()}-{utils.time()}"}
+    data[server_id][warn_index] = {
+        "member": member_id,
+        "reason": reason,
+        "time": f"{utils.date()}-{utils.time()}",
+    }
     save_yaml(const.files["warns"], data)
+
+################################################################
+
+# Check if member is muted
+
+def is_muted(server_id, member_id):
+
+    data = load_yaml(const.files["mutes"])
+    try:
+        data[server_id][member_id]
+        return True
+    except KeyError:
+        return False
+
+# Add a mute
+
+def add_mute(server_id, member_id, role_ids):
+
+    data = load_yaml(const.files["mutes"])
+    if server_id not in data.keys():
+        data[server_id] = {}
+    data[server_id][member_id] = {
+        "roles": role_ids,
+    }
+    save_yaml(const.files["mutes"], data)
 
 ################################################################
 
@@ -157,7 +182,8 @@ class Config:
 
         elif self.vtype == "role":
             role_id = utils.mention_id(value)
-            if ctx.guild.get_role(role_id):
+            role = ctx.guild.get_role(role_id)
+            if role and utils.is_role_normal(role):
                 return role_id
 
 ################################################################

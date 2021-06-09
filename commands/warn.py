@@ -25,8 +25,8 @@ async def warn(ctx):
         raise cmdlib.CmdError("err_warn_perms_author")
 
     conyaml.add_warn(ctx.guild.id, target.id, reason)
-    text = loclib.Loc.member("text_warn_success", ctx.author)
     target_mention = f"<@!{target_id}>"
+    text = loclib.Loc.member("text_warn_success", ctx.author)
     text.format(target_mention, f"`{reason}`")
 
     embed = cembed.get_cembed(ctx.msg, text)

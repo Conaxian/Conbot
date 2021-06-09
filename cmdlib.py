@@ -62,10 +62,14 @@ class Command:
 
 ################################################################
 
-# Exception for sending messages
+# Command error (sends an error message)
 
 class CmdError(Exception):
+    pass
 
+# Bot permission error (sends an error message)
+
+class BotPermsError(Exception):
     pass
 
 ################################################################

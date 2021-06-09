@@ -25,7 +25,7 @@ async def unban(ctx):
         if not target:
             raise cmdlib.CmdError("err_unknown_user", ctx.client.user.id)
 
-    reason = loclib.Loc.member("text_unban_reason", ctx.author)
+    reason = loclib.Loc.server("text_unban_reason", ctx.guild)
     reason.format(ctx.author)
     try:
         await ctx.guild.unban(target, reason=str(reason))

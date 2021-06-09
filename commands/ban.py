@@ -21,7 +21,7 @@ async def ban(ctx):
     if target.top_role >= ctx.author.top_role:
         raise cmdlib.CmdError("err_ban_perms_author")
 
-    reason = loclib.Loc.member("text_ban_reason", ctx.author)
+    reason = loclib.Loc.server("text_ban_reason", ctx.guild)
     reason.format(ctx.author)
     await target.ban(reason=str(reason))
 

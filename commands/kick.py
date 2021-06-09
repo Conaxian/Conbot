@@ -21,7 +21,7 @@ async def kick(ctx):
     if target.top_role >= ctx.author.top_role:
         raise cmdlib.CmdError("err_kick_perms_author")
 
-    reason = loclib.Loc.member("text_kick_reason", ctx.author)
+    reason = loclib.Loc.server("text_kick_reason", ctx.guild)
     reason.format(ctx.author)
     await target.kick(reason=str(reason))
 

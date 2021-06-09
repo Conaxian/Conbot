@@ -45,16 +45,15 @@ class Loc:
     @classmethod
     def server(cls, name, server):
 
-        lang = conyaml.read_server_config(server.id, "language")
-        lang = lang if lang else "en_US"
+        lang = conyaml.read_server_config(server.id, "language") or "en_US"
+        lang = lang or "en_US"
         return cls(name, lang)
 
     @classmethod
     def member(cls, name, member):
 
-        lang = conyaml.read_user_config(member.id, "language")
-        lang = lang if lang else conyaml.read_server_config(member.guild.id, "language")
-        lang = lang if lang else "en_US"
+        lang = conyaml.read_user_config(member.id, "language") or \
+        conyaml.read_server_config(member.guild.id, "language") or "en_US"
         return cls(name, lang)
 
 ################################################################

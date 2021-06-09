@@ -61,7 +61,21 @@ def time(offset=datetime.timedelta()):
 
 ################################################################
 
-# Translate a string
+# Check if the role is a normal role (neither @everyone 
+# nor controled by Discord or an external app)
+
+def is_role_normal(role):
+
+    return not(
+        role.is_bot_managed() or \
+        role.is_default() or \
+        role.is_integration() or \
+        role.is_premium_subscriber()
+    )
+
+################################################################
+
+# Translate a string (using Google Translate)
 
 def translate(string, src=None, dest=None):
 

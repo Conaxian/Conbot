@@ -343,6 +343,16 @@ commands = [
         ["ban_members"]
     ),
 
+    # Mute
+    cmdlib.Command.new(
+        "mute",
+        [],
+        "mod",
+        ["<target>"],
+        [" "],
+        ["manage_messages"]
+    ),
+
     # Warn
     cmdlib.Command.new(
         "warn",
@@ -652,8 +662,9 @@ async def on_message(msg):
                     embed = cembed.get_cembed(msg, text)
                     await msg.channel.send(embed=embed, reference=msg, mention_author=False)
 
-                except discord.errors.Forbidden as error:
-                    if str(error).endswith("Missing Permissions"):
+                except (discord.errors.Forbidden, cmdlib.BotPermsError) as error:
+                    if isinstance(error, cmdlib.BotPermsError) or \
+                    str(error).endswith("Missing Permissions"):
                         text = loclib.Loc.member("err_missing_perms_bot", msg.author)
                         embed = cembed.get_cembed(msg, text)
                         await msg.channel.send(embed=embed, reference=msg, mention_author=False)
