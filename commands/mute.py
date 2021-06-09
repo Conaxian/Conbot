@@ -25,7 +25,7 @@ async def mute(ctx):
     if target.top_role >= ctx.author.top_role:
         raise cmdlib.CmdError("err_mute_perms_author")
     if not mute_role:
-        raise cmdlib.CmdError("err_mute_no_role")
+        raise cmdlib.CmdError("err_mute_no_role", ctx.prefix)
     if mute_role >= ctx.guild.me.top_role:
         raise cmdlib.BotPermsError()
     if conyaml.is_muted(ctx.guild.id, target.id):
