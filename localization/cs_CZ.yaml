@@ -211,8 +211,8 @@ loc_cs_CZ:
   cmd_desc_python: "Spustí zadaný kód `<code>` v Pythonu 3. Doporučuje se z obou stran oddělit kód obrácenými čárkami ` ``` `."
 
   # Images
-  cmd_category_images: "Images"
-  cmd_desc_meme: "Sends a random meme from several subreddits."
+  cmd_category_images: "Obrázky"
+  cmd_desc_meme: "Pošle náhodný meme z několika subredditů."
 
   # Music
   cmd_category_music: "Hudba"
