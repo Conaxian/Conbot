@@ -12,7 +12,7 @@ import loclib
 
 ################################################################
 
-async def mute(ctx):
+async def unmute(ctx):
 
     target_id = utils.mention_id(ctx.args["target"])
     target = ctx.guild.get_member(target_id)
@@ -28,19 +28,20 @@ async def mute(ctx):
         raise cmdlib.CmdError("err_no_mute_role", ctx.prefix)
     if mute_role >= ctx.guild.me.top_role:
         raise cmdlib.BotPermsError()
-    if conyaml.get_mute(ctx.guild.id, target.id):
-        raise cmdlib.CmdError("err_mute_member_muted", target_mention)
+    mute_data = conyaml.get_mute(ctx.guild.id, target.id)
+    if not mute_data:
+        raise cmdlib.CmdError("err_unmute_member_not_muted", target_mention)
 
-    reason = loclib.Loc.server("text_mute_reason", ctx.guild)
+    reason = loclib.Loc.server("text_unmute_reason", ctx.guild)
     reason.format(ctx.author)
-    target_roles = list(filter(utils.is_role_normal, target.roles))
+    original_roles = [ctx.guild.get_role(role_id)
+        for role_id in mute_data["roles"]]
 
-    await target.remove_roles(*target_roles, reason=str(reason))
-    await target.add_roles(mute_role, reason=str(reason))
-    role_ids = [role.id for role in target_roles]
-    conyaml.add_mute(ctx.guild.id, target.id, role_ids)
+    await target.add_roles(*original_roles, reason=str(reason))
+    await target.remove_roles(mute_role, reason=str(reason))
+    conyaml.remove_mute(ctx.guild.id, target.id)
 
-    text = loclib.Loc.member("text_mute_success", ctx.author)
+    text = loclib.Loc.member("text_unmute_success", ctx.author)
     text.format(target_mention)
 
     embed = cembed.get_cembed(ctx.msg, text)

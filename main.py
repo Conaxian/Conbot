@@ -353,6 +353,16 @@ commands = [
         ["manage_messages"]
     ),
 
+    # Unmute
+    cmdlib.Command.new(
+        "unmute",
+        [],
+        "mod",
+        ["<target>"],
+        [" "],
+        ["manage_messages"]
+    ),
+
     # Warn
     cmdlib.Command.new(
         "warn",
@@ -538,8 +548,7 @@ async def on_guild_join(guild):
 async def on_message(msg):
 
     # If the message author is a bot or the message is empty, return
-    if msg.author.bot or not msg.content:
-        return
+    if msg.author.bot or not msg.content: return
 
     # Get the server command prefix
     prefix = conyaml.read_server_config(msg.guild.id, "prefix")

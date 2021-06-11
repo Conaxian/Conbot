@@ -101,16 +101,15 @@ def add_warn(server_id, member_id, reason):
 
 ################################################################
 
-# Check if member is muted
+# Get a mute
 
-def is_muted(server_id, member_id):
+def get_mute(server_id, member_id):
 
     data = load_yaml(const.files["mutes"])
     try:
-        data[server_id][member_id]
-        return True
+        return data[server_id][member_id]
     except KeyError:
-        return False
+        return None
 
 # Add a mute
 
@@ -122,6 +121,15 @@ def add_mute(server_id, member_id, role_ids):
     data[server_id][member_id] = {
         "roles": role_ids,
     }
+    save_yaml(const.files["mutes"], data)
+
+# Remove a mute
+
+def remove_mute(server_id, member_id):
+
+    data = load_yaml(const.files["mutes"])
+    data[server_id].pop(member_id, None)
+    if data[server_id] == {}: data.pop(server_id, None)
     save_yaml(const.files["mutes"], data)
 
 ################################################################
@@ -168,8 +176,7 @@ class Config:
 
     def validate(self, ctx, value):
 
-        if self.vtype == "any":
-            return value
+        if self.vtype == "any": return value
 
         elif self.vtype == "lang_code":
             value = value.replace("-", "_")
