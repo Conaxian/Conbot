@@ -3,6 +3,7 @@
 import discord
 import datetime
 import googletrans
+import speedtest as speed_test
 
 import const
 
@@ -87,6 +88,21 @@ def translate(string, src=None, dest=None):
         kwargs["dest"] = dest
     translation = translator.translate(string, **kwargs)
     return translation
+
+################################################################
+
+# Test the internet speed of the bot's server
+
+def speedtest():
+
+    test = speed_test.Speedtest()
+    test.get_best_server()
+    test.download()
+    test.upload()
+    return test.results.ping, \
+    test.results.download / 1000 / 1000, \
+    test.results.upload / 1000 / 1000
+    # Returns: Ping (ms), Download (Mbits), Upload (Mbits) 
 
 ################################################################
 

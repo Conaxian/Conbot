@@ -37,6 +37,7 @@ loc_en_US:
   label_bot_invite: "Add Bot"
   label_queue: "Song Queue"
   label_numeral: "Numeral"
+  label_internet_speed: "Internet Speed"
 
 ################################################################
 
@@ -211,6 +212,7 @@ loc_en_US:
   cmd_category_tools: "Tools"
   cmd_desc_emoji: "Sends a custom server emoji with the specified `<name>`."
   cmd_desc_translate: "Translates the specified text (`<text>`) into English. If the first word of `<text>` is a valid two-letter language code, translates from this language."
+  cmd_desc_speedtest: "Tests the internet speed of the bot's server."
   cmd_desc_calc: "Evaluates the specified `<expression>` and displays the result."
   cmd_desc_python: "Executes the specified `<code>` in Python 3. Wrapping the code in three backticks ` ``` ` is recommended."
 

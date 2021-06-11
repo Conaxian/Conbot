@@ -221,6 +221,16 @@ commands = [
         []
     ),
 
+    # Speedtest
+    cmdlib.Command.new(
+        "speedtest",
+        [],
+        "tools",
+        [],
+        [" "],
+        []
+    ),
+
     # Calc
     cmdlib.Command.new(
         "calc",

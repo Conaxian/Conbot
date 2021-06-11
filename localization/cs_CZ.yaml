@@ -37,6 +37,7 @@ loc_cs_CZ:
   label_bot_invite: "Přidat Bota"
   label_queue: "Fronta Songů"
   label_numeral: "Číslovka"
+  label_internet_speed: "Rychlost Internetu"
 
 ################################################################
 
@@ -211,6 +212,7 @@ loc_cs_CZ:
   cmd_category_tools: "Nástroje"
   cmd_desc_emoji: "Pošle serverové emoji se zadaným jménem (`<name>`)."
   cmd_desc_translate: "Přeloží zadaný `<text>` do angličtiny. Pokud je první slovo platným dvoupísmenným kódem jazyka, přeloží z tohoto jazyka."
+  cmd_desc_speedtest: "Otestuje rychlost internetu serveru bota."
   cmd_desc_calc: "Vypočítá zadaný výraz `<expression>` a zobrazí výsledek."
   cmd_desc_python: "Spustí zadaný kód `<code>` v Pythonu 3. Doporučuje se z obou stran oddělit kód obrácenými čárkami ` ``` `."
 
