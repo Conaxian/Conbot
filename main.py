@@ -441,16 +441,6 @@ commands = [
         []
     ),
 
-    # Conscript
-    cmdlib.Command.new(
-        "conscript",
-        ["cscript", "botscript"],
-        "dev",
-        ["<code>"],
-        [],
-        []
-    ),
-
     # Google Translate Nonsense
     cmdlib.Command.new(
         "googletrans-nonsense",
