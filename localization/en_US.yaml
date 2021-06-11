@@ -35,6 +35,7 @@ loc_en_US:
   label_about: "About"
   label_github: "GitHub"
   label_bot_invite: "Add Bot"
+  label_version: "Version"
   label_queue: "Song Queue"
   label_numeral: "Numeral"
   label_internet_speed: "Internet Speed"

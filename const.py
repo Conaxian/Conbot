@@ -4,6 +4,9 @@ import os
 
 ################################################################
 
+# Version
+version = "4"
+
 # APIs
 token = os.environ.get("DISCORD_BOT_TOKEN")           # Discord Bot Token
 reddit_secret = os.environ.get("REDDIT_SECRET")       # Reddit API Secret

@@ -35,6 +35,7 @@ loc_cs_CZ:
   label_about: "O botovi"
   label_github: "GitHub"
   label_bot_invite: "Přidat Bota"
+  label_version: "Verze"
   label_queue: "Fronta Songů"
   label_numeral: "Číslovka"
   label_internet_speed: "Rychlost Internetu"
