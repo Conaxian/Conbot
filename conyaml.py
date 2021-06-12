@@ -11,7 +11,8 @@ import utils
 
 def load_yaml(file):
 
-    with open(file, "r", encoding="utf-8") as f:
+    with open(file, "a+", encoding="utf-8") as f:
+        f.seek(0)
         data = yaml.safe_load(f)
     data = {} if not data else data
     return data
