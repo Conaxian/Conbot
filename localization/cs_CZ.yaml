@@ -91,7 +91,7 @@ loc_cs_CZ:
 
   err_unknown_cmd: "Neznámý příkaz! Použij `$1help` pro zobrazení dostupných příkazů!"
   err_unknown_cmd_alt: "Neznámý příkaz! Neměl jsi na mysli `$1$2`?"
-  err_missing_perms: "Nemáš požadované permise pro použití tohoto příkazu!"
+  err_missing_perms_user: "Nemáš požadované permise pro použití tohoto příkazu!"
   err_arg_overflow: "Příliš mnoho zadaných argumentů! (počet argumentů: **$1**, maximální povolený počet: **$2**)"
   err_arg_underflow: "Nedostatek zadaných argumentů! (počet argumentů: **$1**, minimální požadovaný počet: **$2**)"
   err_help_unknown_cmd: "Neznámý příkaz! Poskytni platný příkaz jako argument, například: `help`"
@@ -116,7 +116,7 @@ loc_cs_CZ:
   err_join_no_voice: "Pro použití tohoto příkazu musíš být v hlasovém kanále!"
   err_join_voice_connected: "Bot už je připojený v hlasovém kanále!"
   err_leave_no_voice: "Bot se nenachází v žádném hlasovém kanále!"
-  err_missing_perms: "Bot nemá dostatečné permise k provedení tohoto příkazu! Pro správné fungování potřebuje administrátorskou roli."
+  err_missing_perms_bot: "Bot nemá dostatečné permise k provedení tohoto příkazu! Pro správné fungování potřebuje administrátorskou roli."
   err_empty_queue: "Fronta songů je prázdná!"
   err_play_unknown_song: "Na YouTube nebyl nalezen žádný song!"
   err_play_too_long: "Song je příliš dlouhý! Maximální povolená délka je `$1 minut`."

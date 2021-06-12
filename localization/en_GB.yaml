@@ -91,7 +91,7 @@ loc_en_GB:
 
   err_unknown_cmd: "Unknown command! Use `$1help` to get a list of available commands!"
   err_unknown_cmd_alt: "Unknown command! Did you mean `$1$2`?"
-  err_missing_perms: "You have insufficient permissions to use this command!"
+  err_missing_perms_user: "You have insufficient permissions to use this command!"
   err_arg_overflow: "Too many arguments specified! (got **$1**, expected **$2** at most)"
   err_arg_underflow: "Not enough arguments specified! (got **$1**, expected at least **$2**)"
   err_help_unknown_cmd: "Unknown command! Please provide a valid command as an argument, for example `help`"
@@ -116,7 +116,7 @@ loc_en_GB:
   err_join_no_voice: "You must be in a voice channel to use this command!"
   err_join_voice_connected: "The bot is already connected to a voice channel!"
   err_leave_no_voice: "The bot currently isn't in any voice channel!"
-  err_missing_perms: "The bot has insufficient permissions to execute this command! It needs an administrator role to work correctly."
+  err_missing_perms_bot: "The bot has insufficient permissions to execute this command! It needs an administrator role to work correctly."
   err_empty_queue: "The song queue is empty!"
   err_play_unknown_song: "No song found on YouTube!"
   err_play_too_long: "Song is too long! Max allowed length is `$1 minutes`."
