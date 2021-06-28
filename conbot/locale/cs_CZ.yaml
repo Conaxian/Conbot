@@ -1,0 +1,323 @@
+# Czech
+# cs-CZ
+
+# Meta
+meta:
+  name: "Čeština"
+
+# Command Call
+cmd_call:
+  unknown_cmd: "Neznámý příkaz! Použij `$0help` pro zobrazení
+  dostupných příkazů!"
+  unknown_cmd_hint: "Neznámý příkaz! Neměl jsi na mysli `$0$1`?"
+  no_perms_user: "Nemáš dostatečné permise pro použití
+  tohoto příkazu!"
+  no_perms_bot: "Bot nemá dostatečné permise k provedení
+  tohoto příkazu! Pro správné fungování potřebuje
+  administrátorskou roli."
+  min_args: "Nedostatek zadaných argumentů!\n
+  Chybějící povinný argument: `$0`"
+  max_args: "Příliš mnoho zadaných argumentů!\n
+  Přebývající text: `$0`"
+  invalid_value: "Neplatný argument $0 - zadáno: `$1`\n
+  Zadej platnou hodnotu typu $2."
+
+# Log
+log:
+  member_join: "$0 se připojil/a na server."
+  member_leave: "$0 se odpojil/a ze serveru."
+
+# Argument Formats
+arg_format:
+  loc_lang: "Kód Jazyka"
+  int: "Celé Číslo"
+  num: "Číslo"
+  cmd: "Příkaz"
+  guild_config: "Možnost Nastavení Serveru"
+  member: "Mention Člena"
+  banned_user: "Zabanovaný Uživatel"
+  text_channel_any: "Textový Kanál"
+  custom_emoji_any: "Název Emoji"
+
+# Config
+config:
+  # Names
+  name:
+    language: "Jazyk"
+    prefix: "Prefix"
+    log_channel: "Kanál Záznamů"
+    mute_role: "Mute Role"
+  # Formats
+  format:
+    language: "Kód Jazyka"
+    log_channel: "Textový Kanál"
+    mute_role: "Roli"
+
+# Permissions
+perm:
+  # General
+  administrator: "Administrátor"
+  view_channel: "Zobrazit Kanály"
+  manage_channels: "Správa Kanálů"
+  manage_roles: "Správa Rolí"
+  manage_emojis: "Správa Emoji"
+  view_audit_log: "Zobrazit Audit Log"
+  manage_webhooks: "Správa Webhooks"
+  manage_guild: "Správa Serveru"
+  # Membership
+  create_instant_invite: "Vytvořit Pozvánku"
+  change_nickname: "Změna Přezdívky"
+  manage_nicknames: "Správa Přezdívek"
+  kick_members: "Vyhodit Členy"
+  ban_members: "Banovat Členy"
+  # Text Channels
+  send_messages: "Odesílat Zprávy"
+  embed_links: "Vložit Odkazy"
+  attach_files: "Přiložit Soubory"
+  add_reactions: "Přidat Reakce"
+  external_emojis: "Externí Emoji"
+  mention_everyone: "Zmínit @everyone"
+  manage_messages: "Správa Zpráv"
+  read_message_history: "Číst Historii"
+  send_tts_messages: "Posílat TTS Zprávy"
+  use_slash_commands: "Příkazy s Lomítkem"
+  # Voice Channels
+  connect: "Připojit se"
+  speak: "Mluvit"
+  stream: "Streamovat Video"
+  use_voice_activation: "Hlasová Aktivita"
+  priority_speaker: "Přednostní Mluvčí"
+  mute_members: "Ztlumit Členy"
+  deafen_members: "Ohlušit Členy"
+  move_members: "Přesunout Členy"
+
+# Command Categories
+cmd_category:
+  info: "Info"
+  chat: "Chat"
+  tools: "Nástroje"
+  images: "Obrázky"
+  music: "Hudba"
+  mod: "Moderace"
+  config: "Nastavení"
+  dev: "Vývoj"
+
+# Commands
+cmd:
+  # Help
+  help:
+    desc: "Zobrazí všechny příkazy, seřazené podle kategorií.
+    Pokud je upřesněn příkaz `$0`, zobrazí detailní informace
+    o tomto příkazu."
+    help: "Help"
+    syntax: "Syntaxe"
+    aliases: "Aliasy"
+    req_perms: "Požadované permise"
+    desc_title: "Popis"
+  # About
+  about:
+    desc: "Zobrazí informace o botovi."
+    text: "Conbot je multifunkční Discord bot vytvořený $0.
+    Kontaktuj `$0#$1` na Discordu pokud máš jakékoliv
+    dotazy, návrhy nebo problémy."
+    about: "O Botovi"
+    bot_invite: "Přidat Bota"
+    github: "GitHub"
+    version: "Verze"
+  # Status
+  status:
+    desc: "Zobrazí zprávu potvrzující, že je bot online."
+    online: "Bot je online!"
+  # Invite
+  invite:
+    desc: "Pošle permanentní pozvánku do tohoto kanálu."
+  # Perms
+  perms:
+    desc: "Zobrazí všechny serverové permise zadaného člena `$0`."
+    text: "Toto je seznam všech permisí $0 na tomto serveru."
+    title: "Permise na $0"
+  # Avatar
+  avatar:
+    desc: "Zobrazí avatar zadaného člena `$0`."
+  # RNG
+  rng:
+    desc: "Vygeneruje náhodné číslo v rozsahu od `$0` do `$1`."
+    invalid_range: "Minimální číslo musí být menší než maximální číslo!"
+  # Choice
+  choice:
+    desc: "Vybere náhodnou možnost ze seznamu zadaných možností:
+    `$0`, `$1`, `$2`. Možnosti musí být odděleny čárkou `,`."
+  # Numeral
+  numeral:
+    desc: "Vypíše slovní formu zadaného čísla `$0`."
+    too_large: "Zadané číslo je příliš velké!"
+    title: "Číslovka"
+  # Gay
+  gay:
+    desc: "Zobrazí, jak moc gay je `$0`."
+    text: "$0 je z $1% gay :rainbow_flag:"
+    title: "Gay Metr"
+  # Penis
+  penis:
+    desc: "Zobrazí, jak dlouhý je penis od `$0`."
+    text: "Penis od $0: $1"
+    title: "Délka Penisu"
+  # Emoji
+  emoji:
+    desc: "Pošle serverové emoji se zadaným jménem `$0`."
+  # Translate
+  translate:
+    desc: "Přeloží zadaný text `$2` do angličtiny. Původní
+    jazyk je automaticky zjištěn pomocí Google Translate.
+    Pokud je jazyk `$0` upřesněn, pak je původní jazyk nastaven
+    na tento jazyk. Pokud je jazyk `$1` upřesněn, pak je
+    výsledný jazyk nastaven na tento jazyk místo angličiny.
+    Jazyk může být buď kód jazyka ve formátu ISO 639-1, nebo
+    anglický název jazyka na Google Translate."
+    text: "Přeloženo z `$0` do `$1`"
+    title: "Google Translate"
+  # Speedtest
+  speedtest:
+    desc: "Otestuje rychlost internetu serveru, na kterém bot běží."
+    title: "Rychlost Internetu"
+  # Calc
+  calc:
+    desc: "Vypočítá zadaný výraz `$0` a zobrazí výsledek."
+    illegal_char: "Zadaný výraz obsahuje nepovolený znak: `$0`"
+    syntax_error: "Neplatná syntaxe!"
+    zero_division: "Nelze dělit nulou!"
+    timeout: "Výpočet byl zastaven, protože běžel déle
+    než $0 sekund!"
+    result: "Výsledek"
+  # Python
+  python:
+    desc: "Spustí zadaný kód `$0` v Pythonu 3.
+    Obalení kódu třemi zpětnými čárkami ` ``` ` je doporučeno."
+    success: "Dokončeno s výstupním kódem 0 za `$0` sekund"
+    failure: "Dokončeno s výstupním kódem 1"
+    timeout: "Skript byl zastaven, protože běžel déle
+    než $0 sekund!"
+    banned_module: "Chyba: Modul $0 není povolen!"
+    banned_name: "Chyba: Jméno $0 není povoleno!"
+    output: "Výstup"
+  # Meme
+  meme:
+    desc: "Pošle náhodný meme z několika subredditů."
+  # Join
+  join:
+    desc: "Připojí bota do hlasového kanálu, ve kterém se nacházíš."
+    no_voice: "Pro použití tohoto příkazu musíš být
+    v hlasovém kanále!"
+    connected: "Bot už je připojený do hlasového kanálu!"
+    success: "Připojen do hlasového kanálu **$0**."
+  # Leave
+  leave:
+    desc: "Odpojí bota z hlasového kanálu, ve kterém se nachází."
+    no_voice: "Bot se nenachází v žádném hlasovém kanále!"
+    success: "Odpojen z hlasového kanálu **$0**."
+  # Play
+  play:
+    desc: "Vyhledá zadaný výraz `$0` na YouTube a přehraje
+    první výsledek. `$0` může být také YouTube URL."
+    max_queue: "Fronta může mít maximálně `$0` songů!"
+    not_found: "Při vyhledávání zadaného výrazu na YouTube nebyl
+    nalezen žádný song!"
+    too_long: "Song je příliš dlouhý! Maximální povolená délka
+    je `$0 minut`."
+    add_queue: "Přidáno do fronty: **$0**"
+    playing: "Nyní se přehrává: **$0**"
+  # Skip
+  skip:
+    desc: "Přeskočí současný song ve frontě."
+    text: "Přeskakuji song: **$0**"
+  # Queue
+  queue:
+    desc: "Zobrazí současnou frontu songů."
+    empty: "Fronta songů je prázdná!"
+    entry: "Přehrál/a $0 - Délka: `$1`"
+    title: "Fronta Songů"
+  # Kick
+  kick:
+    desc: "Vyhodí zadaného člena `$0`."
+    no_perms: "Nemáš dostatečné permise pro vyhození tohoto člena,
+    protože má vyšší nebo stejnou roli jako ty."
+    success: "$0 byl/a úspěšně vyhozen/a."
+    reason: "Vyhozen/a $0"
+  # Ban
+  ban:
+    desc: "Zabanuje zadaného člena `$0`."
+    no_perms: "Nemáš dostatečné permise pro zabanování tohoto člena,
+    protože má vyšší nebo stejnou roli jako ty."
+    success: "$0 byl/a úspěšně zabanován/a."
+    reason: "Zabanován/a $0"
+  # Unban
+  unban:
+    desc: "Zruší ban zadaného uživatele `$0`. `$0` musí být
+    ID zabanovaného uživatele."
+    success: "Ban $0 byl úspěšně zrušen."
+    reason: "Ban zrušen $0"
+  # Mute
+  mute:
+    desc: "Ztlumí zadaného člena `$0`."
+    no_perms: "Nemáš dostatečné permise pro ztlumení tohoto člena,
+    protože má vyšší nebo stejnou roli jako ty."
+    no_mute_role: "Není nastavena žádná mute role! Použij
+    `$0server-settings Mute Role @Role`, abys nastavil/a `@Role`
+    jako mute roli."
+    muted: "$0 už je ztlumený/á!"
+    success: "$0 byl/a úspěšně ztlumen/a."
+    reason: "Ztlumen/a $0"
+  # Unmute
+  unmute:
+    desc: "Odtlumí zadaného člena `$0`."
+    no_perms: "Nemáš dostatečné permise pro odtlumení tohoto člena,
+    protože má vyšší nebo stejnou roli jako ty."
+    not_muted: "$0 není ztlumený/á!"
+    success: "$0 byl/a úspěšně odtlumen/a."
+    reason: "Odtlumen/a $0"
+  # Warn
+  warn:
+    desc: "Varuje zadaného člena `$0` ze zadaného důvodu `$1`."
+    no_perms: "Nemáš dostatečné permise pro varování tohoto člena,
+    protože má vyšší nebo stejnou roli jako ty."
+    success: "$0 byl/a varován/a za: **$1**"
+  # Warns
+  warns:
+    desc: "Zobrazí historii varování na tomto serveru."
+    last: "Zobrazeno je jen posledních $0 varování."
+    entry: "Varován/a za **$0** dne `$1` v `$2` UTC"
+    none: "Žádná zaznamenaná varování."
+    title: "Varování na $0"
+  # User Settings
+  user_settings:
+    desc: "Zobrazí buď uživatelská nastavení zadaného člena `$0`,
+    nebo tvá vlastní nastavení."
+    title: "Uživatelská Nastavení"
+  # Server Settings
+  server_settings:
+    desc: "Pokud nejsou zadány žádné argumenty, zobrazí
+    nastavení serveru. Pokud je zadána pouze možnost `$0`, nastaví
+    hodnotu této možnosti na výchozí hodnotu. Pokud je zadána
+    možnost `$0` i hodnota `$1`, nastaví hodnotu této možnosti
+    na zadanou hodnotu."
+    no_perms: "Nemáš dostatečné permise pro změnu nastavení serveru!"
+    success: "Nastavení **$0** úspěšně nastaveno na $1."
+    title: "Nastavení Serveru"
+  # Language
+  language:
+    desc: "Vypíše všechny dostupné jazyky bota. Pokud je upřesněn
+    jazyk `$0`, změní tvé nastavení jazyka. `$0` musí být kód jazyka."
+    list: "Toto je seznam všech dostupných jazyků tohoto bota."
+    changed: "Tvůj jazyk byl úspěšně změněn na jazyk **$0**."
+    languages: "Jazyky"
+  # Shutdown
+  shutdown:
+    exit: "Bot byl úspěšně vypnut."
+
+# Miscellaneous
+misc:
+  current_prefix: "Současný prefix bota je `$0`"
+  none: "Nic"
+  yes: "Ano"
+  no: "Ne"
+  default: "Výchozí"

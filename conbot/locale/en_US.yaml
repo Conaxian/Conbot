@@ -1,0 +1,323 @@
+# English (United States)
+# en-US
+
+# Meta
+meta:
+  name: "English (United States)"
+
+# Command Call
+cmd_call:
+  unknown_cmd: "Unknown command! Use `$0help` to get a list
+  of available commands!"
+  unknown_cmd_hint: "Unknown command! Did you mean `$0$1`?"
+  no_perms_user: "You have insufficient permissions
+  to use this command!"
+  no_perms_bot: "The bot has insufficient permissions
+  to execute this command! It requires administrator permissions
+  to work properly."
+  min_args: "Not enough arguments specified!\n
+  Missing required argument: `$0`"
+  max_args: "Too many arguments specified!\n
+  Overflowing input: `$0`"
+  invalid_value: "Invalid $0 value: `$1`\n
+  Please specify a valid $2."
+
+# Log
+log:
+  member_join: "$0 has joined the server."
+  member_leave: "$0 has left the server."
+
+# Argument Formats
+arg_format:
+  loc_lang: "Localization Language Code"
+  int: "Integer (whole number)"
+  num: "Number"
+  cmd: "Command"
+  guild_config: "Server Config Option"
+  member: "Member"
+  banned_user: "Banned User"
+  text_channel_any: "Text Channel"
+  custom_emoji_any: "Emoji Name"
+
+# Config
+config:
+  # Names
+  name:
+    language: "Language"
+    prefix: "Prefix"
+    log_channel: "Log Channel"
+    mute_role: "Mute Role"
+  # Formats
+  format:
+    language: "Localization Language Code"
+    log_channel: "Text Channel"
+    mute_role: "Role"
+
+# Permissions
+perm:
+  # General
+  administrator: "Administrator"
+  view_channel: "View Channels"
+  manage_channels: "Manage Channels"
+  manage_roles: "Manage Roles"
+  manage_emojis: "Manage Emojis"
+  view_audit_log: "View Audit Log"
+  manage_webhooks: "Manage Webhooks"
+  manage_guild: "Manage Server"
+  # Membership
+  create_instant_invite: "Create Invite"
+  change_nickname: "Change Nickname"
+  manage_nicknames: "Manage Nicknames"
+  kick_members: "Kick Members"
+  ban_members: "Ban Members"
+  # Text Channels
+  send_messages: "Send Messages"
+  embed_links: "Embed Links"
+  attach_files: "Attach Files"
+  add_reactions: "Add Reactions"
+  external_emojis: "External Emoji"
+  mention_everyone: "Mention @everyone"
+  manage_messages: "Manage Messages"
+  read_message_history: "Read History"
+  send_tts_messages: "Use TTS"
+  use_slash_commands: "Slash Commands"
+  # Voice Channels
+  connect: "Connect"
+  speak: "Speak"
+  stream: "Stream Video"
+  use_voice_activation: "Voice Activity"
+  priority_speaker: "Priority Speaker"
+  mute_members: "Mute Members"
+  deafen_members: "Deafen Members"
+  move_members: "Move Members"
+
+# Command Categories
+cmd_category:
+  info: "Info"
+  chat: "Chat"
+  tools: "Tools"
+  images: "Images"
+  music: "Music"
+  mod: "Moderation"
+  config: "Config"
+  dev: "Developer"
+
+# Commands
+cmd:
+  # Help
+  help:
+    desc: "Lists all commands, organized by categories.
+    If `$0` is specified, shows detailed information
+    about the command instead."
+    help: "Help"
+    syntax: "Syntax"
+    aliases: "Aliases"
+    req_perms: "Required Permissions"
+    desc_title: "Description"
+  # About
+  about:
+    desc: "Shows information about the bot."
+    text: "Conbot is a multipurpose Discord bot made by $0.
+    Contact `$0#$1` on Discord if you have
+    any questions, suggestions, or issues."
+    about: "About"
+    bot_invite: "Add Bot"
+    github: "GitHub"
+    version: "Version"
+  # Status
+  status:
+    desc: "Displays a message confirming that the bot is online."
+    online: "Bot is online!"
+  # Invite
+  invite:
+    desc: "Sends a permanent invite to the current channel."
+  # Perms
+  perms:
+    desc: "Shows all server permissions of the specified `$0`."
+    text: "This is a list of all permissions of $0 on this server."
+    title: "Permissions in $0"
+  # Avatar
+  avatar:
+    desc: "Displays the avatar of the specified `$0`."
+  # RNG
+  rng:
+    desc: "Generates a random number in the range
+    from `$0` to `$1`."
+    invalid_range: "Min number must be lesser than the max number!"
+  # Choice
+  choice:
+    desc: "Chooses a random option from the list of specified choices:
+    `$0`, `$1`, `$2`. Choices must be separated by commas `,`."
+  # Numeral
+  numeral:
+    desc: "Displays a word representation of the specified `$0`."
+    too_large: "The entered number is too large!"
+    title: "Number"
+  # Gay
+  gay:
+    desc: "Shows how gay is the `$0`."
+    text: "$0 is $1% gay :rainbow_flag:"
+    title: "Gay Meter"
+  # Penis
+  penis:
+    desc: "Shows how long is the `$0`'s penis."
+    text: "$0's penis: $1"
+    title: "Penis Length"
+  # Emoji
+  emoji:
+    desc: "Sends a custom server emoji with the specified `$0`."
+  # Translate
+  translate:
+    desc: "Translates the specified `$2` into English. The source
+    language is automatically determined by Google Translate.
+    If `$0` is specified, the source language is set to that
+    language instead. If `$1` is specified, the destination language
+    is set to that language instead of English. Languages can be
+    either language codes in the ISO 639-1 format, or English
+    language names found on Google Translate."
+    text: "Translated from `$0` to `$1`"
+    title: "Google Translate"
+  # Speedtest
+  speedtest:
+    desc: "Tests the internet speed of the bot's server."
+    title: "Internet Speed"
+  # Calc
+  calc:
+    desc: "Evaluates the specified `$0` and displays the result."
+    illegal_char: "The entered expression contains
+    an illegal character: `$0`"
+    syntax_error: "Syntax error!"
+    zero_division: "You can't divide by zero!"
+    timeout: "Calculation was terminated, as it ran for longer
+    than $0 seconds!"
+    result: "Result"
+  # Python
+  python:
+    desc: "Executes the specified `$0` in Python 3.
+    Wrapping the code in three backticks ` ``` ` is recommended."
+    success: "Finished with exit code 0 in `$0` seconds"
+    failure: "Finished with exit code 1"
+    timeout: "Script was terminated, as it ran for longer
+    than $0 seconds!"
+    banned_module: "Error: Module $0 is not allowed!"
+    banned_name: "Error: Name $0 is not allowed!"
+    output: "Output"
+  # Meme
+  meme:
+    desc: "Sends a random meme from several subreddits."
+  # Join
+  join:
+    desc: "Joins the voice channel you are currently in."
+    no_voice: "You must be in a voice channel to use this command!"
+    connected: "The bot is already connected to a voice channel!"
+    success: "Joined the **$0** voice channel."
+  # Leave
+  leave:
+    desc: "Leaves the voice channel the bot is currently in."
+    no_voice: "The bot currently isn't connected to any
+    voice channel!"
+    success: "Left the **$0** voice channel."
+  # Play
+  play:
+    desc: "Searches the specified `$0` on YouTube and plays
+    the first result. `$0` can also be a YouTube URL."
+    max_queue: "The song queue can have `$0` songs at most!"
+    not_found: "No such song found on YouTube!"
+    too_long: "Song is too long! Maximum duration is `$0 minutes`."
+    add_queue: "Added to queue: **$0**"
+    playing: "Now playing: **$0**"
+  # Skip
+  skip:
+    desc: "Skips the current song in the queue."
+    text: "Skipping song: **$0**"
+  # Queue
+  queue:
+    desc: "Displays the current song queue."
+    empty: "The song queue is empty!"
+    entry: "Requested by $0 - Duration: `$1`"
+    title: "Song Queue"
+  # Kick
+  kick:
+    desc: "Kicks the specified `$0`."
+    no_perms: "You have insufficient permissions to kick this member,
+    as they have a higher or equal role to yours."
+    success: "Successfully kicked $0."
+    reason: "Kicked by $0"
+  # Ban
+  ban:
+    desc: "Bans the specified `$0`."
+    no_perms: "You have insufficient permissions to ban this member,
+    as they have a higher or equal role to yours."
+    success: "Successfully banned $0."
+    reason: "Banned by $0"
+  # Unban
+  unban:
+    desc: "Unbans the specified `$0`. `$0` must be a User ID
+    of a user banned from the server."
+    success: "Successfully unbanned $0."
+    reason: "Unbanned by $0"
+  # Mute
+  mute:
+    desc: "Mutes the specified `$0`."
+    no_perms: "You have insufficient permissions to mute this member,
+    as they have a higher or equal role to yours."
+    no_mute_role: "No mute role is configured! Please use
+    `$0server-settings Mute Role @Role` to set `@Role`
+    as the mute role."
+    muted: "$0 is already muted!"
+    success: "Successfully muted $0."
+    reason: "Muted by $0"
+  # Unmute
+  unmute:
+    desc: "Unmutes the specified `$0`."
+    no_perms: "You have insufficient permissions to unmute this member,
+    as they have a higher or equal role to yours."
+    not_muted: "$0 isn't muted!"
+    success: "Successfully unmuted $0."
+    reason: "Unmuted by $0"
+  # Warn
+  warn:
+    desc: "Warns the specified `$0` for the specified `$1`."
+    no_perms: "You have insufficient permissions to warn this member,
+    as they have a higher or equal role to yours."
+    success: "$0 has been warned for: **$1**"
+  # Warns
+  warns:
+    desc: "Shows the warn history on this server."
+    last: "Only the last $0 warns are shown."
+    entry: "Warned for **$0** on `$1` at `$2` UTC"
+    none: "No recorded warns."
+    title: "Warns in $0"
+  # User Settings
+  user_settings:
+    desc: "Shows either the specified `$0`'s or your personal
+    user settings."
+    title: "User Settings"
+  # Server Settings
+  server_settings:
+    desc: "If no arguments are specified, shows the server's settings.
+    If only `$0` is specified, sets that option's value to default.
+    If both `$0` and `$1` are specified, sets the option's value to
+    that value."
+    no_perms: "You have insufficient permissions to change
+    the server settings!"
+    success: "Successfully set the server **$0** to $1."
+    title: "Server Settings"
+  # Language
+  language:
+    desc: "Lists all available localizations. If `$0` is specified,
+    changes your language setting instead. `$0` must be a language code."
+    list: "This is a list of all available localizations."
+    changed: "Successfully changed your language to **$0**."
+    languages: "Languages"
+  # Shutdown
+  shutdown:
+    exit: "Successfully shut the bot."
+
+# Miscellaneous
+misc:
+  current_prefix: "The current bot prefix is `$0`"
+  none: "None"
+  yes: "Yes"
+  no: "No"
+  default: "Default"
