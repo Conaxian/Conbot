@@ -75,7 +75,7 @@ permissions = {
 
 # Commands
 cmd_dir = "commands" # Commands Directory
-prefix = "!" # Default
+prefix = "?" # Default
 cmd_cooldown = 1 # Seconds
 cmd_hint_threshold = 0.6 # Decimal Percentage
 categories = [
