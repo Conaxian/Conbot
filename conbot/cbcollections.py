@@ -16,7 +16,7 @@ class Flags:
             setattr(self, flag, True)
 
     def __repr__(self):
-        return str(tuple(self.__dict__.keys()))
+        return str(tuple(vars(self).keys()))
 
     def __getattr__(self, attr: str) -> bool:
         return False
@@ -32,7 +32,7 @@ class AttrDict:
             setattr(self, key, value)
 
     def __repr__(self):
-        return str(self.__dict__)
+        return str(vars(self))
 
     def __getattr__(self, attr: str):
         pass
@@ -41,14 +41,14 @@ class AttrDict:
         return getattr(self, str(key))
 
     def __bool__(self) -> bool:
-        return bool(self.__dict__)
+        return bool(vars(self))
 
     def __iter__(self) -> Generator:
-        for key, value in self.__dict__.items():
+        for key, value in vars(self).items():
             yield key, value
 
     def keys(self) -> tuple[str]:
-        return tuple(self.__dict__.keys())
+        return tuple(vars(self).keys())
 
     def values(self) -> tuple:
-        return tuple(self.__dict__.values())
+        return tuple(vars(self).values())

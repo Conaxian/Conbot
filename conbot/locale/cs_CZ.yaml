@@ -203,7 +203,7 @@ cmd:
   # Subreddit
   subreddit:
     desc: "Pošle náhodný post ze zadaného subredditu `$0`. Post musí
-    obsahovat obrázek nebo video."
+    obsahovat link."
     not_found: "Zadaný subreddit nebyl nalezen!"
     nsfw: "NSFW posty mohou být poslány pouze do NSFW kanálů!"
   # Meme

@@ -205,7 +205,7 @@ cmd:
   # Subreddit
   subreddit:
     desc: "Sends a random post from the specified `$0`. The post
-    must contain an image or a video."
+    must contain a link."
     not_found: "No such subreddit found!"
     nsfw: "NSFW posts can only be sent in NSFW channels!"
   # Meme

@@ -29,22 +29,14 @@ meta = {
 
 # Command Call
 async def call(ctx):
-    await ctx.send("Work In Progress")
-    return
-
     subreddit = ctx.args["subreddit"]
     post = await random_post(subreddit)
+
     if not post:
         raise CmdError("cmd/subreddit/not_found")
 
-    subr = await post.subreddit.load()
-    if subr.over18 and not ctx.channel.is_nsfw():
+    if post.over_18 and not ctx.channel.is_nsfw():
         raise CmdError("cmd/subreddit/nsfw")
-
-    valid_post = False
-    while not valid_post:
-        valid_post = not post.is_self
-        post = await random_post(subreddit)
 
     permalink = "https://www.reddit.com" + post.permalink
     embed = cembed(ctx,

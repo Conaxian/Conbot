@@ -32,17 +32,20 @@ async def get_posts(
         posts = []
         async for post in submissions(limit=limit):
             posts.append(post)
-        return posts
     except Exception as error:
         if error.__class__.__name__ != "NotFound": raise error
+    return posts
 
 # Random Post
-async def random_post(subreddit: str) -> praw.reddit.models.Submission:
+async def random_post(
+    subreddit: str,
+) -> praw.reddit.models.Submission:
     """
     Gets a random post from a subreddit.
     """
     try:
         subreddit = await reddit.subreddit(subreddit)
-        return await subreddit.random()
+        post = await subreddit.random()
     except Exception as error:
         if error.__class__.__name__ != "NotFound": raise error
+    return post
