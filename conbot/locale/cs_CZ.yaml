@@ -200,6 +200,12 @@ cmd:
     banned_module: "Chyba: Modul $0 není povolen!"
     banned_name: "Chyba: Jméno $0 není povoleno!"
     output: "Výstup"
+  # Subreddit
+  subreddit:
+    desc: "Pošle náhodný post ze zadaného subredditu `$0`. Post musí
+    obsahovat obrázek nebo video."
+    not_found: "Zadaný subreddit nebyl nalezen!"
+    nsfw: "NSFW posty mohou být poslány pouze do NSFW kanálů!"
   # Meme
   meme:
     desc: "Pošle náhodný meme z několika subredditů."

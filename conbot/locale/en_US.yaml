@@ -202,6 +202,12 @@ cmd:
     banned_module: "Error: Module $0 is not allowed!"
     banned_name: "Error: Name $0 is not allowed!"
     output: "Output"
+  # Subreddit
+  subreddit:
+    desc: "Sends a random post from the specified `$0`. The post
+    must contain an image or a video."
+    not_found: "No such subreddit found!"
+    nsfw: "NSFW posts can only be sent in NSFW channels!"
   # Meme
   meme:
     desc: "Sends a random meme from several subreddits."
