@@ -153,6 +153,12 @@ cmd:
     desc: "Displays a word representation of the specified `$0`."
     too_large: "The entered number is too large!"
     title: "Number"
+  # Roman
+  roman:
+    desc: "Converts an Arabic numeral into a Roman numeral."
+    too_large: "The entered number must be in the range
+    from 0 to 4999!"
+    title: "Roman"
   # Gay
   gay:
     desc: "Shows how gay is the `$0`."

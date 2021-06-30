@@ -21,7 +21,7 @@ meta = {
         "gay-meter",
     ],
     "category": "chat",
-    "index": 3,
+    "index": 4,
     "args": [
         Arg("[target]", "inf_str"),
     ],

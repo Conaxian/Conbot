@@ -20,7 +20,7 @@ meta = {
         "penis-size",
     ],
     "category": "chat",
-    "index": 4,
+    "index": 5,
     "args": [
         Arg("[target]", "inf_str"),
     ],

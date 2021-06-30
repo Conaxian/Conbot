@@ -152,6 +152,11 @@ cmd:
     desc: "Vypíše slovní formu zadaného čísla `$0`."
     too_large: "Zadané číslo je příliš velké!"
     title: "Číslovka"
+  # Roman
+  roman:
+    desc: "Převede arabské číslo na římské číslo."
+    too_large: "Zadané číslo musí být v rozsahu od 0 do 4999!"
+    title: "Římské Číslo"
   # Gay
   gay:
     desc: "Zobrazí, jak moc gay je `$0`."

@@ -34,7 +34,6 @@ async def call(ctx):
 
     if not post:
         raise CmdError("cmd/subreddit/not_found")
-
     if post.over_18 and not ctx.channel.is_nsfw():
         raise CmdError("cmd/subreddit/nsfw")
 
