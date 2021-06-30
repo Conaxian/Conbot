@@ -9,7 +9,6 @@ from roman import OutOfRangeError
 
 # Conbot Modules
 sys.path.append("..")
-import const
 from cmdtools import Arg, CmdError
 from cembed import cembed
 from loclib import Loc
