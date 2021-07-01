@@ -143,6 +143,7 @@ autoreplies = {
 } # Trigger-Result Pairs (trigger must be lowercase)
 
 # Images
+max_retries = 6
 meme_subreddits = ["memes", "dankmemes"]
 
 # Music

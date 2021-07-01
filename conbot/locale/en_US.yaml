@@ -211,9 +211,10 @@ cmd:
   # Subreddit
   subreddit:
     desc: "Sends a random post from the specified `$0`. The post
-    must contain a link."
+    must contain a single image."
     not_found: "No such subreddit found!"
     nsfw: "NSFW posts can only be sent in NSFW channels!"
+    no_link: "Couldn't find any post with a single image!"
   # Meme
   meme:
     desc: "Sends a random meme from several subreddits."
