@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # General
 name = "Conbot"
 author = "Conax#0001" # Discord in Name#Tag format
-bot_invite = "https://www.conax.cz/conbot-link" # URL
+bot_invite = "https://conax.cz/conbot" # URL
 bot_github = "https://github.com/Conaxian/Conbot" # URL
 encoding = "utf-8" # UTF-8 is recommended
 date_format = "%d/%m/%Y" # DD/MM/YYYY
