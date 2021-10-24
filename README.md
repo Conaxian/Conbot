@@ -1,4 +1,4 @@
 # Conbot
 A Discord bot by Conax
 
-https://conax.cz/conbot
+Outdated and discontinued. See [Osmium](https://github.com/Conaxian/Osmium) for a much better bot.
